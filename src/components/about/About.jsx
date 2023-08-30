@@ -10,7 +10,19 @@ import {HiOutlineLightBulb} from 'react-icons/hi'
 const About = () => {
   return (
     <section id='about'>
-      <h2>About Us</h2>
+      <div className="container about__content"> 
+            <h2><p>About Us</p></h2>
+            <div className="about__paragraph">
+            <h4> 
+            <p> Evening with Industry (EWI) is one of Society of Women Engineers’ flagship events and the largest student-run networking event on UCLA campus. <br /></p>
+            <p> In 2024, SWE @ UCLA will host the 47th annual Evening with Industry at UCLA’s Carnesale Commons. <br /></p>
+            <p> At this event, we strive to create an environment that is more personal than a typical career fair and foster more genuine connections as a result. <br /></p>
+            <p> To do this, our event has a three part structure: informal networking over appetizers, a dinner, and then a formal career fair. <br /></p>
+            <p> During dinner, students get to sit with and talk to representatives from the company of their choice. The relaxed and informal dinner setting contrasts a high-stakes, fast-paced career fair, encouraging more unscripted conversations and allowing both parties to engage in more personal conversation. There is more time for students and representatives to present themselves authentically and connect over shared experiences. </p>
+            
+            </h4>
+         </div>
+    </div>
 
       <div className="container about__container">
         <div className="about__me">
@@ -24,20 +36,15 @@ const About = () => {
 
             <article className='about__card'>
               <h2>Our goals</h2>
-              <h4>hi Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 
-
-Integer vitae justo eget magna fermentum iaculis. Hac habitasse platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Eget felis eget nunc lobortis mattis aliquam faucibus. Elit at imperdiet dui accumsan. Lectus mauris ultrices eros in cursus. Sagittis eu volutpat odio facilisis mauris sit amet. Libero nunc consequat interdum varius sit amet mattis vulputate. Lectus arcu bibendum at varius vel pharetra vel turpis. Diam maecenas sed enim ut sem. Sed euismod nisi porta lorem. 
-
-</h4>
+              <h4>While the event is traditionally oriented towards women in engineering, we welcome students of all genders and academic backgrounds relevant to the engineering field. Our primary goal is to ensure that every attendee gains an enriching and worthwhile experience.<br /><br />
+              <b>Try to meet someone different than you?</b>
+              </h4>
             </article>
           </div>
           
         </div>
       </div>
-      <h2>Quote here</h2>
-      
-
-         <CTAabout />
+      <h2><br/>Quote here</h2>
     </section>
   )
 }

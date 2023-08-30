@@ -9,13 +9,13 @@
   .cta1 {
     margin-top: 2.5rem;
     display: flex;
-    margin-right: 3rem;
+    margin-right: 11rem;
     gap: 1.2rem;
     justify-content: center;
   }
   .cta2 {
     margin-top: -3.3rem;
-    margin-left: 17rem;
+    margin-left: 12rem;
     display: flex;
     gap: 1.2rem;
     justify-content: center;
@@ -73,7 +73,7 @@
   /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
   @media screen and (max-width: 1024px) {
     header {
-      height: 100vh;
+      height: 10vh;
     }
   }
   
