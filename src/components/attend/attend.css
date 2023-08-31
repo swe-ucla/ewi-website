@@ -3,11 +3,13 @@
     text-align: center;
     height: 100%;
     position: relative;
+    justify-content: left;
+    margin-bottom: 10rem;
   }
   
   /* =============== CTA ============== */
   .cta1 {
-    margin-top: 2.5rem;
+    margin-top: 1.5rem;
     display: flex;
     margin-right: 11rem;
     gap: 1.2rem;
