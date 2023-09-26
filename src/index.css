@@ -38,7 +38,16 @@ body {
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
+  font-weight: 150;
   
+}
+
+p {
+  font-family: "Poppins", sans-serif;
+  background: var(--color-bg);
+  color: var(--color-white);
+  line-height: 1.7;
+  font-weight: 100;
 }
 
 /* ============== GENEARL STYLES ============== */

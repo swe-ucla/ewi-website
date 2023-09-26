@@ -1,6 +1,8 @@
 import React from 'react'
 import './portfolio.css'
-import IMG6 from '../../assets/avatar1.jpg'
+//import IMG6 from '../../assets/avatar1.jpg'
+import LEXI from '../../assets/lexi.jpg'
+import KAYLEE from '../../assets/kaylee.jpg'
 
 // DO NOT USE THE IMAGES IN PRODUCTION
 
@@ -8,14 +10,14 @@ const data = [
  
   {
     id: 6,
-    image: IMG6,
-    title: 'Lexi',
+    image: LEXI,
+    title: 'Alexandra (Lexi) Jensen',
     
   },
   {
     id: 6,
-    image: IMG6,
-    title: 'Kaylee',
+    image: KAYLEE,
+    title: 'Kaylee Tran',
     
   }
 ]

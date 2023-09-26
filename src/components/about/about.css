@@ -57,19 +57,25 @@
   color: var(--color-light);
 }
 
-.about__content p {
-  margin-top: 3rem;
+.about__content h2{
+  margin-top: 2rem;
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.about__content p{
+  margin-top: 2rem;
   text-align: center;
   margin-bottom: 3rem;
-  color: var(--color-light);
+  color: var(--color-primary);
 }
 
 .about__paragraph p{
-  margin-right: 50rem;
-  justify-content: center;
-  text-align: center;
-  margin-top: -10rem;
+  justify-content: left;
+  text-align: left;
+  margin-top: -3rem;
   margin-bottom: 3rem;
+  padding-bottom: 1rem;
 }
 
 
@@ -126,3 +132,4 @@
     margin: 1.5rem 0;
   }
 }
+
