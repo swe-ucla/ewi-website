@@ -1,8 +1,8 @@
 import React from 'react'
 import './portfolio.css'
-import IMG6 from '../../assets/avatar1.jpg'
-import LEXI from '../../assets/lexi.png'
-import KAYLEE from '../../assets/kaylee.png'
+//import IMG6 from '../../assets/avatar1.jpg'
+import LEXI from '../../assets/lexi.jpg'
+import KAYLEE from '../../assets/kaylee.jpg'
 
 // DO NOT USE THE IMAGES IN PRODUCTION
 
