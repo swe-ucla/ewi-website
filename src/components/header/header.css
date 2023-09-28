@@ -2,7 +2,7 @@ header {
   height: 60vh;
   padding-top: 4rem;
   overflow: hidden;
-  background-image: linear-gradient(to bottom, purple, pink);
+  background-image: linear-gradient(to bottom, #6E82C7, #FFCEC3);
 }
 
 .header__container {

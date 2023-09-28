@@ -52,6 +52,11 @@ footer a {
   color: var(--color-bg);
 }
 
+footer p {
+  color: var(--color-bg);
+  background: var(--color-white);
+}
+
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {
   .permalinks {

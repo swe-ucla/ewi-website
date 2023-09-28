@@ -1,10 +1,12 @@
 import React from 'react'
 import './about.css'
-import SWEPHOTO from '../../assets/swe-logo-3.jpg'
 import CTAabout from './CTAabout'
 import {HiOutlineBookOpen} from 'react-icons/hi'
 import {HiOutlineDesktopComputer} from 'react-icons/hi'
 import {HiOutlineLightBulb} from 'react-icons/hi'
+import EWI2017 from '../../assets/ewi2017.jpg'
+import COMMITTEE2023 from '../../assets/ewi2023committee.jpeg' 
+import EWI2018_2 from '../../assets/ewi2018_2.jpg'
 
 
 const About = () => {
@@ -20,8 +22,32 @@ const About = () => {
             <p>While the event is traditionally oriented towards women in engineering, <b>we welcome students of all genders and academic backgrounds</b> relevant to the engineering field. Our primary goal is to ensure that every attendee gains an enriching and worthwhile experience. </p>
             </h4>
          </div>
-    </div>
+      </div>
+
       <h2><br/>Quote here</h2>
+
+      <div className="image_container"> 
+      <div class="image_container-row">
+        <div class="image_container-column">
+          <p>this is the 40-somethingth ewi<br></br>first ewi was when?<br></br>first moved on campus when?</p>
+          <div className="image_container-column-image">
+            <img src={EWI2017} alt={'EWI 2017'}/>
+          </div>
+        </div>
+        <div class="image_container-column">
+          <div className="image_container-column-image">
+            <img src={COMMITTEE2023} alt={'EWI Committee 2023'}/>
+          </div>
+          <p>
+            want to continue to make ewi accessible to all types of students and match them with companies and jobs they love <br></br> <br></br> 
+            we are happy to continue hosting evening with industry in-person in 2024
+          </p>
+          <div className="column-image">
+            <img src={EWI2018_2} alt={'EWI 2018'}/>
+          </div>
+        </div>
+      </div>
+      </div>
     </section>
   )
 }

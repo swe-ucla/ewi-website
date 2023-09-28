@@ -79,12 +79,41 @@
 }
 
 
-.CTAabout {
-   
+.CTAabout { 
   margin-top: 1.5rem;
   display: flex;
   justify-content: center;
  
+}
+
+.image_container{
+  padding: 5rem 10rem 1rem 10rem;
+  justify-content: center;
+}
+
+.image_container p{
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--color-primary);
+}
+
+.image_container-column {
+  float: left;
+  width: 50%;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
+/* Clear floats after the columns */
+.image_container-row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.image_container-column-image{
+  padding-bottom: 2rem;
+  width: 100%
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
@@ -109,6 +138,7 @@
     margin: 1rem 0 1.5rem;
   }
 }
+
 
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {

@@ -18,11 +18,14 @@ export default Navbar
 // Navbar.js
 import React from 'react';
 import './navbar.css';
+import LOGO from '../../assets/swe-ewi-new.png'
 
 const Navbar = () => {
     return (
         <div className="navbar">
-            <h2>SWE Logo</h2>
+            <div className="logo">
+                <img src={LOGO} alt={'logo'}/>
+            </div>
             <div className="tabs">
                 <div className="dropdown">
                     <a href="/page1" className="tab">Attend EWI</a>

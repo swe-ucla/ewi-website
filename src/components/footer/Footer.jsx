@@ -21,6 +21,9 @@ const Footer = () => {
         <a href="https://github.com" target="_blank"><BsGithub/></a>
        
       </div>
+
+     <p>+ a special thanks to webdev for putting this together for us :)</p>
+
     </footer>
   )
 }
