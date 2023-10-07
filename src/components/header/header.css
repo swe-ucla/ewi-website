@@ -3,17 +3,22 @@ header {
   padding-top: 4rem;
   overflow: hidden;
   background-image: linear-gradient(to bottom, #6E82C7, #FFCEC3);
+  font-size:200rem;
 }
 
 .header__container {
-  text-align: center;
+  text-align: left;
   height: 100%;
   position: relative;
 }
 
 .headerText {
-  margin-top: 16rem;  
-  margin-right: 30rem;
+  margin-top: 12rem;  
+  margin-right: 37rem;
+}
+
+.headerText h1{
+  font-size: 4rem;
 }
 
 /* =============== CTA ============== */
