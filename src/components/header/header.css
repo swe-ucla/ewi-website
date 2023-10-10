@@ -7,7 +7,7 @@ header {
 }
 
 .header__container {
-  text-align: center;
+  text-align: left;
   height: 100%;
   position: relative;
 }
