@@ -10,9 +10,11 @@ const CompanyHeader = () => {
         <div className="cheaderText">
         <h2>for companies</h2>
         </div>
-        
-      </div>
+        <h4 className="text-light">
 
+        </h4>
+      </div>
+      
     </div>
   )
 }

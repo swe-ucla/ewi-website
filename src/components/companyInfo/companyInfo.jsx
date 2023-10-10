@@ -1,5 +1,7 @@
 import React from 'react'
 import './companyInfo.css'
+import PDFViewer from './PDFViewer'
+
 
 const CompanyInfo = () => {
   return (
@@ -15,8 +17,12 @@ const CompanyInfo = () => {
                 </div>   
                 <h2>Company Representative Survival Guide</h2>         
                 <p>To help guide our company representative guests and prepare them for the evening, our Corporate Relations chair has created the Company Rep Survival Guide!</p>
-                <h2>***INSERT SURVIVAL GUIDE***</h2>
             </div>
+
+            <div className='container pdf_container'>
+                <PDFViewer />
+            </div>
+
             <h2>Student Demographics</h2>
             <div class="row">
                 <div class="column">
