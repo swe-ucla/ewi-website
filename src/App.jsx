@@ -7,18 +7,15 @@ import Navbar from './components/navbar/navbar'
 import Portfolio from './components/portfolio/Portfolio'
 import Contact from './components/contact/Contact'
 import Footer from './components/footer/Footer'
+import Home from './pages/Home'
+import Company from './pages/Company'
 
 const App = () => {
   return (
     <>
         <Navbar />
-        <Header />
-        <Attend />
-        <Nav />
-        <About />
-        
-        <Portfolio />
-        <Contact />
+        <Home />
+        <Company />
         <Footer />
     </>
   )
