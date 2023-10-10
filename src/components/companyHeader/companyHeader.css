@@ -1,20 +1,26 @@
-header {
-  height: 60vh;
-  padding-top: 4rem;
+.cheader {
+  height: 30vh;
+  padding-top: 2rem;
   overflow: hidden;
   background-image: linear-gradient(135deg, #6E82C7, #FFCEC3);
+  padding-bottom: -200px;
 }
 
-.header__container {
+.cheader__container {
   text-align: left;
   height: 100%;
   position: relative;
 }
 
-.headerText {
-  margin-top: 16rem;  
-  margin-right: 30rem;
+.cheaderText {
+  margin-top: 5rem;  
+  margin-right: 20rem;
 }
+
+.cheaderText h2{
+  font-size: 2.75rem;
+}
+
 
 /* =============== CTA ============== */
 .cta {

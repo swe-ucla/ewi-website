@@ -4,16 +4,16 @@ import './companyHeader.css'
 
 const CompanyHeader = () => {
   return (
-    <header>
-      <div className="container header__container">
-        <div className="headerText">
-        <h1>for companies</h1>
+    <div className="cheader">
+    
+      <div className="container cheader__container">
+        <div className="cheaderText">
+        <h2>for companies</h2>
         </div>
-        <h4 className="text-light">
-
-        </h4>
+        
       </div>
-    </header>
+
+    </div>
   )
 }
 

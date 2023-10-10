@@ -3,7 +3,7 @@ header {
   padding-top: 4rem;
   overflow: hidden;
   background-image: linear-gradient(to bottom, #6E82C7, #FFCEC3);
-  font-size:200rem;
+  font-size: 200rem;
 }
 
 .header__container {
@@ -14,11 +14,15 @@ header {
 
 .headerText {
   margin-top: 12rem;  
-  margin-right: 37rem;
+  margin-right: 26rem;
 }
 
 .headerText h1{
   font-size: 4rem;
+}
+
+.headerText h2{
+  font-size: 2.75rem;
 }
 
 /* =============== CTA ============== */
