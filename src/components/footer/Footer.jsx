@@ -2,6 +2,7 @@ import React from 'react'
 import './footer.css'
 import{BsLinkedin} from 'react-icons/bs'
 import{BsGithub} from 'react-icons/bs'
+import{BsInstagram} from 'react-icons/bs'
 import{HiOutlineMail} from 'react-icons/hi'
 
 const Footer = () => {
@@ -19,10 +20,12 @@ const Footer = () => {
       <div className="footer__socials">
         <a href="https://linkedin.com/in" target="_blank"><BsLinkedin/></a>
         <a href="https://github.com" target="_blank"><BsGithub/></a>
+        <a href="https://www.instagram.com/uclasweewi/" target="_blank"><BsInstagram/></a>
+        <a href="mailto:ewi.swe.ucla@gmail.com" target="_blank"><HiOutlineMail/></a>
        
       </div>
 
-     <p>+ a special thanks to webdev for putting this together for us :)</p>
+     <p>+ a special thanks to webdev & prodev chair for putting this together for us :)</p>
 
     </footer>
   )
