@@ -59,8 +59,9 @@
 
 .about__content h2{
   margin-top: 2rem;
-  text-align: center;
+  text-align: left;
   margin-bottom: 4rem;
+  font-size: 2rem;
 }
 
 .about__content p{
@@ -161,5 +162,6 @@
   .about__content p {
     margin: 1.5rem 0;
   }
+
 }
 

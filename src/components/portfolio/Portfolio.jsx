@@ -18,6 +18,7 @@ const data = [
     id: 6,
     image: KAYLEE,
     title: 'Kaylee Tran',
+    position: 'External Director',
     bio: 'Kaylee Tran is a third year student studying Computer Science and the External Director of EWI 2024. When she’s not staring at compilation errors in her code, she enjoys taking dance classes and hitting the gym. She has been involved with web and mobile development through extracurriculars at UCLA and has previously served as Evening with Industry Corporate Relations Chair and Logistics Director.',
   }
 ]
@@ -27,7 +28,7 @@ const Portfolio = () => {
   return (
     <section id='portfolio'>
       
-      <h2>EWI Directors</h2>
+      <h2>EWI Directors 2024</h2>
 
       <div className="container portfolio__container">
         {

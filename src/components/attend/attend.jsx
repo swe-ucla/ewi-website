@@ -9,7 +9,6 @@ const Attend = () => {
   return (
       <section id="attend">
         <div className="attend__container">
-          <h4><br/></h4>
           <h2>Attend EWI</h2>
           <CTA />
           <CTA2 />
