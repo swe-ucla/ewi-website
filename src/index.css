@@ -45,7 +45,7 @@ h3 {
 
 body {
   font-family: DM;
-  font-family: "Poppins", sans-serif;
+  font-family: "Inter", sans-serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
@@ -101,6 +101,7 @@ section > h2 {
 a {
   color: var(--color-primary);
   transition: var(--transition);
+  font-family: "Inter", sans-serif;
 }
 
 a:hover {

@@ -13,12 +13,15 @@ header {
 }
 
 .headerText {
-  margin-top: 12rem;  
+  margin-top: 3rem;  
   margin-right: 26rem;
 }
 
 .headerText h1{
-  font-size: 4rem;
+  font-size: 5rem;
+  font-family: "DM Serif Text", sans-serif;
+  text-shadow: 4px 4px 4px gray;
+  opacity: 0.55;
 }
 
 .headerText h2{

@@ -4,6 +4,10 @@
   gap: 2.5rem;
 }
 
+h2 {
+  font-size: 2rem;
+}
+
 .portfolio__item {
   width: 70%;  /* Adjust this to control the width */
   height: auto; /* Adjust if you want a fixed height, or use auto to let it adjust based on content */
@@ -28,6 +32,7 @@
 
 .portfolio__item h3 {
   margin: 1.2rem 0 0.7rem;
+  font-family: "Inter";
 }
 .portfolio__item h4 {
   margin: 0rem 0 0.7rem;

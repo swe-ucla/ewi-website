@@ -4,11 +4,8 @@
   height: 100%;
   position: relative;
   justify-content: center;
-  margin-bottom: 10rem;
-}
-
-.attend__container h1{
-  text-align: center;
+  font-size: 1.5rem;
+  font-family: "Inter";
 }
 
 /* =============== CTA ============== */
