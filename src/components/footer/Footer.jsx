@@ -2,19 +2,21 @@ import React from 'react'
 import './footer.css'
 import{BsLinkedin} from 'react-icons/bs'
 import{BsGithub} from 'react-icons/bs'
+import {Link } from "react-router-dom";
+import {HashLink } from "react-router-hash-link";
 import{BsInstagram} from 'react-icons/bs'
 import{HiOutlineMail} from 'react-icons/hi'
 
 const Footer = () => {
   return (
     <footer>
-      <a href="#" className='footer__logo'>Evening with Industry</a>
+      <HashLink to='/#' className='footer__logo'>Evening with Industry</HashLink>
       
       <ul className='permalinks'>
-        <li><a href='#'>Home</a></li>
-        <li><a href='#about'>Attend</a></li>
-        <li><a href='#experience'>About</a></li>
-        <li><a href='#contact'>Contact</a></li>
+        <li><HashLink to='/#'>Home</HashLink></li>
+        <li><HashLink to='/#attend'>Attend</HashLink></li>
+        <li><HashLink to='/#about'>About</HashLink></li>
+        <li><HashLink to='/#contact'>Contact</HashLink></li>
       </ul>
 
       <div className="footer__socials">
