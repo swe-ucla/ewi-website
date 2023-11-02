@@ -9,17 +9,36 @@ import Contact from './components/contact/Contact'
 import Footer from './components/footer/Footer'
 import Home from './pages/Home'
 import Company from './pages/Company'
+import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 
 const App = () => {
   return (
     <>
-        <Navbar />
-        <Home />
-        <Company />
-        <Footer />
-        
+      <Router>
+                <Routes>
+                    <Route
+                        exact
+                        path="/"
+                        element={<Home />}
+                    />
+                    <Route
+                        path="/company"
+                        element={<Company />}
+                    />
+ 
+                    {/* <Route
+                        path="/students"
+                        element={<Students />}
+                    /> */}
+ 
+                    <Route
+                        path="*"
+                        element={<Navigate to="/" />}
+                    />
+                </Routes>
+            </Router>
     </>
-  )
+  );
 }
 
 export default App
