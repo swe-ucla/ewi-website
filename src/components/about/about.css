@@ -93,7 +93,7 @@
 }
 
 .image_container p{
-  text-align: center;
+  text-align: left;
   margin-bottom: 3rem;
   color: var(--color-primary);
 }
@@ -115,6 +115,15 @@
 .image_container-column-image{
   padding-bottom: 2rem;
   width: 100%
+}
+
+.image_container-column-caption{
+  text-align: center;
+  font-size: 1.25rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  font-weight: 500;
+  /*font-family: "DM Serif Text", serif;*/
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
