@@ -1,5 +1,4 @@
 header {
-  height: 60vh;
   padding-top: 4rem;
   overflow: hidden;
   background-image: linear-gradient(to bottom, #6E82C7, #FFCEC3);
@@ -13,18 +12,17 @@ header {
 }
 
 .headerText {
-  margin-top: 3rem;  
-  margin-right: 26rem;
+  max-width: 500px;
 }
 
-.headerText h1{
+.headerText h1 {
   font-size: 5rem;
   font-family: "DM Serif Text", sans-serif;
   text-shadow: 4px 4px 4px gray;
   opacity: 0.55;
 }
 
-.headerText h2{
+.headerText h2 {
   font-size: 2.75rem;
 }
 
@@ -71,7 +69,7 @@ header {
 }
 
 
-.me:hover{
+.me:hover {
   width: 32rem;
 }
 
@@ -86,16 +84,10 @@ header {
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
-@media screen and (max-width: 1024px) {
-  header {
-    height: 100vh;
-  }
-}
 
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {
   header {
-    height: 100vh;
     /* added after tutorial */
     padding-top: 4rem;
   }
