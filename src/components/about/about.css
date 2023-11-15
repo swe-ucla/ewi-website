@@ -88,7 +88,7 @@
 }
 
 .image_container{
-  padding: 5rem 10rem 1rem 10rem;
+  padding: 3rem 5rem 0rem 5rem;
   justify-content: center;
 }
 
@@ -101,8 +101,8 @@
 .image_container-column {
   float: left;
   width: 50%;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding-left: 4%;
+  padding-right: 4%;
 }
 
 /* Clear floats after the columns */

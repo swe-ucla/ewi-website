@@ -18,7 +18,9 @@
 
 .cheaderText h2{
   font-size: 4.2rem;
-  opacity: 0.55;
-  text-shadow: 4px 4px 4px gray;
-  margin-left: -50px;
+  opacity: 0.9;
+  width: 1000px;
+  background: -webkit-linear-gradient(left, #0c1870, #7A588C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

@@ -9,6 +9,7 @@ import Contact from './components/contact/Contact'
 import Footer from './components/footer/Footer'
 import Home from './pages/Home'
 import Company from './pages/Company'
+import Student from './pages/Student'
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 
 const App = () => {
@@ -26,10 +27,10 @@ const App = () => {
                         element={<Company />}
                     />
  
-                    {/* <Route
-                        path="/students"
-                        element={<Students />}
-                    /> */}
+                    <Route
+                        path="/student"
+                        element={<Student />}
+                    />
  
                     <Route
                         path="*"

@@ -22,7 +22,7 @@ h2 {
 
 .portfolio__item:hover {
   border-color: var(--color-primary-variant);
-  background: transparent;
+  background-color: transparent;
 }
 
 .portfolio__item-image {

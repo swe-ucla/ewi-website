@@ -24,16 +24,14 @@ const About = () => {
          </div>
       </div>
 
-      { /* <h2><br/>Quote here</h2> */}
-
       <div className="image_container"> 
       <div class="image_container-row">
         <div class="image_container-column">
           <div className="image_container-column-image">
-          <p>As we host the 47th Evening with Industry at UCLA, we hope to continue our SWE Chapter’s longstanding tradition of diminishing the obstacles between students and breaking into industry. 
-          </p>
-          <p>We are happy to continue hosting EWI in-person in 2024, as we believe the opportunity for participants to immerse themselves in the atmosphere of the event leads to a more impactful experience.
-          </p>
+            <p>As we host the 47th Evening with Industry at UCLA, we hope to continue our SWE Chapter’s longstanding tradition of diminishing the obstacles between students and breaking into industry. 
+            </p>
+            <p>We are happy to continue hosting EWI in-person in 2024, as we believe the opportunity for participants to immerse themselves in the atmosphere of the event leads to a more impactful experience.
+            </p>
             <img src={EWI2017} style={{height:"91.5%", width:"91.5%"}} alt={'EWI 2017'}/>
             <div class="image_container-column-caption">EWI 2017</div>
           </div>

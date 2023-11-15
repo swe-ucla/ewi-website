@@ -4,7 +4,8 @@
   position: relative;
   justify-content: center;
   font-size: 1.5rem;
-  font-family: "Inter";
+  margin-top: -2.5rem;
+  margin-bottom: -3rem;
 }
 
 /* =============== CTA ============== */

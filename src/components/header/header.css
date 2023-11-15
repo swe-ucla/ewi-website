@@ -1,7 +1,7 @@
 header {
   padding-top: 4rem;
   overflow: hidden;
-  background-image: linear-gradient(to bottom, #6E82C7, #FFCEC3);
+  background-image: linear-gradient(to right, #6E82C7, #FFCEC3);
   font-size: 200rem;
 }
 
@@ -16,10 +16,17 @@ header {
 }
 
 .headerText h1 {
-  font-size: 5rem;
+  font-size: 6rem;
   font-family: "DM Serif Text", sans-serif;
-  text-shadow: 4px 4px 4px gray;
-  opacity: 0.55;
+  /* color: #0c1870; */
+  background: -webkit-linear-gradient(left, #0c1870, #7A588C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* text-shadow: 4px 4px 4px gray; */
+  opacity: 0.9;
+  line-height: 130%;
+  margin-bottom: 40px;
+  margin-top: 50px;
 }
 
 .headerText h2 {

@@ -8,14 +8,14 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <div className="logo">
-                <Link to="/"> <img src={LOGO} alt={'logo'}/> </Link>
+                <HashLink to="/#top"> <img src={LOGO} alt={'logo'}/> </HashLink>
             </div>
             <div className="tabs">
                 <div className="dropdown">
                     <a className="tab">Attend EWI</a>
                     <div className="dropdown-content">
-                        <Link to="">Students</Link>
-                        <Link to="/company">Companies</Link>
+                        <HashLink to="/student/#top">Students</HashLink>
+                        <HashLink to="/company/#top">Companies</HashLink>
                     </div>
                 </div>
                 <HashLink to="/#about"><a href="#about" className="tab">About Us</a></HashLink>

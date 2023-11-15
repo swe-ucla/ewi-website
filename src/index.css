@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&family=Kumbh+Sans&display=swap');
 
 * {
   margin: 0;
@@ -45,7 +46,7 @@ h3 {
 
 body {
   font-family: DM;
-  font-family: "Inter", sans-serif;
+  font-family: "Kumbh Sans", sans-serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
@@ -54,7 +55,7 @@ body {
 }
 
 p {
-  font-family: "Inter", sans-serif;
+  font-family: "Kumbh Sans", sans-serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
@@ -101,7 +102,7 @@ section>h2 {
 a {
   color: var(--color-primary);
   transition: var(--transition);
-  font-family: "Inter", sans-serif;
+  font-family: "Kumbh Sans", sans-serif;
 }
 
 a:hover {
@@ -111,18 +112,21 @@ a:hover {
 .btn {
   width: max-content;
   display: inline-block;
-  color: var(--color-primary);
+  color: var(--color-primary) !important;
   padding: 0.75rem 1.2rem;
   border-radius: 0.4rem;
   cursor: pointer;
   border: 1px solid var(--color-primary);
+  border-color: lightgray;
   transition: var(--transition);
+  font-family: "Kumbh Sans", sans-serif;
+  background-color: lightgray !important;
 }
 
 .btn:hover {
-  background: var(--color-white);
-  color: var(--color-bg);
-  border-color: transparent;
+  background: var(--color-white) !important;
+  color: var(--color-bg) !important;
+  border-color: transparent !important;
 }
 
 .btn-primary {
