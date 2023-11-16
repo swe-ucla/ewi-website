@@ -9,12 +9,12 @@ header {
 .header__container {
   text-align: left;
   height: 100%;
-  position: relative;
+  position: static; 
 }
 
 .headerText {
-  margin-top: 12rem;  
-  margin-right: 26rem;
+  margin-top: 8vh;
+  margin-right: 45vh;
 }
 
 .headerText h1{
