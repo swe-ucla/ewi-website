@@ -24,26 +24,27 @@ const About = () => {
          </div>
       </div>
 
-      <h2><br/>Quote here</h2>
-
       <div className="image_container"> 
       <div class="image_container-row">
         <div class="image_container-column">
-          <p>this is the 40-somethingth ewi<br></br>first ewi was when?<br></br>first moved on campus when?</p>
           <div className="image_container-column-image">
-            <img src={EWI2017} alt={'EWI 2017'}/>
+            <p>As we host the 47th Evening with Industry at UCLA, we hope to continue our SWE Chapter’s longstanding tradition of diminishing the obstacles between students and breaking into industry. 
+            </p>
+            <p>We are happy to continue hosting EWI in-person in 2024, as we believe the opportunity for participants to immerse themselves in the atmosphere of the event leads to a more impactful experience.
+            </p>
+            <img src={EWI2017} style={{height:"91.5%", width:"91.5%"}} alt={'EWI 2017'}/>
+            <div class="image_container-column-caption">EWI 2017</div>
           </div>
         </div>
         <div class="image_container-column">
           <div className="image_container-column-image">
             <img src={COMMITTEE2023} alt={'EWI Committee 2023'}/>
+            <div class="image_container-column-caption">EWI Committee 2023</div>
           </div>
-          <p>
-            want to continue to make ewi accessible to all types of students and match them with companies and jobs they love <br></br> <br></br> 
-            we are happy to continue hosting evening with industry in-person in 2024
-          </p>
           <div className="column-image">
+            <p> Our mission is to continue to make EWI accessible to all types of students and to match them with fulfilling roles at companies they are inspired by, and we hope that each student leaves EWI with confidence in their capabilities and a sense of belonging in engineering and industry as a whole. </p>
             <img src={EWI2018_2} alt={'EWI 2018'}/>
+            <div class="image_container-column-caption">EWI 2018</div>
           </div>
         </div>
       </div>

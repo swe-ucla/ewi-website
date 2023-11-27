@@ -1,4 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&family=Kumbh+Sans&display=swap');
 
 * {
   margin: 0;
@@ -20,7 +23,7 @@
 
   --transition: all 400ms ease;
 
-  --container-width-lg: 75%;
+  --container-width-lg: 82%;
   --container-width-md: 86%;
   --container-width-sm: 90%;
 }
@@ -33,17 +36,26 @@ html {
   display: none;
 }
 
+h2 {
+  font-family: "DM Serif Text", serif;
+}
+
+h3 {
+  font-family: "DM Serif Text", serif;
+}
+
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: DM;
+  font-family: "Kumbh Sans", sans-serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
   font-weight: 150;
-  
+
 }
 
 p {
-  font-family: "Poppins", sans-serif;
+  font-family: "Kumbh Sans", sans-serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
@@ -72,13 +84,13 @@ section {
   margin-top: 8rem;
 }
 
-section > h2,
-section > h5 {
+section>h2,
+section>h5 {
   text-align: center;
   color: var(--color-light);
 }
 
-section > h2 {
+section>h2 {
   color: var(--color-primary);
   margin-bottom: 3rem;
 }
@@ -90,6 +102,7 @@ section > h2 {
 a {
   color: var(--color-primary);
   transition: var(--transition);
+  font-family: "Kumbh Sans", sans-serif;
 }
 
 a:hover {
@@ -99,18 +112,21 @@ a:hover {
 .btn {
   width: max-content;
   display: inline-block;
-  color: var(--color-primary);
+  color: var(--color-primary) !important;
   padding: 0.75rem 1.2rem;
   border-radius: 0.4rem;
   cursor: pointer;
   border: 1px solid var(--color-primary);
+  border-color: lightgray;
   transition: var(--transition);
+  font-family: "Kumbh Sans", sans-serif;
+  background-color: lightgray !important;
 }
 
 .btn:hover {
-  background: var(--color-white);
-  color: var(--color-bg);
-  border-color: transparent;
+  background: var(--color-white) !important;
+  color: var(--color-bg) !important;
+  border-color: transparent !important;
 }
 
 .btn-primary {
@@ -126,9 +142,9 @@ img {
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
-  .container {
-    width: var(--container-width-md);
-  }
+  /* .container {
+      width: var(--container-width-md);
+  } */
 
   section {
     margin-top: 6rem;
@@ -137,11 +153,11 @@ img {
 
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {
-  .container {
+  /* .container {
     width: var(--container-width-sm);
-  }
+  } */
 
-  section > h2 {
+  section>h2 {
     margin-bottom: 2rem;
   }
 }

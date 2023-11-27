@@ -24,7 +24,7 @@ export const Contact = () => {
           <article className="contact__option">
             <HiOutlineMail className='contact__option-icon'/>
             <h4>Email</h4>
-            <h5>ewiemailhere@gmail.com</h5>
+            <h5>ewi.swe.ucla@gmail.com</h5>
             <a href="mailto:" target="_blank">Send a message</a>
           </article>
         </div>

@@ -59,8 +59,9 @@
 
 .about__content h2{
   margin-top: 2rem;
-  text-align: center;
+  text-align: left;
   margin-bottom: 4rem;
+  font-size: 2rem;
 }
 
 .about__content p{
@@ -87,12 +88,12 @@
 }
 
 .image_container{
-  padding: 5rem 10rem 1rem 10rem;
+  padding: 3rem 5rem 0rem 5rem;
   justify-content: center;
 }
 
 .image_container p{
-  text-align: center;
+  text-align: left;
   margin-bottom: 3rem;
   color: var(--color-primary);
 }
@@ -100,8 +101,8 @@
 .image_container-column {
   float: left;
   width: 50%;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding-left: 4%;
+  padding-right: 4%;
 }
 
 /* Clear floats after the columns */
@@ -114,6 +115,15 @@
 .image_container-column-image{
   padding-bottom: 2rem;
   width: 100%
+}
+
+.image_container-column-caption{
+  text-align: center;
+  font-size: 1.25rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  font-weight: 500;
+  /*font-family: "DM Serif Text", serif;*/
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
@@ -161,5 +171,6 @@
   .about__content p {
     margin: 1.5rem 0;
   }
+
 }
 

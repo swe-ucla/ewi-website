@@ -1,14 +1,11 @@
-
 .attend__container {
   text-align: center;
   height: 100%;
   position: relative;
   justify-content: center;
-  margin-bottom: 10rem;
-}
-
-.attend__container h1{
-  text-align: center;
+  font-size: 1.5rem;
+  margin-top: -2.5rem;
+  margin-bottom: -3rem;
 }
 
 /* =============== CTA ============== */
@@ -19,6 +16,7 @@
   gap: 1.2rem;
   justify-content: center;
 }
+
 .cta2 {
   margin-top: -3.37rem;
   margin-left: 12rem;
@@ -62,7 +60,7 @@
 }
 
 
-.me:hover{
+.me:hover {
   width: 32rem;
 }
 
@@ -77,16 +75,11 @@
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
-@media screen and (max-width: 1024px) {
-  header {
-    height: 10vh;
-  }
-}
+
 
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {
   header {
-    height: 100vh;
     /* added after tutorial */
     padding-top: 4rem;
   }
