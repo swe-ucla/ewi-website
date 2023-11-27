@@ -12,12 +12,7 @@ header {
 }
 
 .headerText {
-<<<<<<< HEAD
-  margin-top: 8vh;
-  margin-right: 45vh;
-=======
   max-width: 500px;
->>>>>>> f022e2db4883bfe1484a56d1b1605ccf4532476a
 }
 
 .headerText h1 {
