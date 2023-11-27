@@ -7,11 +7,12 @@ import CTA2 from './CTA2'
 
 const Attend = () => {
   return (
-      <section id="attend">
+      <section>
         <div className="attend__container">
-          <h2>Attend EWI</h2>
+          <h2 >Attend EWI</h2>
           <CTA />
           <CTA2 />
+          <h6 id='about'></h6>
         </div>
       </section>
   )
