@@ -17,7 +17,7 @@ const Home = () => {
             {/* <Nav /> */}
             <About />
             <Portfolio />
-            <Contact />
+            {/* <Contact /> TODO: fix "send a message" implementation */}
             <Footer />
         </div>
   )
