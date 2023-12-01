@@ -8,7 +8,7 @@ header {
 .header__container {
   text-align: left;
   height: 100%;
-  position: relative;
+  position: static; 
 }
 
 .headerText {

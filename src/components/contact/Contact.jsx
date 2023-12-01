@@ -10,10 +10,11 @@ export const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_qawa2ms', 'template_spug6sc', form.current, 'ldWAa_ZNCIs_VH-Xz')
-     
+    emailjs.sendForm('service_q6yqhll', 'template_yfbrimt', form.current, 'udePWyliPh6tOWF6h');
+
     e.target.reset();
   };
+
   return (
     <section id='contact'>
       
@@ -25,7 +26,7 @@ export const Contact = () => {
             <HiOutlineMail className='contact__option-icon'/>
             <h4>Email</h4>
             <h5>ewi.swe.ucla@gmail.com</h5>
-            <a href="mailto:" target="_blank">Send a message</a>
+            <a href="mailto:ewi.swe.ucla@gmail.com">Send a message</a>
           </article>
         </div>
         {/* END OF CONTACT OPTIONS */}
@@ -40,4 +41,4 @@ export const Contact = () => {
   )
 }
 
-export default Contact
+export default Contact;
