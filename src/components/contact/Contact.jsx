@@ -15,7 +15,7 @@ export const Contact = () => {
     e.target.reset();
   };
   return (
-    <section id='contact'>
+    <section>
       
       <h2>Contact Us</h2>
 

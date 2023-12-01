@@ -11,7 +11,7 @@ import EWI2018_2 from '../../assets/ewi2018_2.jpg'
 
 const About = () => {
   return (
-    <section id='about'>
+    <section>
       <div className="container about__content"> 
             <h2>About Us</h2>
             <div className="about__paragraph">
