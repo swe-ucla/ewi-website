@@ -14,10 +14,10 @@ const Home = () => {
             <Navbar />
             <Header />
             <Attend />
-            {/* <Nav /> */}
+            {/*<Nav />*/}
             <About />
             <Portfolio />
-            {/* <Contact /> TODO: fix "send a message" implementation */}
+            <Contact /> 
             <Footer />
         </div>
   )

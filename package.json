@@ -14,10 +14,7 @@
     "react-icons": "^4.10.1",
     "react-pdf": "^7.5.0",
     "react-router-dom": "^6.18.0",
-<<<<<<< HEAD
-=======
     "react-router-hash-link": "^2.4.3",
->>>>>>> f022e2db4883bfe1484a56d1b1605ccf4532476a
     "react-scripts": "5.0.1",
     "typewriter-effect": "^2.20.1",
     "web-vitals": "^2.1.4"
