@@ -1,0 +1,72 @@
+.student__content p {
+    text-align: left;
+    color: var(--color-primary);
+}
+
+.student__paragraph p {
+    justify-content: left;
+    text-align: left;
+    margin-top: -3rem;
+    font-size: 16px;
+}
+
+.student__content h2 {
+    text-align: left;
+    margin-bottom: 3%;
+    margin-top: -70px;
+    font-size: 26px;
+}
+
+.student__content h3 {
+    margin-top: 2rem;
+    text-align: left;
+    margin-bottom: 4rem;
+    font-size: 24px;
+}
+
+.student__content img {
+    max-width: 100%;
+    height: auto
+}
+
+.row {
+    display: flex;
+    margin-top: -30px;
+}
+
+.column {
+    flex: 33.33%;
+    padding: 5px;
+}
+
+.pdf_container {
+    justify-content: center;
+    text-align: center;
+    min-height: 800px;
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+}
+
+.pdf_container p {
+    text-align: center;
+    padding-right: 2rem;
+}
+
+
+/* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
+@media screen and (max-width: 1024px) {
+    .company__content p {
+        margin: 1rem 0 1.5rem;
+    }
+}
+
+/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
+@media screen and (max-width: 600px) {
+    .company__content p {
+        margin: 1.5rem 0;
+    }
+}
