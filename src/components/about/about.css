@@ -1,62 +1,3 @@
-.about__container {
-  display: grid;
-  grid-template-columns: 35% 50%;
-  gap: 15%;
-}
-
-.about__me {
-  width: 80%;
-  border-radius: 2rem;
-  margin-top: 1rem;
-  left: 30rem;
-  display: grid;
-  place-items: center;
-}
-
-.about__me-image {
-  border-radius: 1rem;
-  overflow: hidden;
-  left: 30rem;
-  size: 10rem;
-  transform: rotate(5deg);
-  transition: var(--transition);
-}
-
-.about__me-image:hover {
-  transform: rotate(0);
-}
-
-.about__cards {
-  margin-left: -30%;
-  margin-right: -15%;
-  display: grid;
-  
-  gap: 1.5rem;
-}
-
-.about__card {
-  border: 1px solid transparent;
-  border-radius: 1rem;
-  padding: 2rem;
-  text-align: center;
-  transition: var(--transition);
-}
-
-.about__icon {
-  color: var(--color-primary);
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.about__card h5 {
-  font-size: 1.2rem;
-}
-
-.about__card small {
-  font-size: 1.0em;
-  color: var(--color-light);
-}
-
 .about__content h2{
   margin-top: 2rem;
   text-align: left;
@@ -77,14 +18,6 @@
   margin-top: -3rem;
   margin-bottom: 3rem;
   padding-bottom: 1rem;
-}
-
-
-.CTAabout { 
-  margin-top: 1.5rem;
-  display: flex;
-  justify-content: center;
- 
 }
 
 .image_container{
@@ -123,7 +56,6 @@
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
   font-weight: 500;
-  /*font-family: "DM Serif Text", serif;*/
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */

@@ -16,7 +16,7 @@ export const Contact = () => {
   };
 
   return (
-    <section id='contact'>
+    <section>
       
       <h2>Contact Us</h2>
 
