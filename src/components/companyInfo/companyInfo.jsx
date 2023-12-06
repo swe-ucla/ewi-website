@@ -9,7 +9,7 @@ const CompanyInfo = () => {
         <section>
             <h2>Registration</h2>
             <div className="company__paragraph">
-                <p>Early bird pricing will remain until November 30th, 2023. For the company registration form, please reach us at ewi.swe.ucla@gmail.com.</p>
+                <p>Early bird pricing will remain until December 8, 2023. For the company registration form, please reach us at ewi.swe.ucla@gmail.com.</p>
                 <div className="indented__paragraph">
                     <h3>Startups</h3>
                     <p id='survival_guide'>To diversify the range of opportunities available to our student attendees, we are introducing a startup discount to EWI 2024. Contact us about startup pricing!</p>

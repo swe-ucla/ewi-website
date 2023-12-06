@@ -1,8 +1,5 @@
 import React from 'react'
 import './header.css'
-import CTA from './CTA'
-import HeaderSocial from './HeaderSocials'
-import Typewriter from 'typewriter-effect'
 
 
 const Header = () => {
