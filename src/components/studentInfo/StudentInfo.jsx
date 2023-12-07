@@ -21,15 +21,25 @@ const StudentInfo = () => {
         <p style={{ marginInlineStart: 0 }}/>
         <h2>EWI Prep Workshops</h2>
         <p style={{ marginInlineStart: '3em' }}>
-          Student registration for Evening with Industry 2024 will open in January. Table assignments are first come, first serve, so be on the lookout to ensure you get to sit with your top choice company! Prices also increase every week, so you don’t want to miss out on the early bird discounts.
+        EWI Prep Workshops - fall, winter
         </p>
         <br/>
         <p style={{ marginInlineStart: '3em' }}>
-        To prepare our student attendees for EWI and entering the world of industry as a whole, we will be hosting workshops for the Fall and Winter quarters. Check out the quick list of workshop dates and registration links below:
+        To prepare our student attendees for EWI and entering the world of industry as a whole, we will be hosting workshops for the Fall and Winter quarters:
         </p>
-
+        <p style={{ marginInlineStart: '5em' }}>
+          <br/>
+        LinkedIn: January 16, 2024, 6-7PM, Location TBD 
         <br/>
-
+        Networking: January 18, 2024, 6-7PM, Location TBD
+        <br/>
+        Resume with Resume Review: January 25, 2024, 6-7PM, Location TBD
+        
+        <br/>
+        Dinner Etiquette: February 1, 2024, 6-7PM, Location TBD
+        <br/>
+</p>
+<br/>
         <h2>Student Survival Guide</h2>
         <p style={{ marginInlineStart: '4em' }}/>
         <br/>
@@ -39,7 +49,7 @@ const StudentInfo = () => {
         <p style={{ marginInlineStart: 0 }}/>
         <h2>Other Questions?</h2>
         <p style={{ marginInlineStart: '3em' }}>
-        Send an email to student.liasion.ewi.swe.ucla@gmail.com !
+        Send an email to student.liasion.ewi.swe.ucla@gmail.com!
         </p>
 
 
