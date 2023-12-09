@@ -1,9 +1,5 @@
 import React from 'react'
 import './about.css'
-import CTAabout from './CTAabout'
-import {HiOutlineBookOpen} from 'react-icons/hi'
-import {HiOutlineDesktopComputer} from 'react-icons/hi'
-import {HiOutlineLightBulb} from 'react-icons/hi'
 import EWI2017 from '../../assets/ewi2017.jpg'
 import COMMITTEE2023 from '../../assets/ewi2023committee.jpeg' 
 import EWI2018_2 from '../../assets/ewi2018_2.jpg'
@@ -11,7 +7,7 @@ import EWI2018_2 from '../../assets/ewi2018_2.jpg'
 
 const About = () => {
   return (
-    <section id='about'>
+    <section>
       <div className="container about__content"> 
             <h2>About Us</h2>
             <div className="about__paragraph">
