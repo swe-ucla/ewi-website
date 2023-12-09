@@ -7,28 +7,23 @@ const StudentInfo = () => {
   return (
     <div className="container student__content">
       <section>
-      <br/>
-      <br/>
-      <br/>
+        
       <h2>Registration</h2>
       <div className="studentInfo__paragraph">
-        <p>
+      <p style={{ marginInlineStart: '3em' }}>
           Student registration for Evening with Industry 2024 will open in January. Table assignments are first come, first serve, so be on the lookout to ensure you get to sit with your top choice company! Prices also increase every week, so you don’t want to miss out on the early bird discounts.
         </p>
-        <p>
+        <br/>
+        <p style={{ marginInlineStart: '3em' }}>
           If the cost of EWI is a barrier for you, please do not hesitate to contact us about discounted pricing options. We would love to have you at our event and want to ensure that financial aid is available to those who need it.
         </p>
         </div>
       </section>
 
-        <br/>
-
+      <section>
         <h2>EWI Prep Workshops</h2>
         <p style={{ marginInlineStart: '3em' }}>
         EWI Prep Workshops - fall, winter
-        </p><p>
-
-          Student registration for Evening with Industry 2024 will open in January. Table assignments are first come, first serve, so be on the lookout to ensure you get to sit with your top choice company! Prices also increase every week, so you don’t want to miss out on the early bird discounts.
         </p>
         <br/>
 
@@ -45,22 +40,19 @@ const StudentInfo = () => {
         <br/>
         Dinner Etiquette: February 1, 2024, 6-7PM, Location TBD
         <br/>
+
 </p>
-<br/>
-<br/>
-<br/>
+</section>
+
+        <section>
         <h2>Student Survival Guide</h2>
           <PDFViewerStudent/>
 
-        <br/>
-        <br/>
-        
-        <h2>Other Questions?</h2>
-        <p style={{ marginInlineStart: '3em' }}>
-        Send an email to student.liasion.ewi.swe.ucla@gmail.com!
-        </p>
+        </section>
 
-      <section>
+        <section>
+        <h2>Other Questions?</h2>
+      
         <p>Send us a message using the form below!</p>
         <br />
         <div className="container send_message">
