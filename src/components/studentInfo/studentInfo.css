@@ -56,6 +56,10 @@
     padding-right: 2rem;
 }
 
+.rsvp_link a {
+    text-decoration: underline;
+    color: blue;
+}
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {

@@ -27,14 +27,15 @@ const StudentInfo = () => {
         </p>
         <br/>
 
+        <div className="rsvp_link">
         <p style={{ marginInlineStart: '3em' }}>
-        To prepare our student attendees for EWI and entering the world of industry as a whole, we will be hosting workshops for the Fall and Winter quarters:
+        To prepare our student attendees for EWI and entering the world of industry as a whole, we will be hosting workshops in the Winter quarter:
         </p>
         <p style={{ marginInlineStart: '5em' }}>
           <br/>
-        LinkedIn: January 16, 2024, 6-7PM, Location TBD 
+        LinkedIn & Personal Portfolio Workshop: January 16, 2024, 6-7PM, Boelter Hall 5436, <a href="https://docs.google.com/forms/d/e/1FAIpQLSdtCOzRUiOHoM1yu7elh9sacACvB7LrP3ZzVZqTWU6Fi3JwvA/viewform" target="_blank" rel="noopener noreferrer">RSVP</a>
         <br/>
-        Networking: January 18, 2024, 6-7PM, Location TBD
+        Networking and Career Fairs: January 18, 2024, 6-7PM, Young Hall 4216, <a className="rsvp_link" href="https://docs.google.com/forms/d/e/1FAIpQLSfO89TiyfCcos3UvPSQcV_R6xnD0N4cc2jBZKWAREIx-Zh4Pw/viewform" rel="noopener noreferrer" target="_blank">RSVP</a>
         <br/>
         Resume with Resume Review: January 25, 2024, 6-7PM, Location TBD
         <br/>
@@ -42,6 +43,7 @@ const StudentInfo = () => {
         <br/>
 
 </p>
+</div>
 </section>
 
         <section>
