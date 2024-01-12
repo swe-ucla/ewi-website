@@ -28,7 +28,7 @@ const PDFViewerStudent = () => {
 				file={student_guide}				
                 onLoadSuccess={onDocumentLoadSuccess}
 			>
-				<Page renderAnnotationLayer={false} renderTextLayer={false} pageNumber={pageNumber} scale={0.25}/>
+				<Page renderAnnotationLayer={false} renderTextLayer={false} pageNumber={pageNumber}/>
 			</Document>
             <div>
                 <p>

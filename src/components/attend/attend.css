@@ -1,11 +1,20 @@
 .attend__container {
   text-align: center;
   height: 100%;
+  width: 60%;
   position: relative;
   justify-content: center;
   font-size: 1.5rem;
-  margin-top: -2.5rem;
-  margin-bottom: -3rem;
+  background: whitesmoke;
+  border-radius: 2rem;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  padding: 2rem;
+  margin: -4rem auto;
+}
+
+.date {
+  background-color: transparent;
 }
 
 /* =============== CTA ============== */
@@ -75,7 +84,11 @@
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
-
+@media screen and (max-width: 1024px) {
+  .attend__container {
+    width: 90%;
+  }
+}
 
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {
@@ -88,19 +101,26 @@
   .scroll__down {
     display: none;
   }
+  
 
-  /* added after tutorial */
-  .me {
-    width: 94%;
-    max-width: 20rem;
-    margin-top: 10rem;
-    justify-content: center;
+  .attend__container {
+    width: 80%;
   }
 
   /* added after tutorial */
-  .cta {
-    margin-bottom: -7rem;
-    margin-top: 1.7rem;
-    gap: 1rem;
+  .cta1 {
+    margin-top: 1.5rem;
+    display: flex;
+    margin-right: 9rem;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  
+  .cta2 {
+    margin-top: -3.37rem;
+    margin-left: 9rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
   }
 }
