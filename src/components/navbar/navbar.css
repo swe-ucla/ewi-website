@@ -3,28 +3,36 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 50px;
+    padding: 10px 2rem;
     background-color:white;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 9999;
+    height: 67px;
+    width: 100%;
 }
 
 .logo {
     width: 150px; /* Adjust according to your logo's size */
     height: auto;
+    display: inline-block;
 }
 
 .tabs {
     display: flex;
     gap: 20px;
+    height: 100%;
+    width: 100%;
+    max-height: none;
+    top: 0;
+    position: relative;
+    justify-content: right;
 }
 
 .tab {
     display: inline-block;
     color: black;
-    text-decoration: none;
     padding: 10px 15px;
     transition: background-color 0.3s ease;
 }
@@ -60,6 +68,7 @@
     background-color: #f1f1f1;
 }
 
+
 /* Show dropdown content on hover */
 .dropdown:hover .dropdown-content {
     display: block;
@@ -68,4 +77,109 @@
 /* Style to retain the hover color on main tab during dropdown hover */
 .dropdown:hover .tab {
     background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Menu Icon */
+.hamb{
+    cursor: pointer;
+    padding: 20px;
+    display: none;
+    position:fixed;
+    top: 15px;
+    right: 10px;
+}/* Style label tag */
+
+.hamb-line {
+    background: black;
+    display: block;
+    height: 2px;
+    position: relative;
+    width: 24px;
+
+} /* Style span tag */
+
+.hamb-line::before,
+.hamb-line::after{
+    background: black;
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    transition: all .2s ease-out;
+    width: 100%;
+}
+.hamb-line::before{
+    top: 5px;
+}
+.hamb-line::after{
+    top: -5px;
+}
+
+.side-menu {
+    display: none;
+} /* Hide checkbox */
+
+@media screen and (max-width: 600px) {
+    .navbar {
+        height: 67px;
+    }
+
+    .tab {
+        position: relative;
+    }
+
+    .hash-link {
+        background-color: #f9f9f9;
+        position: relative;
+        min-width: 145px;
+    }
+
+    .about {
+        margin-top: 80px;
+        width: 180px; 
+    }
+
+    .tabs {
+        max-height: 0;
+        width: 160px;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: #f9f9f9;
+        right: auto;
+    }
+
+    .hamb {
+        display: block;
+    }
+    
+    /* Show dropdown content on hover */
+    .dropdown-content {
+        display: block;
+        padding-left: 15px;
+        box-shadow: none;
+        min-width: none;
+    }
+
+    /* Toggle menu icon */
+    .side-menu:checked ~ .tabs{
+        max-height: 100%;
+        overflow: visible;
+        margin-top: 113px;
+    }
+
+    .side-menu:checked ~ .hamb .hamb-line {
+        background: transparent;
+    }
+    .side-menu:checked ~ .hamb .hamb-line::before {
+        transform: rotate(-45deg);
+        top:0;
+    }
+    .side-menu:checked ~ .hamb .hamb-line::after {
+        transform: rotate(45deg);
+        top:0;
+    }
+
+    .dropdown {
+        display: block;
+    }
 }

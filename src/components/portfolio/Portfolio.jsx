@@ -40,12 +40,12 @@ const Portfolio = () => {
               </div>
               <h3>{title}</h3>
               <h4>{bio}</h4>
-              <p id='contact'></p>
             </article>
             )
           })
         }
       </div>
+      <h6 id='contact'></h6>
     </section>
   )
 }
