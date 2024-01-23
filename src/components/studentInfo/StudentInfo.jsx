@@ -9,11 +9,13 @@ const StudentInfo = () => {
         <h2>Student Registration</h2>
         <div className="student__paragraph">
           <p>
-              Student registration for Evening with Industry 2024 opened on January 11, 2024 at 9 PM. Everyone is invited, regardless of gender. Table assignments are first come, first serve, register as soon as possible to ensure you get to sit with your top choice company! We will also begin a waitlist as we hit capacity.
+              Student registration for Evening with Industry 2024 opened on January 11, 2024 at 9 PM. Everyone is invited, regardless of gender. Table assignments are first come, first serve, register as soon as possible to ensure you get to sit with your top choice company! We will also begin a waitlist as we hit capacity.* 
           </p>
           <br/>
-          <a className="btn" href="https://docs.google.com/forms/d/1ifw7WO5da8OaMP1yaPWfvdGZP80MlKe4R2ytlkhftbU/viewform?edit_requested=true">Student Registration Form</a>
+          <a className="btn" href="https://docs.google.com/forms/d/1ifw7WO5da8OaMP1yaPWfvdGZP80MlKe4R2ytlkhftbU/viewform?edit_requested=true" target="_blank" rel="noopener noreferrer">Student Registration Form</a>
           <br/>
+          <br/>
+          <p>*STUDENT REGISTRATION IS CURRENTLY WAITLIST ONLY</p>
           <br/>
           <p style={{textDecoration: 'underline'}}>
             Dates for Registration Prices: 
@@ -26,7 +28,7 @@ const StudentInfo = () => {
           </ul>
           <br />
           <p>
-            Prices increase every week, so you don’t want to miss out on the early bird discounts. If the cost of EWI is a barrier for you, please do not hesitate to contact us about discounted pricing options. We would love to have you at our event and want to ensure that financial aid is available to those who need it.
+            Ticket sales will end/the waitlist will close at 11:59 PM PT on Thursday, February 1, 2024. Prices increase every week, so you don’t want to miss out on the early bird discounts. If the cost of EWI is a barrier for you, please do not hesitate to contact us about discounted pricing options. We would love to have you at our event and want to ensure that financial aid is available to those who need it.
           </p>
           <br />
           <p> IMPORTANT: Evening with Industry will be on February 8, 2024 from 5:30-10:00 PM. If you cannot attend before 6:45 PM, please DO NOT register. Unfortunately, we are unable to save you seat. </p>
@@ -41,11 +43,11 @@ const StudentInfo = () => {
           <ul>
             <li>LinkedIn & Personal Portfolio Workshop: January 16, 2024, 6-7PM, Boelter Hall 5436, <a href="https://docs.google.com/forms/d/e/1FAIpQLSdtCOzRUiOHoM1yu7elh9sacACvB7LrP3ZzVZqTWU6Fi3JwvA/viewform" target="_blank" rel="noopener noreferrer">RSVP</a></li>
             <br/>
-            <li>Networking and Career Fairs: January 18, 2024, 6-7PM, Young Hall 4216, <a className="rsvp_link" href="https://docs.google.com/forms/d/e/1FAIpQLSfO89TiyfCcos3UvPSQcV_R6xnD0N4cc2jBZKWAREIx-Zh4Pw/viewform" rel="noopener noreferrer" target="_blank">RSVP</a></li>
+            <li>Networking and Career Fairs Workshop: January 18, 2024, 6-7PM, Young Hall 4216, <a className="rsvp_link" href="https://docs.google.com/forms/d/e/1FAIpQLSfO89TiyfCcos3UvPSQcV_R6xnD0N4cc2jBZKWAREIx-Zh4Pw/viewform" rel="noopener noreferrer" target="_blank">RSVP</a></li>
             <br/>
-            <li>Resume with Resume Review: January 25, 2024, 6-7PM, Location TBD</li>
+            <li>Resume/Cover Letter Tips & Review Workshop: January 25, 2024, 6-7PM, Boelter Hall 5264, <a className="rsvp_link" href="https://forms.gle/TRdn8LWJX9LjCm5G9" target="_blank" rel="noopener noreferrer">RSVP</a></li>
             <br/>
-            <li>Dinner Etiquette: February 1, 2024, 6-7PM, Location TBD</li>
+            <li>Dinner Etiquette Workshop: February 1, 2024, 6-7PM, Boelter Hall 5264, <a className="rsvp_link" href="https://forms.gle/JzurD93RYabu1B3Y9" target="_blank" rel="noopener noreferrer">RSVP</a> </li>
           </ul>
           </p>
         </div>
