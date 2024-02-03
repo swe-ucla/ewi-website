@@ -1,5 +1,5 @@
 import React from 'react';
-import company_guide from '../../assets/Company_Survival_Guide_old.pdf';
+import company_guide from '../../assets/Updated CSG.pdf';
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
