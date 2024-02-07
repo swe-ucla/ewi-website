@@ -15,7 +15,7 @@ const StudentInfo = () => {
           <a className="btn" href="https://docs.google.com/forms/d/1ifw7WO5da8OaMP1yaPWfvdGZP80MlKe4R2ytlkhftbU/viewform?edit_requested=true" target="_blank" rel="noopener noreferrer">Student Registration Form</a>
           <br/>
           <br/>
-          <p>*STUDENT REGISTRATION IS CURRENTLY WAITLIST ONLY</p>
+          <p>***STUDENT REGISTRATION FOR EWI 2024 HAS CLOSED ON 2/2/24</p>
           <br/>
           <p style={{textDecoration: 'underline'}}>
             Dates for Registration Prices: 
@@ -28,7 +28,7 @@ const StudentInfo = () => {
           </ul>
           <br />
           <p>
-            Ticket sales will end/the waitlist will close at 11:59 PM PT on Thursday, February 1, 2024. Prices increase every week, so you don’t want to miss out on the early bird discounts. If the cost of EWI is a barrier for you, please do not hesitate to contact us about discounted pricing options. We would love to have you at our event and want to ensure that financial aid is available to those who need it.
+            Prices increase every week, so you don’t want to miss out on the early bird discounts. If the cost of EWI is a barrier for you, please do not hesitate to contact us about discounted pricing options. We would love to have you at our event and want to ensure that financial aid is available to those who need it.
           </p>
           <br />
           <p> IMPORTANT: Evening with Industry will be on February 8, 2024 from 5:30-10:00 PM. If you cannot attend before 6:45 PM, please DO NOT register. Unfortunately, we are unable to save you seat. </p>
@@ -52,10 +52,9 @@ const StudentInfo = () => {
           </p>
         </div>
         <h2>Student Survival Guide</h2>
-        <p> We will be releasing our student survival guide shortly after registration.</p>
-        {/* <div className='container pdf_container'>
+        <div className='container pdf_container'>
           <PDFViewerStudent/>
-        </div> */}
+        </div>
         <h2>Other Questions?</h2>
         <p>Send us a message using the form below!</p>
         <br />

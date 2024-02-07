@@ -18,7 +18,7 @@ const CompanyInfo = () => {
             </div> 
             <div className="company__paragraph">
                 <h2>Company Representative Survival Guide</h2>         
-                <p>To help guide our company representative guests and prepare them for the evening, our Corporate Relations chair has created the Company Rep Survival Guide! Last year's guide is below, but the 2024 guide will be available soon!</p>
+                <p>To help guide our company representative guests and prepare them for the evening, our Corporate Relations chair has created the Company Rep Survival Guide!</p>
         
         <div className='container pdf_container'>
             <PDFViewer />
@@ -27,15 +27,20 @@ const CompanyInfo = () => {
         
     
         <h2>Student Demographics</h2>
-        <div class="row-demographics">
+        {/* <div class="row-demographics">
             <div class="column-demographics">
                 <img src={require('../../assets/EWI2022StudentMajors.png')} alt="2022 student majors chart"/>
             </div>
             <div class="column-demographics">
                 <img src={require('../../assets/EWI2023StudentMajors.png')} alt="2023 student majors chart"/>
             </div>
+        </div> */}
+        <div class="row-demographics">
+            <div class="column-demographics">
+                <img src={require('../../assets/EWI2024StudentMajors.jpg')} alt="2022 student majors chart"/>
+                </div>
         </div>
-            <p id='sponsorship'>About 200 students attended EWI 2022, which was held virtually, and about 280 students attended EWI 2023, which was held in-person. We host students of all engineering concentrations as well as students studying physics, cognitive science, biology, and more. There are some fluctuations year to year in the distribution of majors , but overall the body of student attendees at EWI are representative of the Samueli Engineering school as a whole and most commonly features mechanical engineering, chemical engineering, and computer science students. </p>
+            <p id='sponsorship'> Above depicts the majors of students who signed up for EWI 2024. We host students of all engineering concentrations as well as students studying physics, cognitive science, biology, and more. There are some fluctuations year to year in the distribution of majors , but overall the body of student attendees at EWI are representative of the Samueli Engineering school as a whole and most commonly features computer science, mechanical engineering, and bioengineering students. </p>
         
 
             <div className="company__paragraph">
