@@ -23,10 +23,15 @@ header {
   -webkit-text-fill-color: transparent;
   opacity: 0.9;
   line-height: 130%;
+  margin-bottom: 1rem;
+  scroll-behavior: smooth;
 }
 
-.headerText h2 {
-  font-size: 2.75rem;
+.event__date {
+  font-size: 2rem;
+  color: antiquewhite;
+  margin-bottom: 1rem;
+  text-shadow: 3;
 }
 
 /* =============== SCROLL DOWN ============== */
@@ -53,18 +58,9 @@ header {
     display: none;
   }
 
-  /* added after tutorial */
-  .me {
-    width: 94%;
-    max-width: 20rem;
-    margin-top: 10rem;
-    justify-content: center;
+  .headerText h1 {
+    font-size: 4rem;
   }
 
-  /* added after tutorial */
-  .cta {
-    margin-bottom: -7rem;
-    margin-top: 1.7rem;
-    gap: 1rem;
-  }
+  
 }

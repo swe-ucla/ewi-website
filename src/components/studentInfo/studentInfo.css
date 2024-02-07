@@ -6,14 +6,13 @@
 .student__paragraph p {
     justify-content: left;
     text-align: left;
-    margin-top: -3rem;
     font-size: 16px;
 }
 
 .student__content h2 {
     text-align: left;
-    margin-bottom: 3%;
-    margin-top: -70px;
+    margin-top: 3rem;
+    margin-bottom: 2%;
     font-size: 26px;
 }
 
@@ -42,13 +41,11 @@
 .pdf_container {
     justify-content: center;
     text-align: center;
-    min-height: 800px;
     width: 40%;
     margin-left: auto;
     margin-right: auto;
     display: flex;
     padding-top: 2rem;
-    padding-bottom: 6rem;
 }
 
 .pdf_container p {
@@ -56,6 +53,25 @@
     padding-right: 2rem;
 }
 
+.rsvp_link a {
+    text-decoration: underline;
+    color: blue;
+}
+
+li {
+    display: list-item;
+    list-style-type: circle;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+.react-pdf__Page__canvas {
+    margin: 0 auto;
+    width: 25rem !important;
+    height: 100% !important;
+}
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
@@ -68,5 +84,11 @@
 @media screen and (max-width: 600px) {
     .company__content p {
         margin: 1.5rem 0;
+    }
+
+    .react-pdf__Page__canvas {
+        margin: 0 auto;
+        width: 20rem !important;
+        height: 100% !important;
     }
 }
