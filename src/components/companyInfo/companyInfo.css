@@ -68,6 +68,15 @@
     padding-right: 2rem;
 }
 
+.download-link {
+    color: blue;
+    text-decoration: underline;
+}
+
+.download-link:hover {
+    color: rgb(141, 141, 255);
+}
+
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
     .company__content p {

@@ -1,11 +1,11 @@
 import React from 'react';
-import company_guide from '../../assets/Updated CSG.pdf';
+import sponsorship_packet from '../../assets/24-25SWE@UCLASPONSORSHIP PACKET.pdf';
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
-const PDFViewer = () => {
+const PDFViewerSponsorship = () => {
 	const [numPages, setNumPages] = useState(null);
 	const [pageNumber, setPageNumber] = useState(1);
 
@@ -25,7 +25,7 @@ const PDFViewer = () => {
 	return (
 		<div>
 			<Document
-				file={company_guide}				
+				file={sponsorship_packet}				
                 onLoadSuccess={onDocumentLoadSuccess}
 			>
 				<Page renderAnnotationLayer={false} renderTextLayer={false} pageNumber={pageNumber} scale={55/72}/>
@@ -41,4 +41,4 @@ const PDFViewer = () => {
 	);
 };
 
-export default PDFViewer;
+export default PDFViewerSponsorship;
