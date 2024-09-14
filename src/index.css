@@ -38,29 +38,28 @@ html {
 }
 
 h2 {
-  font-family: "DM Serif Text", serif;
+  font-family: 'Inter', serif;
 }
 
 h3 {
-  font-family: "DM Serif Text", serif;
+  font-family: 'Inter', serif;
 }
 
 body {
-  font-family: DM;
-  font-family: "Kumbh Sans", sans-serif;
+  font-family: 'Inter', serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
-  font-weight: 150;
+  font-weight: 300;
 
 }
 
 p {
-  font-family: "Kumbh Sans", sans-serif;
+  font-family: 'Inter', serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
-  font-weight: 100;
+  font-weight: 300;
 }
 
 /* ============== GENEARL STYLES ============== */
@@ -103,7 +102,7 @@ section>h2 {
 a {
   color: var(--color-primary);
   transition: var(--transition);
-  font-family: "Kumbh Sans", sans-serif;
+  font-family: 'Inter', serif;
 }
 
 a:hover {
@@ -115,13 +114,13 @@ a:hover {
   display: inline-block;
   color: var(--color-primary) !important;
   padding: 0.75rem 1.2rem;
-  border-radius: 0.4rem;
+  border-radius: 1.5rem;
   cursor: pointer;
   border: 1px solid var(--color-primary);
-  border-color: lightgray;
+  border-color: #E6E8EF;
   transition: var(--transition);
-  font-family: "Kumbh Sans", sans-serif;
-  background-color: lightgray !important;
+  font-family: 'Inter', serif;
+  background-color: #E6E8EF !important;
 }
 
 .btn:hover {

@@ -24,7 +24,7 @@ const Footer = () => {
        
       </div>
 
-     <p>+ a special thanks to webdev team & prodev chair for putting this together for us :)</p>
+     <p>+ a special thanks to webdev for putting this together for us :) (again)</p>
 
     </footer>
   )
