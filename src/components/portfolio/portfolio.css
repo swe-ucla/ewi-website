@@ -4,9 +4,9 @@
   gap: 2.5rem;
 }
 
-h2 {
+/* h2 {
   font-size: 2rem;
-}
+} */
 
 .portfolio__item {
   width: 70%;  /* Adjust this to control the width */

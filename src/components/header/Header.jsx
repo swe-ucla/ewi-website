@@ -18,6 +18,7 @@ const Header = () => {
           <div className='event__date'>
             {eventDate}
           </div>
+          <div className='contact_btn'></div>
         </div>
         <h4 className="text-light" id="attend">
         </h4>

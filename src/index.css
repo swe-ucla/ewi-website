@@ -16,7 +16,7 @@
 :root {
   --color-bg: rgb(255, 255, 255);
   /* --color-bg-variant: #9c9a9e; */
-  --color-bg-variant: #9c9a9e;
+  --color-bg-variant: #E6E8EF;
   --color-primary: black;
   --color-primary-variant: #1d121f;
   --color-white: black;
@@ -39,6 +39,11 @@ html {
 
 h2 {
   font-family: 'Inter', serif;
+  font-weight: 700;
+  color: #929292;
+  text-transform: uppercase;
+  font-size: 2em;
+  margin-left: 4.5em;
 }
 
 h3 {
@@ -58,7 +63,7 @@ p {
   font-family: 'Inter', serif;
   background: var(--color-bg);
   color: var(--color-white);
-  line-height: 1.7;
+  line-height: 1.25;
   font-weight: 300;
 }
 
@@ -70,10 +75,20 @@ p {
 
 h1,
 h2,
-h3,
-h4,
+h3 {
+  font-size: 1.7em;
+  font-weight: 300;
+}
+h4 {
+  font-size: 0.9em;
+  font-weight: 400;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
 h5 {
-  font-weight: 500;
+  font-size: 1em;
+  font-weight: 400;
+  margin-top: -0.75em;
 }
 
 h1 {
@@ -84,16 +99,21 @@ section {
   margin-top: 8rem;
 }
 
-section>h2,
 section>h5 {
   text-align: center;
   color: var(--color-light);
+  font-size: 1em;
+  font-weight: 400;
 }
 
 section>h2 {
-  color: var(--color-primary);
-  margin-bottom: 3rem;
+  font-weight: 600;
+  color: #929292;
+  margin-bottom: 4rem;
+  text-align: left;
+  margin-left: 5em;
 }
+
 
 .text-light {
   color: var(--color-light);
@@ -114,7 +134,7 @@ a:hover {
   display: inline-block;
   color: var(--color-primary) !important;
   padding: 0.75rem 1.2rem;
-  border-radius: 1.5rem;
+  border-radius: 1.75rem;
   cursor: pointer;
   border: 1px solid var(--color-primary);
   border-color: #E6E8EF;
@@ -138,6 +158,14 @@ img {
   display: block;
   width: 100%;
   object-fit: cover;
+}
+
+input {
+  font-family: 'Inter', serif;
+}
+
+textarea {
+  font-family: 'Inter', serif;
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
