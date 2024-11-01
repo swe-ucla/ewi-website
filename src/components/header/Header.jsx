@@ -1,6 +1,8 @@
 import React from 'react'
 import './header.css'
 import Timer from '../timer/Timer'
+import {HashLink } from "react-router-hash-link";
+import arrowIcon from './contact_arrow.svg'
 
 const eventDate = "JAN 28TH, 2025 @ CARNESALE COMMONS"
 
@@ -20,8 +22,14 @@ const Header = () => {
           </div>
           <div className='contact_btn'></div>
         </div>
-        <h4 className="text-light" id="attend">
-        </h4>
+        <button class="button contact-button">
+          <HashLink to='/#contact'>
+            <span className="contact-button-contents">
+              contact us
+              <img src={arrowIcon} alt="arrow pointing down"/>
+            </span>
+          </HashLink>
+        </button>
       </div>
     </header>
   )

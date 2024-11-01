@@ -10,6 +10,9 @@ header {
 .header__container {
   text-align: left;
   height: 100%;
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
   position: static; 
 }
 
@@ -68,6 +71,29 @@ header {
   transform: rotate(90deg);
   font-weight: 300;
   font-size: 0.9rem;
+}
+
+.contact-button {
+  aspect-ratio:1;
+  margin-top:5em;
+  width:10em;
+  height:50%;
+  border-radius:50%;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+.contact-button-contents {
+  margin-top:1em;
+  display:flex;
+  flex-direction:column;
+  align-items:end;
+  font-size:calc(1em + 0.5vw);
+}
+
+.contact-button-contents img {
+  width:25%;
 }
 
 @media screen and (max-width: 600px) {
