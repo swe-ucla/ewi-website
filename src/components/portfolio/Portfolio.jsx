@@ -1,8 +1,8 @@
 import React from 'react'
 import './portfolio.css'
 //import IMG6 from '../../assets/avatar1.jpg'
-import INTERNAL from '../../assets/lexi.jpg'
-import EXTERNAL from '../../assets/kaylee.jpg'
+import INTERNAL from '../../assets/CRYSTAL CHAN headshot 1.png'
+import EXTERNAL from '../../assets/khushi headshot.png'
 
 // DO NOT USE THE IMAGES IN PRODUCTION
 

@@ -2,6 +2,7 @@
   margin-top: 2rem;
   text-align: left;
   margin-bottom: 4rem;
+  font-weight: bold;
 }
 
 .about__content p{
@@ -9,6 +10,7 @@
   text-align: center;
   margin-bottom: 3rem;
   color: var(--color-primary);
+  text-align: left;
 }
 
 .about__paragraph p{
@@ -32,7 +34,7 @@
 
 .image_container-column {
   float: left;
-  width: 50%;
+  width: 20%;
   padding-left: 4%;
   padding-right: 4%;
 }
@@ -56,6 +58,58 @@
   padding-top: 0.5rem;
   font-weight: 500;
 }
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.about__left, .about__right {
+  flex: 1;
+}
+
+.about1__left {
+  max-width: 35%;
+}
+
+.about1__right {
+  max-width: 65%;
+}
+
+.about2__left {
+  max-width: 60%;
+}
+
+.about2__right {
+  max-width: 40%;
+}
+
+.about3__left {
+  max-width: 55%;
+}
+
+.about3__right {
+  max-width: 45%;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background-color: #ffffff;
+  margin: 20px 0;
+}
+
+.image_caption {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: center;
+  margin-top: 5px;
+}
+
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
@@ -113,6 +167,5 @@
     padding-top: 0.5rem;
     font-weight: 500;
   }
-
 }
-
+  
