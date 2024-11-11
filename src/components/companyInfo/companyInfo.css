@@ -4,6 +4,9 @@
 }
 
 .company__paragraph {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
     margin-top: 2rem;
     margin-bottom: 2rem;
 }
@@ -12,6 +15,13 @@
     justify-content: left;
     text-align: left;
     font-size: 16px;
+}
+
+
+.company__info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 6%;
 }
 
 .company__content h2 {
@@ -40,10 +50,6 @@
     content: "";
     clear: both;
     display: table;
-  }
-
-.indented__paragraph {
-    margin-left: 6%;
 }
 
 .indented__paragraph p {
