@@ -33,16 +33,16 @@ const About = () => {
           </div>
         </div>
 
-        <div class="image_container-row">
-          <div className="image_container-column-image">
-            <div class="image_container-column image_container-text" style={{width: "1500px"}}>
+        <div class="image_container-row" style={{display: "flex"}}>
+          <div className="image_container-column-image" style={{width: "1500px"}}>
+            <div class="image_container-column image_container-text">
               <p>Our mission is to continue to make EWI accessible to all types of students and to match them with fulfilling roles at companies they are inspired by, and we hope that each student leaves EWI with confidence in their capabilities and a sense of belonging in engineering and industry as a whole.  </p>
             </div>
             <img src={EWI2024} style={{width: "701px", height: "318px"}}  alt={'EWI 2024'}/>
             <div class="image_container-column-caption">EWI 2024</div>
           </div>
 
-          <div className="image_container-column-image" style={{marginLeft: '-700px', marginTop: "-50px"}}>
+          <div className="image_container-column-image" style={{marginLeft: '-700px', marginTop: "-60px"}}>
           <img src={EWI20XX} style={{width: "402px", height: "475px"}} alt={'EWI 20XX'}/>
           <div class="image_container-column-caption" style={{textAlign: "right"}}>EWI 20XX</div>
           </div>

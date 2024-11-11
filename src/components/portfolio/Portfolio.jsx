@@ -13,14 +13,14 @@ const data = [
     image: INTERNAL,
     title: 'Crystal Chan',
     position: 'Internal Director',
-    bio: 'Crystal Chan is a third year student studying Materials Engineering and the Internal Director for EWI 2025. She has been involved with Materials Research Society (MRS) and hopes to pursue a career within the sustainable design of innovative materials, products, and spaces. In her spare time, she enjoys taking dance classes and cafe hopping . She has previously served as EWI 2024 Design and Media Chair.',
+    bio: 'Crystal Chan is a third year student studying Materials Engineering and the Internal Director for EWI 2025. She has been involved with Materials Research Society (MRS) and hopes to pursue a career within the sustainable design of innovative materials, products, and spaces. In her spare time, she enjoys taking dance classes and cafe hopping. She has previously served as EWI 2024 Design and Media Chair.',
   },
   {
     id: 6,
     image: EXTERNAL,
     title: 'Khushi Patel',
     position: 'External Director',
-    bio: 'insert bio',
+    bio: 'Khushi Patel is a third year student studying Civil Engineering and Entrepreneurship. In addition to being the External Director for EWI 2025, she has been involved with Engineers without Borders and Consult Your Community. She aims to pursue a career in construction management and development. She likes hot yoga, dancing, and trying new restaurants in her free time. She previously served as EWI 2024 Logistics Chair and EWI 2023 Student Liaison.',
   }
 ]
 
