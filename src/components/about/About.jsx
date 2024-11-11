@@ -1,14 +1,15 @@
 import React from 'react'
 import './about.css'
-import EWI2024 from '../../assets/ewi2017.jpg'
-import COMMITTEE2024 from '../../assets/ewi2023committee.jpeg' 
-import EWI20XX from '../../assets/ewi2018_2.jpg'
+import EWI2024 from '../../assets/ewi_2024.png'
+import COMMITTEE2024 from '../../assets/ewi_committee.png' 
+import EWI20XX from '../../assets/ewi_20xx.png'
 
 
 const About = () => {
   return (
     <section>
-      <h2>About Us</h2>
+    <div class="custom-grid">
+      <div><h2>About Us</h2></div>
       <div className="container about__content">
             <div className="about__paragraph">
               <p>Evening with Industry (EWI) is one of Society of Women Engineers’ flagship events and the largest student-run networking event on UCLA campus. In 2025, SWE @ UCLA will host the 48th annual Evening with Industry at UCLA’s Carnesale Commons.</p>
@@ -17,30 +18,38 @@ const About = () => {
               <p>While the event is traditionally oriented towards women in engineering, we welcome students of all genders and academic backgrounds relevant to the engineering field. Our primary goal is to ensure that every attendee gains an enriching and worthwhile experience.  </p>
             </div>
       </div>
+    </div>
 
       <div className="image_container"> 
-      <div class="image_container-row">
-        <div class="image_container-column">
+        <div class="image_container-row">
           <div className="image_container-column-image">
-            <p>As we host the 48th Evening with Industry at UCLA, we hope to continue our SWE Chapter’s longstanding tradition of diminishing the obstacles between students and breaking into industry. </p>
-            <p>We are happy to continue hosting EWI in-person in 2025, as we believe the opportunity for participants to immerse themselves in the atmosphere of the event leads to a more impactful experience.</p>
-            <img src={EWI2024} style={{height:"91.5%", width:"91.5%"}} alt={'EWI 2017'}/>
-            <div class="image_container-column-caption">EWI 2024</div>
-          </div>
-        </div>
-        <div class="image_container-column">
-          <div className="image_container-column-image">
-            <img src={COMMITTEE2024} alt={'EWI Committee 2024'}/>
+            <img src={COMMITTEE2024} style={{width: "593px", height: "355px"}} alt={'EWI Committee 2024'}/>
             <div class="image_container-column-caption">EWI Committee 2024</div>
           </div>
-          <div className="column-image">
-            <p>Our mission is to continue to make EWI accessible to all types of students and to match them with fulfilling roles at companies they are inspired by, and we hope that each student leaves EWI with confidence in their capabilities and a sense of belonging in engineering and industry as a whole.  </p>
-            <img src={EWI20XX} alt={'EWI 20XX'}/>
-            <div class="image_container-column-caption">EWI 20XX</div>
+
+          <div class="image_container-column image_container-text">
+            <p>As we host the 48th Evening with Industry at UCLA, we hope to continue our SWE Chapter’s longstanding tradition of diminishing the obstacles between students and breaking into industry.</p>
+            <p>We are happy to continue hosting EWI in-person in 2025, as we believe the opportunity for participants to immerse themselves in the atmosphere of the event leads to a more impactful experience.</p>
           </div>
         </div>
+
+        <div class="image_container-row" style={{display: "flex"}}>
+          <div className="image_container-column-image" style={{width: "1500px"}}>
+            <div class="image_container-column image_container-text">
+              <p>Our mission is to continue to make EWI accessible to all types of students and to match them with fulfilling roles at companies they are inspired by, and we hope that each student leaves EWI with confidence in their capabilities and a sense of belonging in engineering and industry as a whole.  </p>
+            </div>
+            <img src={EWI2024} style={{width: "701px", height: "318px"}}  alt={'EWI 2024'}/>
+            <div class="image_container-column-caption">EWI 2024</div>
+          </div>
+
+          <div className="image_container-column-image" style={{marginLeft: '-700px', marginTop: "-60px"}}>
+          <img src={EWI20XX} style={{width: "402px", height: "475px"}} alt={'EWI 20XX'}/>
+          <div class="image_container-column-caption" style={{textAlign: "right"}}>EWI 20XX</div>
+          </div>
+        </div>
+        
       </div>
-      </div>
+
     </section>
   )
 }

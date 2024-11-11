@@ -23,14 +23,14 @@ header {
 .headerText h1 {
   font-size: 6rem;
   font-family: 'Taviraj', serif;
-  background: -webkit-linear-gradient(left, #203ba5, #fcfcfc); /* Matching colors */
+  background: -webkit-linear-gradient(left, #2641a0, #667bd0); /* Matching colors */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   line-height: 75%;
   margin-bottom: 1rem;
   font-weight: 500;
   scroll-behavior: smooth;
-  text-shadow: 4px 3px 4px rgba(136, 136, 144, 0.2); 
+  text-shadow: 3px 2px 3px rgba(73, 73, 83, 0.2); 
 }
 
 .headerText .e {
@@ -56,12 +56,12 @@ header {
 .event__date {
   font-size: 1.6rem;
   font-family: 'Inter', serif;
-  background: -webkit-linear-gradient(left, #344ba5, #dee1e9); /* Matching colors */
+  background: -webkit-linear-gradient(left, #2641a0, #95a2d8); /* Matching colors */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-top: 3.2rem;
   margin-bottom: 1.7rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .scroll__down {

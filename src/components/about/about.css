@@ -1,61 +1,69 @@
-.about__content h2{
-  margin-top: 2rem;
-  text-align: left;
-  margin-bottom: 4rem;
+.custom-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 3.5fr; /* Adjust column widths as needed */
+  gap: 20px; /* Optional: Adds space between columns */
+  margin-bottom: 2rem; 
 }
 
-.about__content p{
-  margin-top: 2rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  color: var(--color-primary);
+.custom-grid h2{
+  /* margin-top: -3.3rem; */
+  font-weight: 700;
+  text-align: left;
 }
+
 
 .about__paragraph p{
   justify-content: left;
   text-align: left;
-  margin-top: -3rem;
-  margin-bottom: 3rem;
-  padding-bottom: 1rem;
+  /* margin-top: -3rem;
+  margin-bottom: 3rem; */
+  padding-bottom: 2rem;
 }
 
-.image_container{
-  padding: 0rem 5.5% 0rem 5.5%;
+.image_container {
+  padding-left: 7rem;
+  padding-right: 7rem;
+  display: flex;
+  flex-direction: column; /* Stacks the rows vertically */
   justify-content: center;
+  width: 100%;
 }
 
-.image_container p{
-  text-align: left;
-  margin-bottom: 3rem;
-  color: var(--color-primary);
+.image_container-row {
+  display: flex;
+  justify-content: left;
+  width: 100%; /* Ensures each row takes up the full width of the container */
+  padding-bottom: 2rem;
+  gap: 3rem;
 }
 
 .image_container-column {
-  float: left;
-  width: 50%;
-  padding-left: 4%;
-  padding-right: 4%;
+  max-width: 50%;
 }
 
-/* Clear floats after the columns */
-.image_container-row:after {
-  content: "";
-  display: table;
-  clear: both;
+
+.image_container-column-image img {
+  width: 100%; /* Ensures the image does not stretch outside its container */
+  height: auto;
+  display: flex;
+  align-items: left;
 }
 
-.image_container-column-image{
-  padding-bottom: 2rem;
-  width: 100%
-}
-
-.image_container-column-caption{
-  text-align: center;
-  font-size: 1.25rem;
+.image_container-column-caption {
+  font-size: 1.15rem;
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
-  font-weight: 500;
+  font-weight: 400;
 }
+
+.image_container-text p {
+  text-align: left;
+  padding-bottom: 2rem;
+  color: var(--color-primary);
+  box-sizing: border-box; 
+}
+
+
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
