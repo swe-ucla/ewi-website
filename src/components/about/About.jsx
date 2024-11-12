@@ -8,9 +8,9 @@ import EWI20XX from '../../assets/ewi_20xx.png'
 const About = () => {
   return (
     <section>
-    <div class="custom-grid">
-      <div><h2>About Us</h2></div>
-      <div className="container about__content">
+    <div className="container about__content">
+      <div class="custom-grid">
+            <div><h2>About Us</h2></div>
             <div className="about__paragraph">
               <p>Evening with Industry (EWI) is one of Society of Women Engineers’ flagship events and the largest student-run networking event on UCLA campus. In 2025, SWE @ UCLA will host the 48th annual Evening with Industry at UCLA’s Carnesale Commons.</p>
               <p>At this event, we strive to create an environment that is more personal than a typical career fair. To do this, our event has a three-part structure: informal networking over appetizers, a multi-course catered dinner, and then a formal career fair. </p>
