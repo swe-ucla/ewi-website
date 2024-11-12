@@ -7,13 +7,11 @@ const CompanyHeader = () => {
     <div className="cheader">
       <div className="container cheader__container">
         <div className="cheaderText">
+        <span className="f">f</span>
           <h1>
-            <span className="f">f</span>or companie<span className="s">s</span>
+            <span className="middle">or companie<span className="s">s</span></span>
           </h1>
         </div>
-        <h4 className="text-light">
-
-        </h4>
       </div>
       
     </div>
