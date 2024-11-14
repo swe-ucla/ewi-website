@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap');
 
 .company__content p {
     font-family: 'Inter', sans-serif;
     text-align: left;
     color: var(--color-primary);
+    font-size: 24px;
 }
 
 .company__paragraph {
@@ -17,21 +17,25 @@
     font-family: 'Inter', sans-serif;
     justify-content: left;
     text-align: left;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .company__content h2 {
-    font-family: 'DM Serif Text', serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
     text-align: left;
     margin-bottom: 2%;
-    font-size: 26px;
+    font-size: 36px;
 }
 
 .company__content h3 {
-    font-family: 'DM Serif Text', serif;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
     margin-top: 2rem;
     text-align: left;
-    font-size: 24px;
+    font-size: 32px;
+    text-transform: uppercase;
+    color: #929292;
 }
 
 .company__content img {
@@ -58,7 +62,7 @@
     justify-content: left;
     text-align: left;
     padding-bottom: 1rem;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .pdf_container {
