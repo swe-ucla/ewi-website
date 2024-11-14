@@ -11,7 +11,7 @@ const CompanyInfo = () => {
             <p id="registration">Thank you for your interest in EWI!  Evening with Industry is a unique opportunity to spread awareness of your company and make personal connections with hundreds of talented UCLA engineering students at the same time.</p>
         
             <div className="company__paragraph">
-            <h2>Company Registration</h2>
+            <h2>Registration</h2>
                 <p>Early bird pricing will remain until December 8, 2023. For the company registration form, please reach us at ewi.swe.ucla@gmail.com.</p>
                 <div className="indented__paragraph">
                     <h3>Startups</h3>
