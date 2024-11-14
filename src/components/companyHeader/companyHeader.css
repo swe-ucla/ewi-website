@@ -26,6 +26,7 @@
   background: -webkit-linear-gradient(left, #0c1870, #7A588C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-transform: lowercase;
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
