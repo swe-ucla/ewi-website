@@ -1,4 +1,3 @@
-
 .flex-container {
   display: flex;
   text-align: center;
@@ -9,35 +8,45 @@
   padding: 60px;
   gap: 2.2rem;
 }
-  
-  .companyButtons__container h1{
-    text-align: center;
-  }
-  
-  /* =============== BUTTONS ============== */
-  .btn {
-    background-color: #d9d9d9;
-    font-family: "DM Serif Text";
-    font-size: 16px;
-    border-color: #d9d9d9;
-  }
 
-  .buttonRegistration {
-    align-items: flex-start;
-    justify-content: center;
-  }
-  .buttonSG {
-    align-items: center;
-    justify-content: center;
-  }
+.companyButtons__container h1 {
+  text-align: center;
+}
 
-  .buttonSWESponsor {
-    align-items: flex-end;
-    justify-content: center;
-  }
+/* =============== BUTTONS ============== */
+.btn {
+  background-color: #E6E8EF;
+  display: inline-block;
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  border: none;
+  border-radius: 40px;
+  white-space: nowrap;
+}
+
+.btn::before,
+.btn::after {
+  content: '\00a0\00a0\00a0';  /* Adding non-breaking spaces */
+  display: inline;
+}
+
+.buttonRegistration {
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.buttonSG {
+  align-items: center;
+  justify-content: center;
+}
+
+.buttonSWESponsor {
+  align-items: flex-end;
+  justify-content: center;
+}
 
 @media screen and (max-width: 600px) {
   .flex-container {
-    display: none;
+      display: none;
   }
 }
