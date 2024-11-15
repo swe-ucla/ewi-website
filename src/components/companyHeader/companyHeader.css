@@ -1,16 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Tangerine&family=Taviraj:wght@400;700&display=swap');
 
 .cheader {
-  height: 13rem;
-  padding-top: 2rem;
-  overflow: hidden;
-  background-image: linear-gradient(to right, #929FCF, #E6E8EF);
+  padding: 0.5rem;
+  overflow: visible;
+  /* background-image: linear-gradient(to right, #929FCF, #E6E8EF); */
+  background-image: radial-gradient(circle at 40px 40px,#929FCF, #E6E8EF);
 }
 
 .cheader__container {
   text-align: left;
   height: 100%;
-  position: relative;
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  position: static; 
 }
 
 .cheaderText {
@@ -20,23 +23,11 @@
 
 .cheaderText h2{
   font-size: 4.2rem;
-  font-family: 'Taviraj', serif;
   opacity: 0.9;
   max-width: 100%;
-  background: -webkit-linear-gradient(left, #203ba5, #fcfcfc);
+  background: -webkit-linear-gradient(left, #0c1870, #7A588C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-transform: lowercase;
-}
-
-.cheaderText .f {
-  font-family: 'Tangerine', cursive;
-  font-size: 7.8rem;
-}
-
-.cheaderText .s {
-  font-family: 'Tangerine', cursive;
-  font-size: 7.8rem;
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
