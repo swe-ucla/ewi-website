@@ -30,12 +30,14 @@ const PDFViewerSponsorship = () => {
 			>
 				<Page renderAnnotationLayer={false} renderTextLayer={false} pageNumber={pageNumber} scale={55/72}/>
 			</Document>
-            <div>
+            <div style={{paddingTop: '10px'}}>
                 <p>
                     Page {pageNumber} of {numPages}
                 </p>
-                <a href="#Prev" className='btn btn-primary' onClick={goToPrevPage} style={{marginRight: '1.5rem'}}>Prev</a>
-                <a href="#Next" className='btn btn-primary' onClick={goToNextPage} style={{marginRight: '1rem'}}>Next</a>
+                <div style={{paddingTop: '15px'}}>
+					<a href="#Prev" className='btn btn-primary' onClick={goToPrevPage} style={{marginRight: '1.5rem'}}>Prev</a>
+                	<a href="#Next" className='btn btn-primary' onClick={goToNextPage} style={{marginRight: '1rem'}}>Next</a>
+				</div>
             </div>
 		</div>
 	);
