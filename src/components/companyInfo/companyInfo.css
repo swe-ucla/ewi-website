@@ -7,7 +7,7 @@
     font-family: 'Inter', sans-serif;
     text-align: left;
     color: var(--color-primary);
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .company__paragraph {
@@ -19,7 +19,7 @@
     font-family: 'Inter', sans-serif;
     justify-content: left;
     text-align: left;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .company__info {
@@ -43,13 +43,17 @@
     font-weight: 700;
     text-align: left;
     margin-bottom: 2%;
-    font-size: 26px;
+    font-size: 24px;
 }
 
 .company__content h3 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
     margin-top: 2rem;
+    text-transform: uppercase;   
     text-align: left;
     font-size: 24px;
+    color: #929292;
 }
 
 .company__content img {
@@ -75,7 +79,7 @@
     justify-content: left;
     text-align: left;
     padding-bottom: 1rem;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .pdf_container {

@@ -17,18 +17,44 @@
 }
 
 .cheaderText {
-  margin-top: 2rem;
-  margin-right: 10%;
+  max-width: 100%;
+  height:auto;
 }
 
-.cheaderText h2{
-  font-size: 4.2rem;
-  opacity: 0.9;
-  max-width: 100%;
-  background: -webkit-linear-gradient(left, #0c1870, #7A588C);
+.cheaderText h1 {
+  font-size: 3.5rem;
+  font-family: 'Taviraj', serif;
+  background: -webkit-linear-gradient(left, #2641a0, #667bd0); /* Matching colors */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  line-height: 75%;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  scroll-behavior: smooth;
+  text-shadow: 3px 2px 3px rgba(73, 73, 83, 0.2); 
+  display: inline;
 }
+.cheaderText .f{
+  font-family: 'Tangerine', cursive;
+  font-size: 6rem; /* Slightly larger to match the aesthetics */
+  color: #2641a0;
+  text-shadow: 3px 2px 3px rgba(73, 73, 83, 0.2); 
+  font-weight: 500;
+  display: inline;
+  height: auto;
+}
+
+.cheaderText .middle{
+  line-height: 1;
+}
+
+.cheaderText .middle .s {
+  font-family: 'Tangerine', cursive;
+  font-size: 1.9em; /* Slightly larger to match the aesthetics */
+  margin-bottom: -0.55rem;
+  height: auto;
+}
+
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
   
