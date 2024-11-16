@@ -30,7 +30,7 @@ const PDFViewerSponsorship = () => {
 			>
 				<Page renderAnnotationLayer={false} renderTextLayer={false} pageNumber={pageNumber} scale={55/72}/>
 			</Document>
-            <div style={{paddingTop: '10px'}}>
+            <div style={{paddingTop: '10px', textAlign: "center"}}>
                 <p>
                     Page {pageNumber} of {numPages}
                 </p>
