@@ -15,7 +15,7 @@ const About = () => {
               <p>Evening with Industry (EWI) is one of Society of Women Engineers’ flagship events and the largest student-run networking event on UCLA campus. In 2025, SWE @ UCLA will host the 48th annual Evening with Industry at UCLA’s Carnesale Commons.</p>
               <p>At this event, we strive to create an environment that is more personal than a typical career fair. To do this, our event has a three-part structure: informal networking over appetizers, a multi-course catered dinner, and then a formal career fair. </p>
               <p>During dinner, students get to sit with and talk to representatives from the company of their choice. The relaxed dinner setting contrasts a high-stakes, fast-paced career fair, encouraging more unscripted conversations and allowing both parties to engage in more genuine conversation. The extended time and decreased pressure allows students and representatives to present themselves authentically and connect over shared experiences. </p>
-              <p>While the event is traditionally oriented towards women in engineering, we welcome students of all genders and academic backgrounds relevant to the engineering field. Our primary goal is to ensure that every attendee gains an enriching and worthwhile experience.  </p>
+              <p>While the event is traditionally oriented towards women in engineering, we welcome students of all genders and academic backgrounds relevant to the engineering field. Our primary goal is to ensure that every attendee gains an enriching and worthwhile experience. </p>
             </div>
       </div>
     </div>
@@ -51,7 +51,7 @@ const About = () => {
       </div>
 
     </section>
-  )
-}
+  );
+};
 
-export default About
+export default About;

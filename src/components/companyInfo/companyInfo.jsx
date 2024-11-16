@@ -8,14 +8,14 @@ import {Link} from "react-router-dom";
 const CompanyInfo = () => {
   return (
     <div className="container company__content"> 
-        <p id="registration">Thank you for your interest in EWI!  Evening with Industry is a unique opportunity to spread awareness of your company and make personal connections with hundreds of talented UCLA engineering students at the same time.</p>     
+        <p id="registration">Thank you for your interest in EWI! Evening with Industry is a unique opportunity to spread awareness of your company and make personal connections with hundreds of talented UCLA engineering students at the same time.</p>     
             <div className="company__info">
             <h2>Registration</h2>
                 <div className="company__text">
-                    <p>Early bird pricing will remain until December 8, 2023. For the company registration form, please reach us at ewi.swe.ucla@gmail.com.</p>
+                    <p>Early bird pricing will be available until November 29th, 2024. For the company registration form, please reach us at ewi.swe.ucla@gmail.com.</p>
                     <div className="indented__paragraph">
                         <h3>Startups</h3>
-                        <p id='survival_guide'>To diversify the range of opportunities available to our student attendees, we are introducing a startup discount to EWI 2024. Contact us about startup pricing!</p>
+                        <p id='survival_guide'>To diversify the range of opportunities available to our student attendees, we are introducing a startup discount to EWI 2025. Contact us about startup pricing!</p>
                     </div> 
                 </div>
 
