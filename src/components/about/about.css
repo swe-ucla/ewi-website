@@ -26,7 +26,8 @@
   display: flex;
   flex-direction: column; /* Stacks the rows vertically */
   justify-content: center;
-  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .image_container-row {
@@ -43,7 +44,7 @@
 
 
 .image_container-column-image img {
-  width: 100%; /* Ensures the image does not stretch outside its container */
+  max-width: 100%; /* Ensures the image does not stretch outside its container */
   height: auto;
   display: flex;
   align-items: left;
