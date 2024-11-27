@@ -28,14 +28,6 @@ const CompanyInfo = () => {
             </div>
 
             <h2>Student Demographics</h2>
-            {/* <div class="row-demographics">
-                <div class="column-demographics">
-                    <img src={require('../../assets/EWI2022StudentMajors.png')} alt="2022 student majors chart"/>
-                </div>
-                <div class="column-demographics">
-                    <img src={require('../../assets/EWI2023StudentMajors.png')} alt="2023 student majors chart"/>
-                </div>
-            </div> */}
             <div className="company__text">
                 <div class="row-demographics">
                     <div class="column-demographics">
