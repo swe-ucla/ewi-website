@@ -2,6 +2,8 @@ import React from 'react'
 import './studentInfo.css'
 import PDFViewerStudent from './PDFViewerStudent'
 import SendMessage from '../sendMessage/sendMessage';
+import student_guide from '../../assets/Updated SSG.pdf';
+
 
 const StudentInfo = () => {
   return (
@@ -55,17 +57,26 @@ const StudentInfo = () => {
     //       </p>
     //     </div>
     //     <h2>Student Survival Guide</h2>
-    //     <div className='container pdf_container'>
+    //     {/* <div className='container pdf_container'>
     //       <PDFViewerStudent/>
-    //     </div>
+    //     </div> */}
+    //     <iframe 
+    //     src={student_guide}
+    //     style={{
+    //         alignSelf: 'center',
+    //         width: '80%',
+    //         height: `60rem`,
+    //         border: 'none',
+    //         display: 'block',
+    //         padding: '1rem'
+    //     }}
+    //     />
     //     <h2>Other Questions?</h2>
     //     <p>Send us a message using the form below!</p>
     //     <br />
     //     <div className="container send_message">
     //       <SendMessage />
     //     </div>
-
-
     //   </div>
   );
 };
