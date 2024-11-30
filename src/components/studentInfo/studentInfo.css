@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
 .coming_soon{
     height: 20rem;
     padding-top: 5rem;
 }
 
 .student__content p {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
     font-family: 'Inter', sans-serif;
     font-size: 16px;
     text-align: left;
@@ -19,6 +23,8 @@
 }
 
 .student__content h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     text-align: left;
@@ -69,15 +75,17 @@
     color: blue;
 }
 
-li {
+.student__content li {
     font-family: 'Inter', sans-serif;
     display: list-item;
     list-style-type: circle;
     background: var(--color-bg);
     color: var(--color-white);
+    background: var(--color-bg);
+    color: var(--color-white);
 }
 
-ul {
+.student__content ul {
     padding-left: 20px;
 }
 
