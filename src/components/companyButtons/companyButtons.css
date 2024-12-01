@@ -46,8 +46,40 @@
   justify-content: center;
 }
 
+/* ================ MEDIA QUERIES FOR SMALL DEVICES ================= */
+
+@media screen and (max-width: 1024px) {
+  .flex-container {
+    flex-direction: column; 
+    padding: 20px; /* between header and first button*/
+    gap: 1rem; /* between each button */
+  }
+
+  .btn {
+    width: 100%; 
+  }
+
+  .buttonRegistration, .buttonSG, .buttonSWESponsor {
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ================ MEDIA QUERIES FOR XSMALL DEVICES ================= */
+
 @media screen and (max-width: 600px) {
   .flex-container {
-      display: none;
+    flex-direction: column;  /* Stack buttons vertically */
+    padding: 20px; /* between header and first button*/
+    gap: 1rem; /* between each button */
+  }
+
+  .btn {
+    width: 100%;
+    font-size: 16px; 
+  }
+  .buttonRegistration, .buttonSG, .buttonSWESponsor {
+    align-items: center;
+    justify-content: center;
   }
 }
