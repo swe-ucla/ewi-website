@@ -11,7 +11,7 @@ const StudentInfo = () => {
       <p>Coming Soon!</p>
     </div>
     // <div className="container student__content">
-    //     <h2>Student Registration</h2>
+    //     <h2>Registration</h2>
     //     <div className="student__paragraph">
     //       <p>
     //           Student registration for Evening with Industry 2024 opened on January 11, 2024 at 9 PM. Everyone is invited, regardless of gender. Table assignments are first come, first serve, register as soon as possible to ensure you get to sit with your top choice company! We will also begin a waitlist as we hit capacity.* 
@@ -27,9 +27,7 @@ const StudentInfo = () => {
     //         <br/>
     //       </p>
     //       <ul>
-    //         <li>1/11 - 1/18 @ 9:00PM: $5 for nationally registered SWE members / $10 for non-members </li>
-    //         <li> 1/18 - 1/25 @ 9:00PM: $10 for nationally registered SWE members / $15 for non-members</li>
-    //         <li> 1/25 - 2/1 @ 11:59PM: $15 for nationally registered SWE members / $20 for non-members </li>
+    //         <li>Coming Soon!</li>
     //       </ul>
     //       <br />
     //       <p>
