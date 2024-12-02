@@ -43,6 +43,10 @@
 .image_container-row:last-child {
   display: flex;
   align-items: flex-end;
+  justify-content: space-between; /* Match the alignment of the top row */
+  gap: 2rem; /* Maintain spacing between images */
+  width: 100%; /* Ensure the row takes the full width of its parent container */
+  margin: 0 auto; /* Center the entire row */
 }
 
 /* Container for the EWI 2024 image and its text */
