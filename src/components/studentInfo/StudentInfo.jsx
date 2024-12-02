@@ -28,9 +28,7 @@ const StudentInfo = () => {
              <br/>
            </p>
            <ul>
-             <li>1/11 - 1/18 @ 9:00PM: $5 for nationally registered SWE members / $10 for non-members </li>
-             <li> 1/18 - 1/25 @ 9:00PM: $10 for nationally registered SWE members / $15 for non-members</li>
-             <li> 1/25 - 2/1 @ 11:59PM: $15 for nationally registered SWE members / $20 for non-members </li>
+             <li>Coming Soon! </li>
            </ul>
            <br />
            <p>
