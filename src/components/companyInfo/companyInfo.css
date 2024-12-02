@@ -110,24 +110,65 @@
     color: rgb(141, 141, 255);
 }
 
-/* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
+/* ================ MEDIA QUERIES FOR SMALLER DEVICES (TABLETS, PHONES) ================= */
+
 @media screen and (max-width: 1024px) {
-    .company__content p {
-        margin: 1rem 0 1.5rem;
+    .company__info {
+        grid-template-columns: 1fr;
+        row-gap: 0.1rem;
     }
 
-    .column-demographics {
-        width: 80%;
+    .pdf_container {
+        width: 90%; /* Allow PDF viewer to take up most of the screen width */
+        margin: 0 auto;
+    }
+
+    .download-link {
+        font-size: 14px; /* Make the download link smaller */
+    }
+
+    .company__buttons {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; /* Allow wrapping of buttons for smaller screens */
+      
     }
 }
 
-/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
+/* Phones and smaller devices (up to 600px) */
 @media screen and (max-width: 600px) {
-    .company__content p {
-        margin: 1.5rem 0;
+
+    .company__info {
+        grid-template-columns: 1fr; 
+        row-gap: 0.1rem;
     }
-    
+
     .column-demographics {
-        width: 100%;
+        width: 100%; /* Make the images in the demographic section full-width */
+        margin-bottom: 1rem; /* Add some space between images */
+    }
+
+    .pdf_container {
+        width: 100%; /* Make PDF container take up full width */
+        margin-left: 0; /* Reset margins for smaller screens */
+        margin-right: 0;
+    }
+
+    .download-link {
+        font-size: 14px; /* Adjust download link font size */
+    }
+
+    .company__buttons {
+        display: flex;
+        flex-direction: column; /* Stack buttons vertically */
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Adjust the image size in student demographics for small screens */
+    .row-demographics img {
+        max-width: 100%; /* Ensure images scale properly */
+        height: auto;
     }
 }
+
