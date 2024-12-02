@@ -23,7 +23,7 @@ const About = () => {
       <div className="image_container"> 
         <div class="image_container-row">
           <div className="image_container-column-image">
-            <img src={COMMITTEE2024} style={{width: "593px", height: "355px"}} alt={'EWI Committee 2024'}/>
+            <img src={COMMITTEE2024} style={{width: "700px", height: "415px"}} alt={'EWI Committee 2024'}/>
             <div class="image_container-column-caption">EWI Committee 2024</div>
           </div>
 
@@ -33,7 +33,22 @@ const About = () => {
           </div>
         </div>
 
-        <div class="image_container-row" style={{display: "flex"}}>
+        <div class="image_container-row">
+        <div class="image_container-column image_container-text">
+            <p>Our mission is to continue to make EWI accessible to all types of students and to match them with fulfilling roles at companies they are inspired by, and we hope that each student leaves EWI with confidence in their capabilities and a sense of belonging in engineering and industry as a whole.  </p>
+          <div className="image_container-column-image:first-child">
+            <img src={EWI2024} style={{width: "701px", height: "318px"}}  alt={'EWI 2024'}/>
+            <div class="image_container-column-caption">EWI 2024</div>
+          </div>
+          </div>
+
+          <div className="image_container-column-image:last-child" >
+          <img src={EWI20XX} style={{width: "430px", height: "500px", marginTop: '-4rem'}} alt={'EWI 20XX'}/>
+          <div class="image_container-column-caption" style={{textAlign: "right"}}>EWI 20XX</div>
+          </div>
+        </div>
+
+        {/* <div class="image_container-row" style={{display: "flex"}}>
           <div className="image_container-column-image" style={{width: "1500px"}}>
             <div class="image_container-column image_container-text">
               <p>Our mission is to continue to make EWI accessible to all types of students and to match them with fulfilling roles at companies they are inspired by, and we hope that each student leaves EWI with confidence in their capabilities and a sense of belonging in engineering and industry as a whole.  </p>
@@ -46,7 +61,7 @@ const About = () => {
           <img src={EWI20XX} style={{width: "402px", height: "475px"}} alt={'EWI 20XX'}/>
           <div class="image_container-column-caption" style={{textAlign: "right"}}>EWI 20XX</div>
           </div>
-        </div>
+        </div> */}
         
       </div>
 
