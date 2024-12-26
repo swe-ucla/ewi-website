@@ -4,9 +4,6 @@
   gap: 2.5rem;
 }
 
-/* h2 {
-  font-size: 2rem;
-} */
 
 .portfolio__item {
   width: 70%;  /* Adjust this to control the width */
@@ -34,6 +31,7 @@
   margin: 1.2rem 0 0.7rem;
   font-family: "Inter";
 }
+
 .portfolio__item h4 {
   margin: 0rem 0 0.7rem;
   font-weight: 350;
@@ -61,4 +59,5 @@
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
 }
