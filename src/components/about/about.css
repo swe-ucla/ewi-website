@@ -2,8 +2,7 @@
   display: grid;
   grid-template-columns: 0.8fr 3.5fr; /* Adjust column widths as needed */
   gap: 20px; /* Optional: Adds space between columns */
-  margin-bottom: 2rem;
-  min-width: 1200px;
+  margin-bottom: 2rem; 
 }
 
 .custom-grid h2{
@@ -26,16 +25,19 @@
   padding-right: 7rem;
   display: flex;
   flex-direction: column; /* Stacks the rows vertically */
-  width: 100%;
-  min-width: 1200px;
+  justify-content: center;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .image_container-row {
   display: flex;
+  justify-content: left;
   width: 100%; /* Ensures each row takes up the full width of the container */
   padding-bottom: 2rem;
   gap: 3rem;
 }
+
 
 /* First row specific styles */
 .image_container-row:first-child {
@@ -55,13 +57,14 @@
  /* Container for the EWI 2024 image and its text */
 .image_container-row:last-child .image_container-column-image:first-child {
   width: 701px;
-  flex-shrink: 0;
+  flex-shrink: auto;
  }
 
-.image_container-column-image img {
-  width: 100%; /* Ensures the image does not stretch outside its container */
+ .image_container-column-image img {
+  max-width: 100%; /* Ensures the image does not stretch outside its container */
   height: auto;
-  display: block;
+  display: flex;
+  align-items: left;
 }
 
 .image_container-column-caption {
@@ -78,6 +81,7 @@
   box-sizing: border-box; 
   max-width: 701px;
 }
+
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
@@ -136,3 +140,4 @@
     font-weight: 500;
   }
 }
+  
