@@ -7,6 +7,7 @@ import Navbar from '../components/navbar/navbar'
 import Portfolio from '../components/portfolio/Portfolio'
 import Contact from '../components/contact/Contact'
 import Footer from '../components/footer/Footer'
+import Committee from '../components/committee/Committee'
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
             {/*<Nav />*/}
             <About />
             <Portfolio />
+            <Committee />
             <Contact /> 
             <Footer />
         </div>
