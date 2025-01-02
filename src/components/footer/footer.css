@@ -67,4 +67,8 @@ footer p {
   .footer__socials {
     margin-bottom: 2.6rem;
   }
+
+  footer p{
+    padding: 0 0.5rem 0 0.5rem;
+  }
 }

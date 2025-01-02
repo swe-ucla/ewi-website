@@ -107,6 +107,19 @@ header {
   }
 
   .headerText h1 {
-    font-size: 4rem;
+    font-size: 3.5rem;
+  }
+
+  .event__date {
+    margin-top: 1rem;
+    font-size: 1.15rem;
+  }
+
+  .contact-button {
+    margin-top:3em;
+  }
+  
+  .contact-button-contents {
+    font-size:calc(0.85em + 0.5vw);
   }
 }

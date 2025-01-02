@@ -70,23 +70,22 @@
       display: none;
     }
 
-    .cheaderText {
-      margin-top: 1rem;
+    .cheaderText .f{
+      font-size: 5rem;
     }
-
-    .cheaderText h2 {
-        font-size: 2.8rem;
-      }
+    .cheaderText h1 {
+        font-size: 2.75rem;
+    }
     
   }
 
   @media screen and (max-width: 400px) {
-    .cheaderText {
-      margin-top: 1.8rem;
-    }
 
-    .cheaderText h2 {
-        font-size: 2rem;
-      }
+    .cheaderText .f{
+      font-size: 5rem;
+    }
+    .cheaderText h1 {
+      font-size: 2.75rem;
+    }
     
   }

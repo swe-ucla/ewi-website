@@ -14,12 +14,12 @@ export const Contact = () => {
 
       <div className="container contact__container">
         <div className="contact__options">
-          <article className="contact__option">
+          <div className="contact__option">
             <HiOutlineMail className='contact__option-icon'/>
             <h4 style = {{fontSize:'1rem'}}>Email</h4>
             <h5 style = {{fontSize:'0.75rem', paddingTop:'0.3rem'}}>ewi.swe.ucla@gmail.com</h5>
             <a href="mailto:ewi.swe.ucla@gmail.com">Send a message</a>
-          </article>
+          </div>
         </div>
         {/* END OF CONTACT OPTIONS */}
         <SendMessage />

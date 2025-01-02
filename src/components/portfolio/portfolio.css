@@ -61,4 +61,13 @@
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+  .portfolio__item {
+    width: 100%; 
+  }
+  .portfolio__item-image {
+    width: 80%;
+    margin: 0 auto; /* Centers the image */
+    display: block;
+  }
+  
 }
