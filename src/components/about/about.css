@@ -54,11 +54,6 @@
   margin: 0 auto; /* Center the entire row */
  }
 
- /* Container for the EWI 2024 image and its text */
-.image_container-row:last-child .image_container-column-image:first-child {
-  width: 701px;
-  flex-shrink: auto;
- }
 
  .image_container-column-image img {
   max-width: 100%; /* Ensures the image does not stretch outside its container */
@@ -74,6 +69,14 @@
   font-weight: 400;
 }
 
+.image_container-column-caption-right {
+  font-size: 1.15rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  font-weight: 400;
+  text-align: right;
+}
+
 .image_container-text p {
   text-align: left;
   padding-bottom: 2rem;
@@ -85,6 +88,15 @@
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
 @media screen and (max-width: 1024px) {
+  .custom-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .about__paragraph{
+    margin-top: -5%;
+  }
+
   .about__container {
     grid-template-columns: 1fr;
     gap: 0;
@@ -107,7 +119,7 @@
   }
 
   .about__content p {
-    margin: 1.5rem 0;
+    margin: 0.5rem 0;
   }
 
   .about__content h2{
@@ -122,9 +134,14 @@
     justify-content: center;
   }
 
+  .image_container-row{
+    display: block;
+  }
+
   .image_container-column {
     float: left;
     width: 100%;
+    display: block;
   }
 
   .image_container-column-image{
@@ -137,7 +154,17 @@
     font-size: 1.25rem;
     padding-bottom: 0.5rem;
     padding-top: 0.5rem;
-    font-weight: 500;
   }
+
+
+  .image_container-row:last-child {
+    display: block;
+  }
+
+  .image_container-column-caption-right {
+    text-align: center;
+    margin-bottom: -20%;
+  }
+
 }
   

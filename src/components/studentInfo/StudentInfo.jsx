@@ -50,17 +50,7 @@ const StudentInfo = () => {
 
 
         <h2>Student Survival Guide</h2>
-        <iframe 
-        src={student_guide}
-        style={{
-            alignSelf: 'center',
-            width: '80%',
-            height: `60rem`,
-            border: 'none',
-            display: 'block',
-            marginTop: '3rem',
-        }}
-        />
+        <iframe src={student_guide}/>
 
 
         <h2>Other Questions</h2>

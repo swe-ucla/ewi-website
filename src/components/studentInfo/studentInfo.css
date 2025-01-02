@@ -118,23 +118,71 @@
     color: var(--color-black);
 }
 
-
-/* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
-@media screen and (max-width: 1024px) {
-    .company__content p {
-        margin: 1rem 0 1.5rem;
-    }
+.student__content iframe{
+    align-self: 'center';
+    width: '80%';
+    height: 60rem;
+    border: 'none';
+    display: 'block';
+    margin-top: '3rem';
 }
 
-/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
-@media screen and (max-width: 600px) {
-    .company__content p {
-        margin: 1.5rem 0;
+
+
+@media screen and (max-width: 1024px) {
+    .student__info {
+        grid-template-columns: 1fr;
+        row-gap: 0.1rem;
     }
 
+    .pdf_container {
+        width: 90%; /* Allow PDF viewer to take up most of the screen width */
+        margin: 0 auto;
+    }
+
+    .download-link {
+        font-size: 14px; /* Make the download link smaller */
+    }
+
+    .company__buttons {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap; /* Allow wrapping of buttons for smaller screens */
+      
+    }
+
+    
+    .student__content iframe{
+        width: 100%;
+        height: 25rem;
+      }
+}
+
+/* Phones and smaller devices (up to 600px) */
+@media screen and (max-width: 600px) {
+
+    .student__info {
+        grid-template-columns: 1fr; 
+        row-gap: 0.1rem;
+    }
+
+    .column-demographics {
+        width: 100%; /* Make the images in the demographic section full-width */
+        margin-bottom: 1rem; /* Add some space between images */
+    }
+
+    .pdf_container {
+        width: 100%; /* Make PDF container take up full width */
+        margin-left: 0; /* Reset margins for smaller screens */
+        margin-right: 0;
+    }
     .react-pdf__Page__canvas {
         margin: 0 auto;
         width: 20rem !important;
         height: 100% !important;
     }
+    .student__info p {
+        margin-top: 1rem;
+    }
+
 }

@@ -44,7 +44,7 @@ const About = () => {
 
           <div className="image_container-column-image" >
           <img src={EWI20XX} style={{width: "430px", height: "500px", marginTop: '-4rem'}} alt={'EWI 20XX'}/>
-          <div class="image_container-column-caption" style={{textAlign: "right"}}>EWI 20XX</div>
+          <div class="image_container-column-caption-right">EWI 20XX</div>
           </div>
         </div>
 

@@ -24,17 +24,7 @@ const CompanyInfo = () => {
             <h2>Company Representative Survival Guide</h2>  
             <div className="company__text">
                 <p>To help guide our company representative guests and prepare them for the evening, our Corporate Relations chair has created the Company Rep Survival Guide!</p>
-                <iframe 
-                src={company_guide}
-                style={{
-                    alignSelf: 'center',
-                    width: '70%',
-                    height: `50rem`,
-                    border: 'none',
-                    display: 'block',
-                    padding: '1.5rem'
-                }}
-                />
+                <iframe src={company_guide}/>
             </div>
             
 
@@ -52,16 +42,7 @@ const CompanyInfo = () => {
             <div className="company__text">
                 <p>If you would like to support SWE@UCLA as a whole, you may view or <Link className="download-link" to="/2024-25 SOCIETY OF WOMEN ENGINEERS @UCLA SPONSORSHIP PACKET FINAL.pdf" target="_blank" download>download</Link> the sponsorship packet below to learn more about our sponsorship tiers. Send an email to our External Vice President at evp.swe.ucla@gmail.com if you have any questions!</p>
                 <iframe 
-                src={sponsorship_packet}
-                style={{
-                    alignSelf: 'center',
-                    width: '70%',
-                    height: `50rem`,
-                    border: 'none',
-                    display: 'block',
-                    padding: '1.5rem'
-                }}
-                />
+                src={sponsorship_packet}/>
             </div>
             </div>
     </div>
