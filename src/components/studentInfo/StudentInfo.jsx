@@ -14,7 +14,7 @@ const StudentInfo = () => {
           <p>
               Student registration for Evening with Industry 2025 has not opened yet. Everyone is invited, regardless of gender. Table assignments are first come, first serve, register as soon as possible to ensure you get to sit with your top choice company! We will also begin a waitlist as we hit capacity.* 
           <br/><br/>
-          <a className="btn" href="https://docs.google.com/forms/d/1ifw7WO5da8OaMP1yaPWfvdGZP80MlKe4R2ytlkhftbU/viewform?edit_requested=true" target="_blank" rel="noopener noreferrer">Student Registration Form</a>
+          <a className="btn" href="https://forms.gle/W4PZsdmeKZdZDCso6" target="_blank" rel="noopener noreferrer">Student Registration Form</a>
           <br/>
           <br/>
           <br/>
