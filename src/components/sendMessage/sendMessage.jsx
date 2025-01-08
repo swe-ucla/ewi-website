@@ -9,7 +9,7 @@ export const SendMessage = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_q6yqhll', 'template_yfbrimt', form.current, 'udePWyliPh6tOWF6h');
+    emailjs.sendForm('service_q6yqhll', 'template_yfbrimt', form.current, 'Z7j812LuDjlbsCsMe');
 
     e.target.reset();
   };
