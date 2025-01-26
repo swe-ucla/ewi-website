@@ -2,7 +2,7 @@ import React from 'react'
 import './studentInfo.css'
 import PDFViewerStudent from './PDFViewerStudent'
 import SendMessage from '../sendMessage/sendMessage';
-import student_guide from '../../assets/Updated SSG.pdf';
+import student_guide from '../../assets/EWI Student Survival Guide 2024-2025.pdf';
 
 
 const StudentInfo = () => {

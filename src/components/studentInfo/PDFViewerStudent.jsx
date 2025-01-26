@@ -1,5 +1,5 @@
 import React from 'react';
-import student_guide from '../../assets/Updated SSG.pdf';
+import student_guide from '../../assets/EWI Student Survival Guide 2024-2025.pdf';
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`

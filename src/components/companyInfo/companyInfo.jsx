@@ -4,7 +4,7 @@ import PDFViewerCompanyGuide from './PDFViewerCompanyGuide';
 import PDFViewerSponsorship from './PDFViewerSponsorship';
 import CompanyButtons from '../companyButtons/CompanyButtons';
 import {Link} from "react-router-dom";
-import company_guide from '../../assets/Updated CSG.pdf';
+import company_guide from '../../assets/EWI 2025 Company Survival Guide.pdf';
 import sponsorship_packet from '../../assets/24-25SWE@UCLASPONSORSHIP PACKET.pdf';
 
 const CompanyInfo = () => {
