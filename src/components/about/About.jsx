@@ -43,8 +43,8 @@ const About = () => {
           </div>
 
           <div className="image_container-column-image" >
-          <img src={EWI20XX} style={{width: "430px", height: "500px", marginTop: '-4rem'}} alt={'EWI 20XX'}/>
-          <div class="image_container-column-caption-right">EWI 20XX</div>
+          <img src={EWI20XX} style={{width: "430px", height: "500px", marginTop: '-4rem'}} alt={'EWI 2024'}/>
+          <div class="image_container-column-caption-right">EWI 2024</div>
           </div>
         </div>
 
