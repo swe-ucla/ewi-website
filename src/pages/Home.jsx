@@ -8,6 +8,7 @@ import Portfolio from '../components/portfolio/Portfolio'
 import Contact from '../components/contact/Contact'
 import Footer from '../components/footer/Footer'
 import Committee from '../components/committee/Committee'
+import MeetTheTeam from '../components/meetTheTeam/MeetTheTeam'
 
 const Home = () => {
   return (
@@ -19,6 +20,7 @@ const Home = () => {
             <About />
             <Portfolio />
             <Committee />
+            <MeetTheTeam />
             <Contact /> 
             <Footer />
         </div>
