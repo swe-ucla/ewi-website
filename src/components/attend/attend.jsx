@@ -3,6 +3,7 @@ import "./attend.css";
 import CTA from "./CTA";
 import CTA2 from "./CTA2";
 import Timer from "../timer/Timer";
+import CompanyGrid from "../companyGrid/CompanyGrid";
 
 const Attend = () => {
   return (
@@ -17,6 +18,7 @@ const Attend = () => {
         {/* <Timer/> */}
         <CTA />
         <CTA2 />
+        <CompanyGrid />
         <h6 id="about"></h6>
       </div>
     </section>
