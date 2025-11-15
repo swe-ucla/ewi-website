@@ -51,4 +51,9 @@
   color: white;
   font-size: 1.1rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero-buttons button:hover {
+  transform: scale(1.05);
 }
