@@ -1,0 +1,32 @@
+.google-map-container {
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.google-map-wrapper {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.google-map-wrapper iframe {
+  width: 100%;
+  height: 600px;
+  border: 0;
+  display: block;
+}
+
+@media screen and (max-width: 1024px) {
+  .google-map-wrapper iframe {
+    height: 500px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .google-map-wrapper iframe {
+    height: 400px;
+  }
+}
+
