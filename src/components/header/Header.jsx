@@ -1,36 +1,20 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./header.css";
-import Timer from "../timer/Timer";
-import { HashLink } from "react-router-hash-link";
-import arrowIcon from "./contact_arrow.svg";
-
-const eventDate = "JAN 22ND, 2026 @ CARNESALE COMMONS";
+import hero_text from "../../assets/hero_text.svg";
 
 const Header = () => {
   return (
-    <header>
-      <div className="container header__container">
-        <div className="headerText">
-          <h1>
-            <span className="e">e</span>vening
-            <br />
-            <span className="with">with</span>
-            <br />
-            <span className="industry">
-              industr<span className="y">y</span>
-            </span>
-          </h1>
-          <div className="event__date">{eventDate}</div>
-          <div className="contact_btn"></div>
-        </div>
-        <button class="button contact-button">
-          <HashLink to="/#contact">
-            <span className="contact-button-contents">
-              contact us
-              <img src={arrowIcon} alt="arrow pointing down" />
-            </span>
-          </HashLink>
-        </button>
+    <header className="hero">
+      <img src={hero_text} className="hero-text" alt="Hero text" />
+
+      <div className="hero-buttons">
+        <Link to="/student">
+          <button>FOR STUDENTS</button>
+        </Link>
+        <Link to="/company">
+          <button>FOR COMPANIES</button>
+        </Link>
       </div>
     </header>
   );
