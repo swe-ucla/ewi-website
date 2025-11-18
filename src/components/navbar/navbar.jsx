@@ -1,6 +1,6 @@
 import React from 'react';
 import './navbar.css';
-import LOGO from '../../assets/swe-ewi-new.png'
+import LOGO from '../../assets/ewi_logo_2026.png'
 import {Link} from "react-router-dom";
 import {HashLink} from "react-router-hash-link";
 
@@ -17,14 +17,11 @@ const Navbar = () => {
 
             {/* full size navbar */}
             <div className="tabs">
-                <div className="dropdown">
-                    <a className="tab">Attend EWI</a>
-                    <div className="dropdown-content">
-                        <HashLink className="hash-link" to="/student/#top">Students</HashLink>
-                        <HashLink className="hash-link" to="/company/#top">Companies</HashLink>
-                    </div>
-                </div>
-                <HashLink className="hash-link" to="/#about"><a className="tab about" href="#about">About Us</a></HashLink>
+                <HashLink className="tab" to="/#top">Home</HashLink>
+                <HashLink className="tab" to="/student/#top">Students</HashLink>
+                <HashLink className="tab" to="/company/#top">Companies</HashLink>
+                <HashLink className="tab" to="/#committee">Meet the Team</HashLink>
+                <HashLink className="tab" to="/#contact">Contact Us</HashLink>
             </div>
         </div>
     );

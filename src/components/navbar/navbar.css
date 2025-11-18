@@ -32,51 +32,15 @@
 
 .tab {
     display: inline-block;
-    color: black;
+    color: rgb(141, 72, 95);
     padding: 10px 15px;
     transition: background-color 0.3s ease;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .tab:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Dropdown Container */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-/* Dropdown Content (Hidden by default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-
-/* Show dropdown content on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Style to retain the hover color on main tab during dropdown hover */
-.dropdown:hover .tab {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Menu Icon */
@@ -126,45 +90,34 @@
 
     .tab {
         position: relative;
-    }
-
-    .hash-link {
-        background-color: #f9f9f9;
-        position: relative;
-        min-width: 145px;
-    }
-
-    .about {
-        margin-top: 80px;
-        width: 180px; 
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .tabs {
         max-height: 0;
-        width: 160px;
+        width: 200px;
         flex-direction: column;
         overflow: hidden;
         background-color: #f9f9f9;
-        right: auto;
+        right: 10px;
+        position: fixed;
+        top: 67px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        border-radius: 4px;
     }
 
     .hamb {
         display: block;
     }
     
-    /* Show dropdown content on hover */
-    .dropdown-content {
-        display: block;
-        padding-left: 15px;
-        box-shadow: none;
-        min-width: none;
-    }
-
     /* Toggle menu icon */
     .side-menu:checked ~ .tabs{
-        max-height: 100%;
+        max-height: 500px;
         overflow: visible;
-        margin-top: 113px;
     }
 
     .side-menu:checked ~ .hamb .hamb-line {
@@ -177,9 +130,5 @@
     .side-menu:checked ~ .hamb .hamb-line::after {
         transform: rotate(45deg);
         top:0;
-    }
-
-    .dropdown {
-        display: block;
     }
 }
