@@ -2,6 +2,7 @@ import React from "react";
 import "./studentInfo.css";
 import PDFViewerStudent from "./PDFViewerStudent";
 import SendMessage from "../sendMessage/sendMessage";
+import Testimonials from "../testimonials/Testimonials";
 import student_guide from "../../assets/EWI Student Survival Guide 2024-2025.pdf";
 
 const StudentInfo = () => {
@@ -113,6 +114,9 @@ const StudentInfo = () => {
         */}
         <h2>Student Survival Guide</h2>
         <iframe src={student_guide} />
+        <div className="testimonials-wrapper">
+          <Testimonials />
+        </div>
         <h2>Other Questions</h2>
         <p>
           Send us a message using the form below!
