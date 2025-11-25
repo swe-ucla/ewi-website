@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import './Carousel.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import "./Carousel.css";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Carousel = ({ images = [], autoPlay = true, interval = 3000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,7 +46,7 @@ const Carousel = ({ images = [], autoPlay = true, interval = 3000 }) => {
         {images.map((_, index) => (
           <span
             key={index}
-            className={`dot ${index === currentIndex ? 'active' : ''}`}
+            className={`dot ${index === currentIndex ? "active" : ""}`}
             onClick={() => setCurrentIndex(index)}
           />
         ))}
