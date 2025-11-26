@@ -1,74 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&display=swap');
+
 footer {
-  background: var(--color-primary);
-  padding: 3rem 0;
-  text-align: center;
-  font-size: 0.9rem;
-  margin-top: 3.5rem;
-}
+  background: none;
+  position: relative;
 
-footer a {
-  color: var(--color-bg);
-}
-
-.footer__logo {
-  font-size: 2rem;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  display: inline-block;
-}
-
-.permalinks {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  margin: 0 auto 3rem;
-}
-
-.footer__socials {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 4rem;
+  min-height: 300px;
 }
 
-.footer__socials a {
-  background: var(--color-bg);
-  color: var(--color-white);
-  padding: 0.8rem;
-  border-radius: 0.7rem;
+.footer-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.footer-content {
+  position: absolute;
+  bottom: -7.5rem;
+  left: 50%;
+  transform: translateX(-50%); /* center horizontally */
+
   display: flex;
-  border: 1px solid transparent;
-}
+  justify-content: space-between;
+  align-items: center;
 
-.footer__socials a:hover {
-  background: transparent;
-  color: var(--color-bg);
-  border-color: var(--color-bg);
-}
-
-.footer__copyright {
-  margin-bottom: 4rem;
-  color: var(--color-bg);
+  width: 80%;
+  max-width: 1200px;
+  z-index: 1;
+  font-size: 2.2rem;
+  background-color: none;
 }
 
 footer p {
-  color: var(--color-bg);
-  background: var(--color-white);
+  color: #FFE1ED;
+  background-color: transparent;
+  font-family: 'Katibeh', cursive;
+  font-weight: 400;
+  text-shadow: 1px 1px 2px #ecbad06a;
+  font-size: 2.4rem;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-socials {
+  display: flex;
+  justify-content: space-between;
+  background-color: none;
+}
+
+footer a {
+  text-decoration: none;
+}
+
+.footer-socials a {
+  color: #FFE1ED;
+  border: none;
+  padding: 0.8rem;
+  display: flex;
+}
+
+.footer-socials a:hover {
+  background: transparent;
+  color: #8D485F;
 }
 
 /* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
 @media screen and (max-width: 600px) {
-  .permalinks {
+  .footer-content {
     flex-direction: column;
-    gap: 1.5rem;
+    align-items: center;
   }
 
-  .footer__socials {
-    margin-bottom: 2.6rem;
+  .footer-socials {
+    gap: 1rem;
+    margin-top: 1rem;
   }
 
-  footer p{
-    padding: 0 0.5rem 0 0.5rem;
+  footer p {
+    font-size: 1rem;
+    text-align: center;
   }
 }
