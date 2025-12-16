@@ -1,5 +1,6 @@
 import React from 'react'
 import './footer.css'
+import footer_background from "../../assets/footer_background.svg";
 import{BsLinkedin} from 'react-icons/bs'
 import {HashLink } from "react-router-hash-link";
 import{BsInstagram} from 'react-icons/bs'
@@ -8,24 +9,15 @@ import{HiOutlineMail} from 'react-icons/hi'
 const Footer = () => {
   return (
     <footer>
-      <HashLink to='/#' className='footer__logo'>Evening with Industry</HashLink>
-      
-      <ul className='permalinks'>
-        <li><HashLink to='/#'>Home</HashLink></li>
-        <li><HashLink to='/#attend'>Attend</HashLink></li>
-        <li><HashLink to='/#about'>About</HashLink></li>
-        <li><HashLink to='/#contact'>Contact</HashLink></li>
-      </ul>
-
-      <div className="footer__socials">
-        <a href="https://www.linkedin.com/company/swe-ucla" target="_blank"><BsLinkedin/></a>
-        <a href="https://www.instagram.com/uclasweewi/" target="_blank"><BsInstagram/></a>
-        <a href="mailto:ewi.swe.ucla@gmail.com" target="_blank"><HiOutlineMail/></a>
-       
+      <img src={footer_background} className="footer-background" alt="Footer Background" />
+      <div className="footer-content"> 
+        <p>made with love, swe dev team <span>&lt;3</span></p>
+        <div className="footer-socials"> 
+          <a href="https://www.linkedin.com/company/swe-ucla" target="_blank"><BsLinkedin/></a>
+          <a href="https://www.instagram.com/uclasweewi/" target="_blank"><BsInstagram/></a>
+          <a href="mailto:ewi.swe.ucla@gmail.com" target="_blank"><HiOutlineMail/></a>
+        </div>
       </div>
-
-     <p>+ a special thanks to webdev for putting this together for us :) (again)</p>
-
     </footer>
   )
 }
