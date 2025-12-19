@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap');
+
+.student-header {
+  width: 100%;
+  background: linear-gradient(180deg, #ECBAD0, #ffffff);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Noto Serif Bengali", sans-serif;
+}
+
+.student-header-content {
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  width: 50%;
+  max-width: 800px;
+
+  gap: 1.5rem;
+}
+
+.student-text {
+  margin-top: 6rem;
+  width: 50%;
+  max-width: 600px;
+}
+
+.student-header button {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: #8D485F;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  margin-bottom: 0.8rem;
+}
+
+.student-header button:hover {
+  transform: scale(1.05);
+}
+
+.student-header h3 {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+  color: #fff;
+  font-weight: 500;
+  background: none;
+}
+
+.student-header p {
+  font-size: 1rem;
+  color: #8D485F;
+  font-weight: 400;
+  background: none;
+  margin-bottom: 8rem;
+}

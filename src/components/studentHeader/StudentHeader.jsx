@@ -1,19 +1,16 @@
 import React from 'react'
-import '../companyHeader/companyHeader.css'
-
+import "./StudentHeader.css";
+import student_header_text from "../../assets/student_header_text.svg";
 
 const StudentHeader = () => {
   return (
-    <div className="cheader">
-      <div className="container cheader__container">
-        <div className="cheaderText">
-        <span className="f">f</span>
-          <h1>
-            <span className="middle">or student<span className="s">s</span></span>
-          </h1>
-        </div>
+    <div className="student-header">
+      <div className="student-header-content">
+        <img src={student_header_text} className="student-text" alt="Student Registration text" />
+        <h3 className="h3">regular deadline by 0/0</h3>
+        <button className="button">APPLY</button>
+        <p className="p">Eligibility: Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
       </div>
-      
     </div>
   )
 }
