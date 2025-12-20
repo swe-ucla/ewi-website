@@ -1,0 +1,125 @@
+.general-qa-container {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.general-qa-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 26px;
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 2%;
+  color: #8B8B6B; /* Dark olive green - same as survival tips */
+  text-transform: lowercase;
+  width: 100%;
+}
+
+.general-qa-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px; /* Center the list with max width */
+  margin-top: 2rem;
+}
+
+.general-qa-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+.general-qa-item {
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+}
+
+.general-qa-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.general-qa-question:hover {
+  opacity: 0.7;
+}
+
+.general-qa-question-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: var(--color-primary);
+  font-weight: 400;
+}
+
+.general-qa-icon {
+  font-size: 16px;
+  color: var(--color-primary);
+  transition: transform 0.3s ease;
+  transform: rotate(0deg);
+  font-weight: 300;
+}
+
+.general-qa-icon.open {
+  transform: rotate(90deg);
+}
+
+.general-qa-answer {
+  padding: 0 0 1.5rem 0;
+  animation: slideDown 0.3s ease;
+}
+
+.general-qa-answer p {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: var(--color-primary);
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+    transform: translateY(0);
+  }
+}
+
+/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
+@media screen and (max-width: 600px) {
+  .general-qa-title {
+    font-size: 1.5em;
+    margin-bottom: 2rem;
+  }
+
+  .general-qa-question {
+    padding: 1rem 0;
+  }
+
+  .general-qa-answer {
+    padding: 0 0 1rem 0;
+  }
+
+  .general-qa-question-text {
+    font-size: 14px;
+  }
+
+  .general-qa-answer p {
+    font-size: 14px;
+  }
+}
+
