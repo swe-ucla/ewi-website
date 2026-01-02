@@ -2,13 +2,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  border: 1px solid red;
 }
 
 .event-card {
   display: flex;
   gap: 20px;
-  border: 1px solid orange;
 }
 
 .event-card-number {

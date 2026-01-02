@@ -68,4 +68,3 @@ const CompanyGrid = () => {
 };
 
 export default CompanyGrid;
-
