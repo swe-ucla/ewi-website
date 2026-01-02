@@ -1,0 +1,53 @@
+.events-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  border: 1px solid red;
+}
+
+.event-card {
+  display: flex;
+  gap: 20px;
+  border: 1px solid orange;
+}
+
+.event-card-number {
+  color: var(--color-dark-pink);
+  text-align: center;
+  font-family: Katibeh;
+  font-size: 6rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 0.1;
+
+  margin-top: 3rem;
+}
+.event-card-rsvp {
+  background-color: white;
+  color: var(--color-dark-green);
+  border: 1px solid var(--color-dark-green);
+  border-radius: 0.5em;
+  padding: 0.2rem 0.4rem;
+}
+.event-card-title {
+  font-size: 2rem;
+  font-weight: 400;
+}
+.event-card-dateTime {
+  color: var(--color-dark-pink);
+  font-style: italic;
+}
+.event-card-description {
+}
+
+.events-section {
+  color: var(--color-dark-pink);
+}
+
+.section-title {
+  font-family: Katibeh;
+  font-size: 4rem;
+
+  line-height: 1;
+  text-align: center;
+}
