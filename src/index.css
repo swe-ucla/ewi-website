@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&family=Kumbh+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Text&family=Inter&family=Kumbh+Sans&display=swap");
 
 * {
   margin: 0;
@@ -14,9 +14,14 @@
 }
 
 :root {
+  --color-dark-pink: #8d485f;
+  --color-light-pink: #ffe1ed;
+  --color-light-green: #9da77a;
+  --color-dark-green: #3e4c13;
+
   --color-bg: rgb(255, 255, 255);
   /* --color-bg-variant: #9c9a9e; */
-  --color-bg-variant: #E6E8EF;
+  --color-bg-variant: #e6e8ef;
   --color-primary: black;
   --color-primary-variant: #1d121f;
   --color-white: black;
@@ -38,7 +43,7 @@ html {
 }
 
 h2 {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   font-weight: 700;
   color: #929292;
   text-transform: uppercase;
@@ -46,20 +51,19 @@ h2 {
 }
 
 h3 {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
 }
 
 body {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.7;
   font-weight: 300;
-
 }
 
 p {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
   background: var(--color-bg);
   color: var(--color-white);
   line-height: 1.25;
@@ -98,21 +102,20 @@ section {
   margin-top: 8rem;
 }
 
-section>h5 {
+section > h5 {
   text-align: center;
   color: var(--color-light);
   font-size: 1em;
   font-weight: 400;
 }
 
-section>h2 {
+section > h2 {
   font-weight: 700;
   color: #929292;
   margin-bottom: 4rem;
   text-align: left;
   margin-left: 5em;
 }
-
 
 .text-light {
   color: var(--color-light);
@@ -121,7 +124,7 @@ section>h2 {
 a {
   color: var(--color-primary);
   transition: var(--transition);
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
 }
 
 a:hover {
@@ -136,10 +139,10 @@ a:hover {
   border-radius: 1.75rem;
   cursor: pointer;
   border: 1px solid var(--color-primary);
-  border-color: #E6E8EF;
+  border-color: #e6e8ef;
   transition: var(--transition);
-  font-family: 'Inter', serif;
-  background-color: #E6E8EF !important;
+  font-family: "Inter", serif;
+  background-color: #e6e8ef !important;
 }
 
 .btn:hover {
@@ -160,11 +163,11 @@ img {
 }
 
 input {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
 }
 
 textarea {
-  font-family: 'Inter', serif;
+  font-family: "Inter", serif;
 }
 
 /* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
@@ -184,7 +187,7 @@ textarea {
     width: var(--container-width-sm);
   } */
 
-  section>h2 {
+  section > h2 {
     margin-bottom: 2rem;
     margin-left: 1.2em;
   }

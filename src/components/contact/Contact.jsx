@@ -4,12 +4,12 @@ import{HiOutlineMail} from 'react-icons/hi'
 import { useRef } from 'react';
 import emailjs from 'emailjs-com'
 import SendMessage from '../sendMessage/sendMessage';
+import GeneralQA from '../generalQA/GeneralQA';
 
 
 export const Contact = () => {
   return (
     <section>
-      
       <h2>Contact Us</h2>
 
       <div className="container contact__container">
@@ -24,6 +24,7 @@ export const Contact = () => {
         {/* END OF CONTACT OPTIONS */}
         <SendMessage />
       </div>
+      <GeneralQA />
     </section>
   )
 }

@@ -21,6 +21,12 @@
     margin-top: 3rem;
 }
 
+.accordion-wrapper {
+    grid-column: 1 / -1; /* Span all grid columns */
+    width: 100%;
+    margin-top: 3rem;
+}
+
 .student__content p {
     font-family: 'Inter', sans-serif;
     font-size: 16px;
