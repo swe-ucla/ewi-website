@@ -1,16 +1,19 @@
 import React from "react";
-import CompanyHeader from "../components/companyHeader/CompanyHeader";
-import CompanyInfo from "../components/companyInfo/companyInfo";
-import CompanyButtons from "../components/companyButtons/CompanyButtons";
+import CompanyRegistration from "../components/companyRegistration/CompanyRegistration";
+import GetInvolved from "../components/getInvolved/GetInvolved";
+import WhyGetInvolved from "../components/whyGetInvolved/WhyGetInvolved";
+import Testimonials from "../components/testimonials/Testimonials";
+import "./Companies.css";
 
-const Company = () => {
+const Companies = () => {
   return (
-    <div className="company">
-      <CompanyHeader />
-      <CompanyButtons />
-      <CompanyInfo />
+    <div className="companies-page">
+      <CompanyRegistration />
+      <GetInvolved />
+      <WhyGetInvolved />
+      <Testimonials />
     </div>
   );
 };
 
-export default Company;
+export default Companies;
