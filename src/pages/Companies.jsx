@@ -1,4 +1,3 @@
-import React from "react";
 import CompanyRegistration from "../components/companyRegistration/CompanyRegistration";
 import GetInvolved from "../components/getInvolved/GetInvolved";
 import WhyGetInvolved from "../components/whyGetInvolved/WhyGetInvolved";
