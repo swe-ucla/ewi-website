@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap');
+
+.get-involved {
+  width: 100%;
+  background: transparent;
+  padding: 3rem 0 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 100px;
+}
+
+.get-involved-content {
+  width: 100%;
+  max-width: 948px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 46px;
+}
+
+.get-involved-title {
+  font-family: 'Katibeh', serif;
+  font-size: 130px;
+  line-height: 0.74;
+  color: #3e4c13;
+  background: transparent;
+  text-shadow: 2px 2px 4px #9da77a;
+  letter-spacing: -1.3px;
+  text-align: center;
+  margin: 0;
+  height: 96.21px;
+  text-transform: none;
+  width: 100%;
+}
+
+.get-involved-description {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: black;
+  background: transparent;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 948px;
+  margin: 0;
+  height: 145px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.get-involved-buttons {
+  display: flex;
+  gap: 70px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.involved-button {
+  background: #6e7a47;
+  color: white;
+  border: none;
+  padding: 21px 14px;
+  border-radius: 10px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 180px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.involved-button:hover {
+  background: #5a6540;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.get-involved-stats {
+  display: flex;
+  gap: 70px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.stat-circle {
+  position: relative;
+  width: 278px;
+  height: 278px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.stat-circle-bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ffe1ed;
+  border: 1px solid #ecbad0;
+  z-index: 0;
+}
+
+.stat-number {
+  font-family: 'Katibeh', serif;
+  font-size: 130px;
+  line-height: 0.5;
+  color: #8d485f;
+  background: transparent;
+  text-shadow: 2px 2px 4px #ecbad0;
+  letter-spacing: -1.3px;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  margin-top: 1rem;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.stat-label {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #8d485f;
+  background: transparent;
+  letter-spacing: -0.2px;
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  /* margin-top: 0.5rem; */
+  text-align: center;
+  width: 100%;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 1024px) {
+  .get-involved {
+    gap: 60px;
+  }
+
+  .get-involved-content {
+    gap: 40px;
+  }
+
+  .get-involved-title {
+    font-size: 80px;
+  }
+
+  .get-involved-description {
+    font-size: 20px;
+    height: auto;
+  }
+
+  .get-involved-buttons {
+    gap: 40px;
+  }
+
+  .get-involved-stats {
+    gap: 40px;
+  }
+
+  .stat-circle {
+    width: 220px;
+    height: 220px;
+  }
+
+  .stat-number {
+    font-size: 100px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .get-involved {
+    padding: 2rem 0 4rem;
+    gap: 40px;
+  }
+
+  .get-involved-content {
+    gap: 30px;
+  }
+
+  .get-involved-title {
+    font-size: 60px;
+  }
+
+  .get-involved-description {
+    font-size: 18px;
+    padding: 0 1rem;
+    height: auto;
+  }
+
+  .get-involved-buttons {
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .involved-button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .get-involved-stats {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .stat-circle {
+    width: 200px;
+    height: 200px;
+  }
+
+  .stat-number {
+    font-size: 80px;
+  }
+
+  .stat-label {
+    font-size: 18px;
+  }
+}
+

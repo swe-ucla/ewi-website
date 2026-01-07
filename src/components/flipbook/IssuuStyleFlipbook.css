@@ -1,0 +1,850 @@
+.issuu-flipbook-container {
+  width: 100%;
+  max-width: 907px;
+  margin: 0 auto;
+  background: #0d1117;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.issuu-flipbook-viewer {
+  width: 100%;
+  height: 571px;
+  position: relative;
+  background: #0d1117;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Keep hidden for container */
+}
+
+.issuu-pages-spread {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2500px;
+  perspective-origin: center center;
+  position: relative;
+  transform-style: preserve-3d;
+  overflow: visible; /* Allow curl to show */
+  background: #0d1117; /* Match viewer background */
+}
+
+.issuu-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  font-size: 48px;
+  width: 50px;
+  height: 100px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.issuu-nav-arrow:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.issuu-nav-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.issuu-nav-prev {
+  left: 10px;
+}
+
+.issuu-nav-next {
+  right: 10px;
+}
+
+.issuu-pages-spread {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2500px;
+  perspective-origin: center center;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.issuu-page-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 0;
+  transition: transform 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  overflow: visible; /* Allow curl effect to be visible */
+  user-select: none; /* Prevent text selection during drag */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  background: #0d1117; /* Dark background to prevent white flash */
+}
+
+.issuu-page-container .issuu-page {
+  margin: 0;
+  padding: 0;
+}
+
+.issuu-pages-prev {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.issuu-pages-current {
+  position: relative;
+  z-index: 1;
+  opacity: 1; /* Always visible */
+}
+
+.issuu-page-container.cover-page {
+  justify-content: flex-end; /* Align cover page to right */
+}
+
+.issuu-page-container.last-page-alone {
+  justify-content: flex-start; /* Align last page to left */
+}
+
+.issuu-page-right.issuu-page-cover {
+  max-width: 50% !important;
+  width: auto !important;
+  margin: 0;
+}
+
+.issuu-page-left.issuu-page-cover {
+  max-width: 50% !important;
+  width: auto !important;
+  margin: 0;
+}
+
+.issuu-page-container.zooming {
+  opacity: 1;
+}
+
+.issuu-page-container.zooming .issuu-page {
+  opacity: 1;
+}
+
+
+.issuu-page .react-pdf__Page {
+  transition: none; /* Remove transition to prevent white flash */
+  background: #0d1117; /* Dark background to prevent white flash during loading */
+}
+
+/* Hide all loading states and spinners */
+.issuu-page .react-pdf__Page__loading,
+.issuu-page .react-pdf__Page__loadingMessage,
+.issuu-page .react-pdf__Page__loadingIcon {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.issuu-page .react-pdf__Page__canvas {
+  transition: none; /* Remove transition to prevent white flash */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* When clicking right arrow (next), flip the RIGHT page */
+.issuu-pages-spread.flipping.flipping-next .issuu-pages-prev .issuu-page-right:not(.issuu-page-cover) {
+  animation: pageTurnLeft 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  z-index: 3;
+}
+
+.issuu-pages-spread.flipping.flipping-next .issuu-pages-prev .issuu-page-left {
+  /* Left page stays static - no animation */
+  transform: none;
+  animation: none;
+}
+
+.issuu-pages-spread.flipping.flipping-next .issuu-pages-current {
+  opacity: 1; /* Show new pages immediately underneath */
+  z-index: 1;
+}
+
+.issuu-pages-spread.flipping.flipping-next .issuu-pages-current .issuu-page-left {
+  /* Left page stays static */
+  transform: none;
+  animation: none;
+}
+
+@keyframes pageTurnRight {
+  0% {
+    transform: rotateY(0deg) translateZ(0px) translateX(0px);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  10% {
+    transform: rotateY(-15deg) translateZ(3px) translateX(5px);
+    filter: brightness(1.05) drop-shadow(-5px 0 10px rgba(0, 0, 0, 0.2));
+    box-shadow: -8px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  25% {
+    transform: rotateY(-45deg) translateZ(6px) translateX(12px);
+    filter: brightness(1.1) drop-shadow(-15px 0 20px rgba(0, 0, 0, 0.35));
+    box-shadow: -20px 0 35px rgba(0, 0, 0, 0.45);
+  }
+  40% {
+    transform: rotateY(-70deg) translateZ(8px) translateX(18px);
+    opacity: 0.95;
+    filter: brightness(1.05) drop-shadow(-25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: -30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    transform: rotateY(-90deg) translateZ(10px) translateX(22px);
+    opacity: 0.9;
+    filter: brightness(0.95) drop-shadow(-30px 0 35px rgba(0, 0, 0, 0.6));
+    box-shadow: -35px 0 50px rgba(0, 0, 0, 0.7);
+  }
+  60% {
+    transform: rotateY(-110deg) translateZ(8px) translateX(18px);
+    opacity: 0.7;
+    filter: brightness(0.85) drop-shadow(-25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: -30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    transform: rotateY(-150deg) translateZ(6px) translateX(12px);
+    opacity: 0.4;
+    filter: brightness(0.75) drop-shadow(-15px 0 20px rgba(0, 0, 0, 0.4));
+    box-shadow: -20px 0 35px rgba(0, 0, 0, 0.5);
+  }
+  90% {
+    transform: rotateY(-170deg) translateZ(3px) translateX(5px);
+    opacity: 0.2;
+    filter: brightness(0.7) drop-shadow(-5px 0 10px rgba(0, 0, 0, 0.3));
+    box-shadow: -8px 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotateY(-180deg) translateZ(0px) translateX(0px);
+    opacity: 0;
+    filter: brightness(0.6) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes fadeInPage {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* When clicking left arrow (prev), flip the LEFT page */
+.issuu-pages-spread.flipping.flipping-prev .issuu-pages-prev .issuu-page-left {
+  animation: pageTurnRight 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  z-index: 3;
+}
+
+.issuu-pages-spread.flipping.flipping-prev .issuu-pages-prev .issuu-page-right {
+  /* Right page stays static */
+  transform: none;
+  animation: none;
+}
+
+.issuu-pages-spread.flipping.flipping-prev .issuu-pages-current {
+  opacity: 1; /* Show new pages immediately underneath */
+  z-index: 1;
+}
+
+.issuu-pages-spread.flipping.flipping-prev .issuu-pages-current .issuu-page-right {
+  /* Right page stays static */
+  transform: none;
+  animation: none;
+}
+
+@keyframes pageTurnLeft {
+  0% {
+    transform: rotateY(0deg) translateZ(0px) translateX(0px);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  10% {
+    transform: rotateY(15deg) translateZ(3px) translateX(-5px);
+    filter: brightness(1.05) drop-shadow(5px 0 10px rgba(0, 0, 0, 0.2));
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  25% {
+    transform: rotateY(45deg) translateZ(6px) translateX(-12px);
+    filter: brightness(1.1) drop-shadow(15px 0 20px rgba(0, 0, 0, 0.35));
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.45);
+  }
+  40% {
+    transform: rotateY(70deg) translateZ(8px) translateX(-18px);
+    opacity: 0.95;
+    filter: brightness(1.05) drop-shadow(25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    transform: rotateY(90deg) translateZ(10px) translateX(-22px);
+    opacity: 0.9;
+    filter: brightness(0.95) drop-shadow(30px 0 35px rgba(0, 0, 0, 0.6));
+    box-shadow: 35px 0 50px rgba(0, 0, 0, 0.7);
+  }
+  60% {
+    transform: rotateY(110deg) translateZ(8px) translateX(-18px);
+    opacity: 0.7;
+    filter: brightness(0.85) drop-shadow(25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    transform: rotateY(150deg) translateZ(6px) translateX(-12px);
+    opacity: 0.4;
+    filter: brightness(0.75) drop-shadow(15px 0 20px rgba(0, 0, 0, 0.4));
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.5);
+  }
+  90% {
+    transform: rotateY(170deg) translateZ(3px) translateX(-5px);
+    opacity: 0.2;
+    filter: brightness(0.7) drop-shadow(5px 0 10px rgba(0, 0, 0, 0.3));
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotateY(180deg) translateZ(0px) translateX(0px);
+    opacity: 0;
+    filter: brightness(0.6) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Removed pageFlipInPrev - new pages just fade in */
+
+.issuu-page {
+  background: #0d1117 !important; /* Dark background during loading/reload - force with !important */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible; /* Changed to visible to show curl effect */
+  position: relative;
+  flex: 1;
+  max-width: 50%;
+  height: 95%;
+  transform-style: preserve-3d;
+  backface-visibility: visible; /* Changed to visible to show back of page */
+  min-height: 100px; /* Prevent collapse during render */
+}
+
+.issuu-page .react-pdf__Page__canvas {
+  background: white; /* PDF content is white */
+}
+
+/* Add pseudo-element for page curl effect on RIGHT page turning left (from binding) - when clicking right arrow */
+.issuu-pages-prev .issuu-page-right::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0; /* Curl from left edge (binding) */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, 
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 85%,
+    rgba(0, 0, 0, 0.15) 92%,
+    rgba(0, 0, 0, 0.25) 96%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.issuu-pages-spread.flipping.flipping-next .issuu-pages-prev .issuu-page-right::before {
+  opacity: 1;
+}
+
+/* Add pseudo-element for page curl effect on LEFT page turning right (from binding) - when clicking left arrow */
+.issuu-pages-prev .issuu-page-left::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0; /* Curl from right edge (binding) */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to left, 
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 85%,
+    rgba(0, 0, 0, 0.15) 92%,
+    rgba(0, 0, 0, 0.25) 96%,
+    rgba(0, 0, 0, 0.35) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.issuu-pages-spread.flipping.flipping-prev .issuu-pages-prev .issuu-page-left::before {
+  opacity: 1;
+}
+
+/* Add shadow to pages during flip */
+.issuu-pages-spread.flipping .issuu-page {
+  filter: brightness(1);
+}
+
+.issuu-page-left {
+  border-radius: 4px 0 0 4px;
+  transform-origin: right center; /* Rotate from left edge (very end, outer edge) */
+  margin-right: 0;
+}
+
+.issuu-page-right {
+  border-radius: 0 4px 4px 0;
+  transform-origin: left center; /* Rotate from right edge (very end, outer edge) */
+  margin-left: 0;
+}
+
+/* Override transform-origin for cover page to ensure it pivots from absolute left edge */
+.issuu-pages-prev .issuu-page-right.issuu-page-cover {
+  transform-origin: 0% 50% !important;
+}
+
+/* Special animations for single page flips - minimal horizontal movement */
+@keyframes pageTurnLeftSingle {
+  0% {
+    transform: rotateY(0deg) translateZ(0px) translateX(0px);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  10% {
+    transform: rotateY(15deg) translateZ(3px) translateX(0px);
+    filter: brightness(1.05) drop-shadow(5px 0 10px rgba(0, 0, 0, 0.2));
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  25% {
+    transform: rotateY(45deg) translateZ(6px) translateX(0px);
+    filter: brightness(1.1) drop-shadow(15px 0 20px rgba(0, 0, 0, 0.35));
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.45);
+  }
+  40% {
+    transform: rotateY(70deg) translateZ(8px) translateX(0px);
+    opacity: 0.95;
+    filter: brightness(1.05) drop-shadow(25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    transform: rotateY(90deg) translateZ(10px) translateX(0px);
+    opacity: 0.9;
+    filter: brightness(0.95) drop-shadow(30px 0 35px rgba(0, 0, 0, 0.6));
+    box-shadow: 35px 0 50px rgba(0, 0, 0, 0.7);
+  }
+  60% {
+    transform: rotateY(110deg) translateZ(8px) translateX(0px);
+    opacity: 0.7;
+    filter: brightness(0.85) drop-shadow(25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    transform: rotateY(150deg) translateZ(6px) translateX(0px);
+    opacity: 0.4;
+    filter: brightness(0.75) drop-shadow(15px 0 20px rgba(0, 0, 0, 0.4));
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.5);
+  }
+  90% {
+    transform: rotateY(170deg) translateZ(3px) translateX(0px);
+    opacity: 0.2;
+    filter: brightness(0.7) drop-shadow(5px 0 10px rgba(0, 0, 0, 0.3));
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotateY(180deg) translateZ(0px) translateX(0px);
+    opacity: 0;
+    filter: brightness(0.6) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes pageTurnLeftFromBinding {
+  0% {
+    transform: rotateY(0deg) translateZ(0px) translateX(0px);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  10% {
+    transform: rotateY(15deg) translateZ(3px) translateX(0px);
+    filter: brightness(1.05) drop-shadow(5px 0 10px rgba(0, 0, 0, 0.2));
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  25% {
+    transform: rotateY(45deg) translateZ(6px) translateX(0px);
+    filter: brightness(1.1) drop-shadow(15px 0 20px rgba(0, 0, 0, 0.35));
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.45);
+  }
+  40% {
+    transform: rotateY(70deg) translateZ(8px) translateX(0px);
+    opacity: 0.95;
+    filter: brightness(1.05) drop-shadow(25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    transform: rotateY(90deg) translateZ(10px) translateX(0px);
+    opacity: 0.9;
+    filter: brightness(0.95) drop-shadow(30px 0 35px rgba(0, 0, 0, 0.6));
+    box-shadow: 35px 0 50px rgba(0, 0, 0, 0.7);
+  }
+  60% {
+    transform: rotateY(110deg) translateZ(8px) translateX(0px);
+    opacity: 0.7;
+    filter: brightness(0.85) drop-shadow(25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: 30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    transform: rotateY(150deg) translateZ(6px) translateX(0px);
+    opacity: 0.4;
+    filter: brightness(0.75) drop-shadow(15px 0 20px rgba(0, 0, 0, 0.4));
+    box-shadow: 20px 0 35px rgba(0, 0, 0, 0.5);
+  }
+  90% {
+    transform: rotateY(170deg) translateZ(3px) translateX(0px);
+    opacity: 0.2;
+    filter: brightness(0.7) drop-shadow(5px 0 10px rgba(0, 0, 0, 0.3));
+    box-shadow: 8px 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotateY(180deg) translateZ(0px) translateX(0px);
+    opacity: 0;
+    filter: brightness(0.6) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes pageTurnRightSingle {
+  0% {
+    transform: rotateY(0deg) translateZ(0px) translateX(0px);
+    opacity: 1;
+    filter: brightness(1) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  }
+  10% {
+    transform: rotateY(-15deg) translateZ(3px) translateX(0px);
+    filter: brightness(1.05) drop-shadow(-5px 0 10px rgba(0, 0, 0, 0.2));
+    box-shadow: -8px 0 20px rgba(0, 0, 0, 0.3);
+  }
+  25% {
+    transform: rotateY(-45deg) translateZ(6px) translateX(0px);
+    filter: brightness(1.1) drop-shadow(-15px 0 20px rgba(0, 0, 0, 0.35));
+    box-shadow: -20px 0 35px rgba(0, 0, 0, 0.45);
+  }
+  40% {
+    transform: rotateY(-70deg) translateZ(8px) translateX(0px);
+    opacity: 0.95;
+    filter: brightness(1.05) drop-shadow(-25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: -30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  50% {
+    transform: rotateY(-90deg) translateZ(10px) translateX(0px);
+    opacity: 0.9;
+    filter: brightness(0.95) drop-shadow(-30px 0 35px rgba(0, 0, 0, 0.6));
+    box-shadow: -35px 0 50px rgba(0, 0, 0, 0.7);
+  }
+  60% {
+    transform: rotateY(-110deg) translateZ(8px) translateX(0px);
+    opacity: 0.7;
+    filter: brightness(0.85) drop-shadow(-25px 0 30px rgba(0, 0, 0, 0.5));
+    box-shadow: -30px 0 45px rgba(0, 0, 0, 0.6);
+  }
+  75% {
+    transform: rotateY(-150deg) translateZ(6px) translateX(0px);
+    opacity: 0.4;
+    filter: brightness(0.75) drop-shadow(-15px 0 20px rgba(0, 0, 0, 0.4));
+    box-shadow: -20px 0 35px rgba(0, 0, 0, 0.5);
+  }
+  90% {
+    transform: rotateY(-170deg) translateZ(3px) translateX(0px);
+    opacity: 0.2;
+    filter: brightness(0.7) drop-shadow(-5px 0 10px rgba(0, 0, 0, 0.3));
+    box-shadow: -8px 0 20px rgba(0, 0, 0, 0.4);
+  }
+  100% {
+    transform: rotateY(-180deg) translateZ(0px) translateX(0px);
+    opacity: 0;
+    filter: brightness(0.6) drop-shadow(0 0 0px rgba(0, 0, 0, 0));
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Special handling for single page flips - cover page on right flips from binding (left edge) */
+.issuu-pages-spread.flipping.flipping-next .issuu-pages-prev .issuu-page-right.issuu-page-cover {
+  transform-origin: 0% 50% !important; /* Cover page flips from absolute left edge (binding) - force with !important */
+  animation: pageTurnLeftFromBinding 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  z-index: 3;
+  position: relative; /* Ensure positioning context */
+  margin-left: 0 !important; /* Ensure no left margin that could cause shift */
+  left: 0; /* Anchor to left edge */
+}
+
+/* Special handling for single page flips - last page on left flips from binding (right edge) */
+.issuu-pages-spread.flipping.flipping-prev .issuu-pages-prev .issuu-page-left.issuu-page-cover {
+  transform-origin: right center; /* Last page flips from right edge (binding) */
+  animation: pageTurnRightSingle 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.issuu-page .react-pdf__Page {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d1117; /* Dark background during loading */
+  min-width: 1px; /* Prevent collapse */
+  min-height: 1px; /* Prevent collapse */
+  transition: none; /* Prevent white flash during zoom */
+}
+
+.issuu-page .react-pdf__Page__canvas {
+  background: white; /* Canvas itself is white (the PDF content) */
+}
+
+.issuu-page .react-pdf__Page__canvas {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+  display: block;
+  opacity: 1 !important; /* Keep visible during zoom */
+  visibility: visible !important;
+  transition: none !important; /* Prevent white flash during zoom */
+  background: white; /* Canvas itself is white (the PDF content) */
+}
+
+/* Force dark background on Page wrapper to prevent white flash */
+.issuu-page .react-pdf__Page {
+  background: #0d1117 !important; /* Force dark background */
+}
+
+/* Ensure no white background shows during initial render */
+.issuu-page-container:not(:has(.react-pdf__Page__canvas)) {
+  background: #0d1117 !important;
+}
+
+/* Hide all loading spinners or indicators */
+.react-pdf__Page__loading {
+  display: none !important;
+}
+
+.issuu-page-container .react-pdf__Page__loading {
+  display: none !important;
+}
+
+/* Hide loading indicators during page flips */
+.issuu-pages-spread.flipping .react-pdf__Page__loading {
+  display: none !important;
+}
+
+.issuu-pages-spread.flipping .issuu-page-container .react-pdf__Page__loading {
+  display: none !important;
+}
+
+.issuu-pages-prev .react-pdf__Page__loading,
+.issuu-pages-current .react-pdf__Page__loading {
+  display: none !important;
+}
+
+/* Hide any loading spinners or indicators during zoom */
+.issuu-page-container.zooming .react-pdf__Page__loading {
+  display: none !important;
+}
+
+.issuu-page-container.zooming .react-pdf__Page__textContent {
+  opacity: 1 !important;
+}
+
+/* Ensure page container doesn't show white background during render */
+.issuu-page-container {
+  background: transparent;
+}
+
+.issuu-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: white;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 18px;
+  background: #0d1117; /* Match container background */
+}
+
+.issuu-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: white;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 18px;
+  background: #0d1117; /* Match container background */
+}
+
+.issuu-controls-bar {
+  background: #161b22;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.issuu-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.issuu-page-indicator {
+  color: white;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  min-width: 80px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.issuu-progress-bar {
+  flex: 1;
+  max-width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.issuu-progress-fill {
+  height: 100%;
+  background: white;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.issuu-controls-right {
+  display: flex;
+  gap: 10px;
+}
+
+.issuu-control-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.issuu-control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.issuu-control-btn:active {
+  transform: scale(0.95);
+}
+
+/* Fullscreen styles */
+.issuu-flipbook-container:fullscreen {
+  max-width: 100%;
+  height: 100vh;
+  border-radius: 0;
+}
+
+.issuu-flipbook-container:fullscreen .issuu-flipbook-viewer {
+  height: calc(100vh - 50px);
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 1024px) {
+  .issuu-flipbook-viewer {
+    height: 500px;
+  }
+
+  .issuu-nav-arrow {
+    width: 40px;
+    height: 80px;
+    font-size: 36px;
+  }
+
+  .issuu-page-container {
+    gap: 1px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .issuu-flipbook-container {
+    border-radius: 10px;
+  }
+
+  .issuu-flipbook-viewer {
+    height: 400px;
+  }
+
+  .issuu-nav-arrow {
+    width: 35px;
+    height: 70px;
+    font-size: 28px;
+  }
+
+  .issuu-controls-bar {
+    height: 45px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+  }
+
+  .issuu-controls-left {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .issuu-progress-bar {
+    max-width: 100%;
+  }
+
+  .issuu-page-container {
+    flex-direction: column;
+  }
+
+  .issuu-page {
+    width: 100% !important;
+  }
+}
+

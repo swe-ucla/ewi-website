@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap');
+
+.why-get-involved {
+  width: 100%;
+  background: transparent;
+  padding: 3rem 0 5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.why-get-involved-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.why-get-involved-title {
+  font-family: 'Katibeh', serif;
+  font-size: 130px;
+  line-height: 0.74;
+  color: #3e4c13;
+  background: transparent;
+  text-shadow: 2px 2px 4px #9da77a;
+  letter-spacing: -1.3px;
+  text-align: center;
+  margin: 0;
+  text-transform: none;
+}
+
+.why-get-involved-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.why-get-involved-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.why-get-involved-text p {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: black;
+  background: transparent;
+  line-height: 1.5;
+  text-align: left;
+  margin: 0;
+}
+
+.why-get-involved-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.form-field label {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #3e4c13;
+  background: transparent;
+  height: 32px;
+  margin: 0;
+}
+
+.form-field input {
+  background: white;
+  border: 1px solid #3e4c13;
+  border-radius: 15px;
+  height: 58px;
+  padding: 0 1rem;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 16px;
+  color: #3e4c13;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-field input:focus {
+  outline: none;
+  border-color: #6e7a47;
+  box-shadow: 0 0 0 2px rgba(110, 122, 71, 0.2);
+}
+
+.submit-button {
+  background: #6e7a47;
+  color: white;
+  border: none;
+  padding: 21px 14px;
+  border-radius: 10px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 147px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background: #5a6540;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 1024px) {
+  .why-get-involved-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .why-get-involved-title {
+    font-size: 80px;
+  }
+
+  .why-get-involved-text p {
+    font-size: 20px;
+  }
+
+  .form-field label {
+    font-size: 20px;
+  }
+
+  .form-field input {
+    height: 50px;
+    font-size: 14px;
+  }
+
+  .submit-button {
+    width: 140px;
+    height: 55px;
+    font-size: 18px;
+    align-self: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .why-get-involved {
+    padding: 2rem 0 4rem;
+  }
+
+  .why-get-involved-content {
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+
+  .why-get-involved-layout {
+    gap: 2rem;
+  }
+
+  .why-get-involved-title {
+    font-size: 60px;
+  }
+
+  .why-get-involved-text p {
+    font-size: 18px;
+  }
+
+  .form-field label {
+    font-size: 18px;
+  }
+
+  .form-field input {
+    height: 48px;
+    font-size: 14px;
+  }
+
+  .submit-button {
+    width: 130px;
+    height: 50px;
+    font-size: 16px;
+    align-self: center;
+  }
+}
+
