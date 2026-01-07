@@ -19,10 +19,10 @@
   align-items: center;
   text-align: center;
 
-  width: 50%;
-  max-width: 800px;
+  width: 80%;
+  max-width: 1000px;
 
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .student-text {
@@ -50,7 +50,7 @@
 
 .student-header h3 {
   font-size: 2rem;
-  margin-bottom: 0.8rem;
+  /* margin-bottom: 0.8rem; */
   color: #fff;
   font-weight: 500;
   background: none;
