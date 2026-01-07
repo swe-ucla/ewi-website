@@ -9,6 +9,7 @@
   align-items: center;
 
   font-family: "Noto Serif Bengali", sans-serif;
+  margin-bottom: 6rem;
 }
 
 .student-header-content {
@@ -31,7 +32,8 @@
   max-width: 600px;
 }
 
-.student-header button {
+.student-header button,
+.student-header a.button-link {
   padding: 1rem 1.5rem;
   border-radius: 8px;
   border: none;
@@ -44,7 +46,8 @@
   margin-bottom: 0.8rem;
 }
 
-.student-header button:hover {
+.student-header button:hover,
+.student-header a.button-link:hover {
   transform: scale(1.05);
 }
 
@@ -61,5 +64,6 @@
   color: #8D485F;
   font-weight: 400;
   background: none;
-  margin-bottom: 8rem;
+  margin-bottom: 1rem;
 }
+
