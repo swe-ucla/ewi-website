@@ -1,68 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap');
+
 .testimonials-container {
   width: 100%;
-  max-width: 100%;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
-  padding: 0;
+  background: transparent;
+  padding: 5rem 0 12rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .testimonials-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 26px;
-  text-align: left;
-  margin-top: 3rem;
-  margin-bottom: 2%;
-  color: #929292;
+  font-family: 'Katibeh', serif;
+  font-size: 130px;
+  line-height: 0.74;
+  color: #8d485f;
+  background: transparent;
+  text-shadow: 2px 2px 4px #ecbad0;
+  letter-spacing: -1.3px;
+  text-align: center;
+  margin: 0 auto 4rem;
+  max-width: 1072px;
+  height: 96.21px;
+  text-transform: none;
+  width: 100%;
 }
 
 .testimonials-list {
+  width: 100%;
+  max-width: 1072px;
+  margin: 0 auto;
+  padding: 0 2rem;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
-  width: 100%;
+  gap: 96px;
 }
 
 .testimonial-card {
   display: flex;
   align-items: flex-start;
   width: 100%;
-  gap: 2rem;
-}
-
-.testimonial-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  flex: 1;
-  min-width: 0; /* Allows text to shrink if needed */
-  max-width: calc(100% - 180px); /* Narrower to accommodate larger photo */
+  gap: 0;
 }
 
 .testimonial-quote-icon {
-  font-size: 6rem;
-  font-weight: 700;
-  color: #8B8B6B; /* Muted olive green */
+  font-family: 'Katibeh', serif;
+  font-size: 300px;
   line-height: 1;
+  color: #9da77a;
+  letter-spacing: -3px;
   flex-shrink: 0;
-  font-family: 'Inter', sans-serif;
-  margin-top: -0.5rem;
+  width: 175px;
+  text-align: center;
+  height: 152px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
 }
 
-.testimonial-text {
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
-  margin: 0;
-  text-align: left;
+.testimonial-content {
+  display: flex;
+  align-items: center;
+  gap: 24px;
   flex: 1;
 }
 
-.testimonial-right {
+.testimonial-text {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: black;
+  background: transparent;
+  line-height: 1.5;
+  margin: 0;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  max-width: 595px;
+}
+
+.testimonial-image-container {
   flex-shrink: 0;
-  width: 160px;
-  height: 160px;
+  width: 278px;
+  height: 278px;
 }
 
 .testimonial-image {
@@ -86,64 +106,74 @@
   background-color: #ffffff;
 }
 
-/* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
+/* Mobile Responsive */
 @media screen and (max-width: 1024px) {
-  .testimonial-card {
-    gap: 1.5rem;
-  }
-
-  .testimonial-quote-icon {
-    font-size: 5rem;
-  }
-
-  .testimonial-right {
-    width: 140px;
-    height: 140px;
-  }
-  
-  .testimonial-left {
-    max-width: calc(100% - 160px);
-  }
-}
-
-/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
-@media screen and (max-width: 600px) {
   .testimonials-title {
-    font-size: 1.5em;
-    margin-bottom: 2rem;
+    font-size: 80px;
   }
 
   .testimonials-list {
-    gap: 2rem;
+    gap: 60px;
+  }
+
+  .testimonial-quote-icon {
+    font-size: 200px;
+    width: 120px;
+    height: 100px;
+  }
+
+  .testimonial-text {
+    font-size: 20px;
+    height: auto;
+  }
+
+  .testimonial-image-container {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .testimonials-container {
+    padding: 4rem 0;
+  }
+
+  .testimonials-title {
+    font-size: 60px;
+    margin-bottom: 3rem;
+  }
+
+  .testimonials-list {
+    gap: 4rem;
   }
 
   .testimonial-card {
     flex-direction: column;
-    gap: 1.5rem;
     align-items: center;
   }
 
-  .testimonial-left {
-    width: 100%;
-    gap: 1rem;
+  .testimonial-quote-icon {
+    font-size: 150px;
+    width: 100px;
+    height: 80px;
   }
 
-  .testimonial-quote-icon {
-    font-size: 4rem;
+  .testimonial-content {
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
   }
 
   .testimonial-text {
-    font-size: 14px;
+    font-size: 18px;
+    max-width: 100%;
+    text-align: center;
+    height: auto;
   }
 
-  .testimonial-right {
-    width: 110px;
-    height: 110px;
-    align-self: flex-end;
-  }
-  
-  .testimonial-left {
-    max-width: 100%;
+  .testimonial-image-container {
+    width: 150px;
+    height: 150px;
   }
 }
 
