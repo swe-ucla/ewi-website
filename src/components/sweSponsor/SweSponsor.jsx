@@ -15,9 +15,9 @@ const SweSponsor = () => {
   return (
     <section className="swe-sponsor-section">
       <div className="swe-sponsor-content">
-        <h2 className="swe-sponsor-title">Become a SWE Sponsor</h2>
+        <h2 className="swe-sponsor-title">become a SWE sponsor</h2>
         <p className="swe-sponsor-text">
-          Platinum and Gold level sponsors of SWE UCLA are able to register for EWI for free, in addition to other benefits; if a partnership with SWE UCLA is of interest, please contact ewi.swe.ucla@gmail.com.
+        Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor.
         </p>
       </div>
 
