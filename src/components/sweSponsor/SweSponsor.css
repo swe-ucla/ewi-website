@@ -1,0 +1,177 @@
+.swe-sponsor-section {
+  width: 100%;
+  background: transparent;
+  padding: 4rem 0;
+}
+
+.swe-sponsor-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  background: transparent;
+  border: none;
+}
+
+.swe-sponsor-title {
+  font-family: 'DM Serif Text', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #3e4c13;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.swe-sponsor-text {
+  font-family: 'Inter', serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-primary);
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  background: transparent !important;
+  border: none !important;
+  padding: 0;
+}
+
+/* ================== FORM SECTION ==================== */
+.swe-sponsor-form-section {
+  width: 100%;
+  background: transparent;
+  padding: 2rem 0 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.swe-sponsor-form {
+  width: 70%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.swe-sponsor-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.swe-sponsor-form-field label {
+  font-family: 'Inter', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-primary);
+  text-align: left;
+  margin-bottom: 0.2rem;
+}
+
+.swe-sponsor-form-field .required {
+  color: #3e4c13;
+}
+
+.swe-sponsor-form-field input,
+.swe-sponsor-form-field textarea {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 1px solid #3e4c13;
+  border-radius: 4px;
+  background: white;
+  color: var(--color-primary);
+  font-family: 'Inter', serif;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.swe-sponsor-form-field input:focus,
+.swe-sponsor-form-field textarea:focus {
+  outline: none;
+  border-color: #9da77a;
+}
+
+.swe-sponsor-form-field textarea {
+  resize: vertical;
+  min-height: 180px;
+  font-family: 'Inter', serif;
+}
+
+.swe-sponsor-submit-btn {
+  align-self: center;
+  width: 150px;
+  padding: 1rem 2rem;
+  background: #6E7A47;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.swe-sponsor-submit-btn:hover {
+  background: #9da77a;
+}
+
+/* ================== MEDIA QUERIES ==================== */
+@media screen and (max-width: 1024px) {
+  .swe-sponsor-title {
+    font-size: 2.5rem;
+  }
+  
+  .swe-sponsor-form {
+    width: 80%;
+  }
+  
+  .swe-sponsor-form-section {
+    padding: 2rem 0 3rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .swe-sponsor-section {
+    padding: 3rem 0;
+  }
+  
+  .swe-sponsor-content {
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .swe-sponsor-title {
+    font-size: 2rem;
+  }
+  
+  .swe-sponsor-text {
+    font-size: 1rem;
+  }
+  
+  .swe-sponsor-form {
+    width: 90%;
+  }
+  
+  .swe-sponsor-form-section {
+    padding: 1.5rem 0 2.5rem;
+  }
+  
+  .swe-sponsor-form {
+    gap: 2rem;
+  }
+  
+  .swe-sponsor-form-field {
+    gap: 0.5rem;
+  }
+  
+  .swe-sponsor-submit-btn {
+    width: 100%;
+    align-self: stretch;
+  }
+}
+
