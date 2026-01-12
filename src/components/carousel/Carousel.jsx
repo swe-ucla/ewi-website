@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "./Carousel.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import careerFair from "../../assets/career fair.png";
@@ -69,13 +70,29 @@ const Carousel = ({ images = defaultImages, autoPlay = true, interval = 3000 }) 
       
       <div className="carousel-text">
         <p>
-          Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.
+          Evening with Industry (EWI) is one of Society of Women Engineers' flagship events and the largest student-run networking event at UCLA. This year, we are proud to host the 49th annual EWI on Thursday, January 22 from 5:30 p.m. to 10:00 p.m. at Carnesale Commons.
+        </p>
+        <p>
+          Our goal is to make the networking experience more personable and approachable. Deviating from a traditional career fair, we prioritize gaining valuable connections by dividing the event into three main portions: informal networking over appetizers, a multi-course catered dinner, and conclude with a typical career fair.
+        </p>
+        <p>
+          During our three-course dinner portion, 6-8 students will be assigned to sit with 1-2 company representatives of their choice. This format encourages unscripted conversations and genuine insights, in contrast to conventional high-stakes, fast-paced career fairs. For students looking to broaden their connections with other representatives, attendees are free to explore all companies during the career fair.
+        </p>
+        <p>
+          While the event is traditionally oriented towards women in engineering, we welcome students of all genders and academic backgrounds relevant to the engineering field. Our primary goal is to ensure that every attendee gains an enriching and worthwhile experience.
+        </p>
+        <p>
+          We are happy to continue hosting EWI in-person in 2026, as we believe the opportunity for participants to immerse themselves in the atmosphere of the event leads to a more impactful experience.
         </p>
       </div>
 
       <div className="carousel-buttons">
-        <button className="carousel-register-btn">REGISTER</button>
-        <button className="carousel-learn-more-btn">LEARN MORE</button>
+        <Link to="/students">
+          <button className="carousel-register-btn">REGISTER</button>
+        </Link>
+        <Link to="/students">
+          <button className="carousel-learn-more-btn">LEARN MORE</button>
+        </Link>
       </div>
     </div>
   );

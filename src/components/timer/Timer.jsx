@@ -43,8 +43,14 @@ const Timer = () => {
   const seconds = timeLeft.seconds || 0;
 
   return (
-    <div className="timer-wrapper">
-      <div className="timer-container">
+    <div className="timer-section-wrapper">
+      <div className="timer-logistics">
+        <div className="logistics-date">Thursday, January 22</div>
+        <div className="logistics-time">5:30 PM - 10:00 PM</div>
+        <div className="logistics-location">@ Carnesale Commons</div>
+      </div>
+      <div className="timer-wrapper">
+        <div className="timer-container">
         <img src={homeFlower} alt="Home flower decoration" className="timer-flower" />
         <img src={homeLeaves} alt="Home leaves decoration" className="timer-leaves" />
         <img src={timerBackground} alt="Timer background" className="timer-background" />
@@ -67,6 +73,7 @@ const Timer = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

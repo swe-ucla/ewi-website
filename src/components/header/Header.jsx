@@ -10,10 +10,10 @@ const Header = () => {
       <img src={hero_text} className="hero-text" alt="Hero text" />
 
       <div className="hero-buttons">
-        <Link to="/students">
+        <Link to="/students" onClick={() => setTimeout(() => window.scrollTo(0, 0), 0)}>
           <button>FOR STUDENTS</button>
         </Link>
-        <Link to="/companies">
+        <Link to="/companies" onClick={() => setTimeout(() => window.scrollTo(0, 0), 0)}>
           <button>FOR COMPANIES</button>
         </Link>
       </div>

@@ -1,15 +1,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Inter:wght@400;500;600;700&display=swap');
 
-.timer-wrapper {
+.timer-section-wrapper {
   position: absolute;
   top: 48.5%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   z-index: 10;
+}
+
+.timer-logistics {
+  position: absolute;
+  bottom: calc(100% + 1.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.logistics-date {
+  font-family: 'Katibeh', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #3E4C13;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.logistics-time {
+  font-family: 'Katibeh', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #8D485F;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.logistics-location {
+  font-family: 'Katibeh', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #3E4C13;
+  text-align: center;
+  line-height: 1.2;
+  font-style: italic;
+}
+
+.timer-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .timer-container {
@@ -107,6 +157,16 @@
   .timer-label {
     font-size: 0.875rem;
   }
+
+  .timer-logistics {
+    gap: 2rem;
+  }
+
+  .logistics-date,
+  .logistics-time,
+  .logistics-location {
+    font-size: 2rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -125,5 +185,15 @@
 
   .timer-content {
     padding: 1rem 0.5rem;
+  }
+
+  .timer-logistics {
+    gap: 1.5rem;
+  }
+
+  .logistics-date,
+  .logistics-time,
+  .logistics-location {
+    font-size: 1.5rem;
   }
 }
