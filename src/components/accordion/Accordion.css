@@ -5,14 +5,15 @@
 }
 
 .accordion-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'DM Serif Text', serif;
   font-weight: 700;
-  font-size: 26px;
+  font-size: 2em;
   text-align: left;
   margin-top: 3rem;
   margin-bottom: 2%;
-  color: #8B8B6B; /* Dark olive green */
+  color: #3e4c13; /* Dark green to match contact page */
   text-transform: lowercase;
+  letter-spacing: 0.02em;
 }
 
 .accordion-list {
