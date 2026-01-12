@@ -1,19 +1,18 @@
 import React from "react";
 
 import StudentHeader from "../components/studentHeader/StudentHeader";
-import IssuuStyleFlipbook from "../components/flipbook/IssuuStyleFlipbook";
-import student_guide from "../assets/EWI Student Survival Guide 2024-2025.pdf";
+import PDFViewerStudent from "../components/studentInfo/PDFViewerStudent";
 import Testimonials from "../components/testimonials/Testimonials";
 import Accordion from "../components/accordion/Accordion";
+// import StudentInfo from "../components/studentInfo/StudentInfo";
 
 const Student = () => {
   return (
     <div className="student">
       <StudentHeader />
       <div className="container">
-        <div className="company-registration-document">
-          <IssuuStyleFlipbook pdfFile={student_guide} scale={1.0} />
-        </div>
+        <PDFViewerStudent />
+        {/* <StudentInfo /> */}
         <Testimonials />
         <Accordion />
       </div>
