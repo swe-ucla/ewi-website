@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./timer.css";
 import timerBackground from "../../assets/timer_background.svg";
+import homeFlower from "../../assets/home_flower copy.svg";
+import homeLeaves from "../../assets/home_leaves.svg";
 
 const calculateTimeLeft = () => {
   // January 22, 2026 at 5:30PM PST
@@ -43,6 +45,8 @@ const Timer = () => {
   return (
     <div className="timer-wrapper">
       <div className="timer-container">
+        <img src={homeFlower} alt="Home flower decoration" className="timer-flower" />
+        <img src={homeLeaves} alt="Home leaves decoration" className="timer-leaves" />
         <img src={timerBackground} alt="Timer background" className="timer-background" />
         <div className="timer-content">
           <div className="timer-section">

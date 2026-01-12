@@ -6,6 +6,8 @@ import dinner from "../../assets/dinner.png";
 import ewi20xx from "../../assets/ewi_20xx.png";
 import ewi2024 from "../../assets/ewi_2024.png";
 import ewiCommittee from "../../assets/ewi_committee.png";
+import tiltedFlower from "../../assets/tilted_flower.svg";
+import tiltedLeaves from "../../assets/tilted_leaves.svg";
 
 const defaultImages = [careerFair, dinner, ewi20xx, ewi2024, ewiCommittee];
 
@@ -46,6 +48,8 @@ const Carousel = ({ images = defaultImages, autoPlay = true, interval = 3000 }) 
             alt={`Slide ${currentIndex}`}
             className="carousel-image"
           />
+          <img src={tiltedFlower} alt="Tilted flower decoration" className="carousel-flower" />
+          <img src={tiltedLeaves} alt="Tilted leaves decoration" className="carousel-leaves" />
         </div>
 
         <button className="carousel-btn next" onClick={nextImage}>

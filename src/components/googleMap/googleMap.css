@@ -3,7 +3,7 @@
 .google-map-container {
   width: 100%;
   max-width: 1072px;
-  margin: 8rem auto 2rem;
+  margin: 10rem auto 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;

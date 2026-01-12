@@ -22,6 +22,28 @@
   align-items: center;
 }
 
+.timer-flower {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: auto;
+  height: 100px;
+  object-fit: contain;
+}
+
+.timer-leaves {
+  position: absolute;
+  bottom: -45px;
+  right: 0;
+  transform: translateX(75%);
+  z-index: 2;
+  width: auto;
+  height: 150px;
+  object-fit: contain;
+}
+
 .timer-background {
   position: absolute;
   top: 0;
