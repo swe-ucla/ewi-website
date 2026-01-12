@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./navbar.css";
-import LOGO from "../../assets/ewi_logo_2026.png";
+import LOGO from "../../assets/ewilogo.svg";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
