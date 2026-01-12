@@ -2,13 +2,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  border: 1px solid red;
 }
 
 .event-card {
   display: flex;
   gap: 20px;
-  border: 1px solid orange;
 }
 
 .event-card-number {
@@ -19,7 +17,6 @@
   font-style: normal;
   font-weight: 400;
   line-height: 0.1;
-
   margin-top: 3rem;
 }
 .event-card-rsvp {
@@ -30,12 +27,13 @@
   padding: 0.2rem 0.4rem;
 }
 .event-card-title {
-  font-size: 2rem;
-  font-weight: 400;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 .event-card-dateTime {
   color: var(--color-dark-pink);
   font-style: italic;
+  margin-bottom: 0.2rem;
 }
 .event-card-description {
 }
@@ -50,4 +48,11 @@
 
   line-height: 1;
   text-align: center;
+}
+
+.event-card-left {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
 }
