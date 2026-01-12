@@ -23,16 +23,16 @@
 
 .get-involved-title {
   font-family: 'Katibeh', serif;
-  font-size: 130px;
+  font-size: 100px;
   line-height: 0.74;
   color: #3e4c13;
   background: transparent;
   text-shadow: 2px 2px 4px #9da77a;
   letter-spacing: -1.3px;
   text-align: center;
-  margin: 0;
-  height: 96.21px;
-  text-transform: none;
+  margin: 0 auto 0rem;
+  height: 74px;
+  text-transform: lowercase;
   width: 100%;
 }
 
@@ -169,7 +169,8 @@
   }
 
   .get-involved-title {
-    font-size: 80px;
+    font-size: 70px;
+    height: 52px;
   }
 
   .get-involved-description {
@@ -207,6 +208,7 @@
 
   .get-involved-title {
     font-size: 60px;
+    height: 44px;
   }
 
   .get-involved-description {

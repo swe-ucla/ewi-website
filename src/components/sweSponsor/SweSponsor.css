@@ -19,15 +19,17 @@
 
 .swe-sponsor-title {
   font-family: 'Katibeh', serif;
-  font-size: 130px;
+  font-size: 100px;
   line-height: 0.74;
   color: #3e4c13;
   background: transparent;
   text-shadow: 2px 2px 4px #9da77a;
   letter-spacing: -1.3px;
   text-align: center;
-  margin: 0 auto 1.5rem;
-  text-transform: none;
+  margin: 0 auto 4rem;
+  height: 74px;
+  text-transform: lowercase;
+  width: 100%;
 }
 
 .swe-sponsor-text {
@@ -129,7 +131,8 @@
 /* ================== MEDIA QUERIES ==================== */
 @media screen and (max-width: 1024px) {
   .swe-sponsor-title {
-    font-size: 80px;
+    font-size: 70px;
+    height: 52px;
   }
   
   .swe-sponsor-form {
@@ -153,6 +156,7 @@
   
   .swe-sponsor-title {
     font-size: 60px;
+    height: 44px;
   }
   
   .swe-sponsor-text {

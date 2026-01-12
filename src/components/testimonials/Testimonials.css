@@ -3,7 +3,7 @@
 .testimonials-container {
   width: 100%;
   background: transparent;
-  padding: 5rem 0 12rem;
+  padding: 5rem 0 0rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,7 +19,7 @@
   letter-spacing: -1.3px;
   text-align: center;
   margin: 0 auto 4rem;
-  max-width: 1400px;
+  max-width: 100%;
   height: 74px;
   text-transform: none;
   width: 100%;
@@ -27,7 +27,7 @@
 
 .testimonials-list {
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
