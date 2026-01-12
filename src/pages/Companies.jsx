@@ -24,7 +24,9 @@ const Companies = () => {
       <CompanyRegistration />
       <GetInvolved />
       <WhyGetInvolved />
-      <Testimonials />
+      <div className="container">
+        <Testimonials />
+      </div>
       <SweSponsor />
     </div>
   );

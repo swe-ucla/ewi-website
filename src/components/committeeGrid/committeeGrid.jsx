@@ -9,8 +9,8 @@ import LILLIAN from "../../assets/Lillian_EWIHeadshot.JPG";
 import SUSIE from "../../assets/Susie_EWIHeadshot.jpeg";
 import CLARISSE from "../../assets/Clarisse_EWIHeadshot.jpg";
 import APARNA from "../../assets/Aparna_EWIHeadshot.JPG";
-import MEETTHETEAM_TITLE from "../../assets/meetheteam-title.png";
-import MEETTHETEAM_FLOWER from "../../assets/meettheteam-flower.png";
+import MEETTHETEAM_TITLE from "../../assets/meettheteam.svg";
+import MEETTHETEAM_FLOWER from "../../assets/meettheteamflower.svg";
 import BUTTERFLY from "../../assets/butterfly.png";
 
 const teamData = [
