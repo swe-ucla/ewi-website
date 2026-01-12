@@ -9,10 +9,11 @@ const CompanyFlipCard = ({ company }) => {
           {company.logo ? (
             <img src={company.logo} alt={company.name} className="company-logo" />
           ) : (
-            <div className="company-logo-placeholder"></div>
+            <h3 className="company-name">{company.name}</h3>
           )}
         </div>
         <div className="flip-card-back">
+          <h3 className="company-name-back">{company.name}</h3>
           <p className="company-description">{company.description}</p>
         </div>
       </div>

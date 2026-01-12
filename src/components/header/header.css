@@ -2,10 +2,10 @@
 
 .hero {
   width: 100%;
-  aspect-ratio: 2.32995951417; /* 1151 / 494 */
-  background-image: url("../../assets/hero_background.svg");
-  background-size: contain;
-  background-position: center;
+  padding-bottom: 106.4%; /* 1213/1140 aspect ratio */
+  background-image: url("../../assets/new_hero_background.svg");
+  background-size: 100% auto;
+  background-position: center top;
   background-repeat: no-repeat;
   position: relative;
 
@@ -27,7 +27,7 @@
 
 .hero-text {
   position: absolute;
-  top: 40%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
@@ -36,20 +36,20 @@
 
 .hero-buttons {
   position: absolute;
-  top: 75%;
+  top: 35%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 1.5rem;
+  gap: 5.0rem;
 }
 
 .hero-buttons button {
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.8rem;
   border-radius: 8px;
   border: none;
   background: #8D485F;
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }

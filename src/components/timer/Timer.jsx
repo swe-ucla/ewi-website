@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./timer.css";
+import timerBackground from "../../assets/timer_background.svg";
 
 const calculateTimeLeft = () => {
-  let difference = +new Date(`02/08/2024`) - +new Date();
+  // January 22, 2026 at 5:30PM PST
+  let difference = +new Date(`2026-01-22T17:30:00-08:00`) - +new Date();
 
   let timeLeft = {};
 
@@ -18,8 +20,13 @@ const calculateTimeLeft = () => {
   return timeLeft;
 };
 
+const formatTime = (value) => {
+  return value.toString().padStart(2, "0");
+};
+
 const Timer = () => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
@@ -28,21 +35,33 @@ const Timer = () => {
     return () => clearTimeout(timer);
   });
 
-  const timerComponents = [];
-  Object.keys(timeLeft).forEach((interval) => {
-    if (!timeLeft[interval]) {
-      return;
-    }
-    timerComponents.push(
-      <span>
-        {timeLeft[interval]} {interval}{" "}
-      </span>
-    );
-  });
+  const days = timeLeft.days || 0;
+  const hours = timeLeft.hours || 0;
+  const minutes = timeLeft.minutes || 0;
+  const seconds = timeLeft.seconds || 0;
+
   return (
-    <div>
-      <div className="countdown__container">
-        {timerComponents.length ? timerComponents : <span></span>}
+    <div className="timer-wrapper">
+      <div className="timer-container">
+        <img src={timerBackground} alt="Timer background" className="timer-background" />
+        <div className="timer-content">
+          <div className="timer-section">
+            <div className="timer-number">{formatTime(days)}</div>
+            <div className="timer-label">DAYS</div>
+          </div>
+          <div className="timer-section">
+            <div className="timer-number">{formatTime(hours)}</div>
+            <div className="timer-label">HOURS</div>
+          </div>
+          <div className="timer-section">
+            <div className="timer-number">{formatTime(minutes)}</div>
+            <div className="timer-label">MIN</div>
+          </div>
+          <div className="timer-section">
+            <div className="timer-number">{formatTime(seconds)}</div>
+            <div className="timer-label">SEC</div>
+          </div>
+        </div>
       </div>
     </div>
   );

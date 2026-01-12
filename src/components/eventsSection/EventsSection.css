@@ -1,12 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Noto+Serif+Bengali:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap');
+
 .events-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  border: 1px solid red;
 }
 
 .event-card {
   display: flex;
   gap: 20px;
+  border: 1px solid orange;
 }
 
 .event-card-number {
@@ -17,6 +21,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 0.1;
+
   margin-top: 3rem;
 }
 .event-card-rsvp {
@@ -27,32 +32,49 @@
   padding: 0.2rem 0.4rem;
 }
 .event-card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 2rem;
+  font-weight: 400;
 }
 .event-card-dateTime {
   color: var(--color-dark-pink);
   font-style: italic;
-  margin-bottom: 0.2rem;
 }
 .event-card-description {
 }
 
 .events-section {
   color: var(--color-dark-pink);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .section-title {
-  font-family: Katibeh;
-  font-size: 4rem;
-
-  line-height: 1;
+  font-family: 'Katibeh', serif;
+  font-size: 130px;
+  line-height: 0.74;
+  color: #8d485f;
+  background: transparent;
+  text-shadow: 2px 2px 4px #ecbad0;
+  letter-spacing: -1.3px;
   text-align: center;
+  margin: 0 auto 2rem;
+  max-width: 1072px;
+  height: 96.21px;
+  text-transform: none;
+  width: 100%;
 }
 
-.event-card-left {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 5px;
+@media screen and (max-width: 1024px) {
+  .section-title {
+    font-size: 80px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .section-title {
+    font-size: 60px;
+    margin-bottom: 3rem;
+  }
 }
