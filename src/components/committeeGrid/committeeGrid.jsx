@@ -9,6 +9,9 @@ import LILLIAN from "../../assets/Lillian_EWIHeadshot.JPG";
 import SUSIE from "../../assets/Susie_EWIHeadshot.jpeg";
 import CLARISSE from "../../assets/Clarisse_EWIHeadshot.jpg";
 import APARNA from "../../assets/Aparna_EWIHeadshot.JPG";
+import MEETTHETEAM_TITLE from "../../assets/meetheteam-title.png";
+import MEETTHETEAM_FLOWER from "../../assets/meettheteam-flower.png";
+import BUTTERFLY from "../../assets/butterfly.png";
 
 const teamData = [
   {
@@ -102,22 +105,85 @@ const teamData = [
 ];
 
 const committeeGrid = () => {
+  const directors = teamData.filter(
+    (person) => person.name === "Khanh Tran" || person.name === "Lillian Gonick"
+  );
+  const chairs = teamData.filter(
+    (person) => person.name !== "Khanh Tran" && person.name !== "Lillian Gonick"
+  );
+
   return (
-    <section id="meet-the-team">
-      <div className="container meet-the-team__container">
-        {teamData.map(
-          ({ id, image, name, position, description, year, major }) => (
-            <PeopleCard
-              key={id}
-              image={image}
-              name={name}
-              position={position}
-              description={description}
-              year={year}
-              major={major}
-            />
-          )
-        )}
+    <section id="meet-the-team" className="meet-the-team-section">
+      {/* Header Section with Decorative Elements */}
+      <div className="meet-the-team-header">
+        {/* Decorative Flowers */}
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-1" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-2" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-3" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-4" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-5" />
+        
+        {/* Dashed Line */}
+        <svg className="meet-the-team-dashed-line" viewBox="0 0 400 200" preserveAspectRatio="none">
+          <path
+            d="M 50 50 Q 200 150 350 50"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.6)"
+            strokeWidth="2"
+            strokeDasharray="5,5"
+          />
+        </svg>
+
+        {/* Header Content */}
+        <div className="meet-the-team-header-content">
+          <img src={MEETTHETEAM_TITLE} alt="meet the team" className="meet-the-team-title-image" />
+          <img src={BUTTERFLY} alt="butterfly" className="meet-the-team-butterfly" />
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="container meet-the-team-content">
+        {/* Directors Section */}
+        <div className="committee-section">
+          <h2 className="committee-section-heading">directors</h2>
+          <div className="committee-grid directors-grid">
+            {directors.map(
+              ({ id, image, name, position, description, year, major, linkedInURL }) => (
+                <PeopleCard
+                  key={id}
+                  image={image}
+                  name={name}
+                  position={position}
+                  description={description}
+                  year={year}
+                  major={major}
+                  linkedInURL={linkedInURL}
+                />
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Chairs Section */}
+        <div className="committee-section">
+          <h2 className="committee-section-heading">chairs</h2>
+          <div className="committee-grid chairs-grid">
+            {chairs.map(
+              ({ id, image, name, position, description, year, major, linkedInURL }) => (
+                <PeopleCard
+                  key={id}
+                  image={image}
+                  name={name}
+                  position={position}
+                  description={description}
+                  year={year}
+                  major={major}
+                  linkedInURL={linkedInURL}
+                />
+              )
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
