@@ -6,9 +6,9 @@ import {HashLink } from "react-router-hash-link";
 import{BsInstagram} from 'react-icons/bs'
 import{HiOutlineMail} from 'react-icons/hi'
 
-const Footer = ({ className }) => {
+const Footer = () => {
   return (
-    <footer className={className}>
+    <footer>
       <img src={footer_background} className="footer-background" alt="Footer Background" />
       <div className="footer-content"> 
         <p>made with love, swe dev team <span>&lt;3</span></p>

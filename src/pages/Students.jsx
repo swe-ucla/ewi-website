@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 import StudentHeader from "../components/studentHeader/StudentHeader";
 import IssuuStyleFlipbook from "../components/flipbook/IssuuStyleFlipbook";
@@ -7,6 +8,12 @@ import Testimonials from "../components/testimonials/Testimonials";
 import Accordion from "../components/accordion/Accordion";
 
 const Student = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="student">
       <StudentHeader />

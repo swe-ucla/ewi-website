@@ -3,9 +3,9 @@ import './contact.css'
 import { useRef } from 'react';
 import emailjs from 'emailjs-com'
 import GeneralQA from '../generalQA/GeneralQA';
+import flower from "../../assets/flower.svg";
+import hero_background from "../../assets/hero_background.svg";
 import butterfly from "../../assets/butterfly.png";
-import leafLeft from "../../assets/leafLeft.png";
-import leafRight from "../../assets/leafRight.png";
 
 export const Contact = () => {
   const form = useRef();
@@ -20,12 +20,22 @@ export const Contact = () => {
     <section className="contact-section">
       {/* Header Section with Decorative Elements */}
       <div className="contact-header">
+        <div className="contact-header-background">
+          {/* Hero background image */}
+          <div className="contact-header-bg-image"></div>
+          
+          {/* Decorative flowers */}
+          <img src={flower} alt="flower" className="contact-flower contact-flower-1" />
+          <img src={flower} alt="flower" className="contact-flower contact-flower-2" />
+          <img src={flower} alt="flower" className="contact-flower contact-flower-3" />
+          <img src={flower} alt="flower" className="contact-flower contact-flower-4" />
+        </div>
+        
         {/* Contact Us Text with Butterfly */}
         <div className="contact-header-text-container">
           <h1 className="contact-header-text">
-            <img src={leafLeft} alt="leaf left" className="contact-leaf-left" />
-            <span className="contact-header-text-span">contact us</span>
-            <img src={leafRight} alt="leaf right" className="contact-leaf-right" />
+            contact us
+            <img src={butterfly} alt="butterfly" className="contact-butterfly-text" />
           </h1>
         </div>
       </div>

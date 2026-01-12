@@ -1,20 +1,53 @@
+.carousel-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 2rem auto;
+}
+
 .carousel-container {
   position: relative;
-  width: 600px;
+  width: 800px;
   max-width: 100%;
   margin: auto;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .carousel-image-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 0.5rem;
+  overflow: visible;
+}
+
+.carousel-flower {
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  transform: translateX(-70%);
+  z-index: 2;
+  width: auto;
+  height: 200px;
+  object-fit: contain;
+}
+
+.carousel-leaves {
+  position: absolute;
+  bottom: -35px;
+  right: 0;
+  transform: translateX(70%);
+  z-index: 2;
+  width: auto;
+  height: 160px;
+  object-fit: contain;
 }
 
 .carousel-image {
   width: 100%;
-  height: 400px;
+  height: 500px;
   object-fit: cover;
 }
 
@@ -22,21 +55,34 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: rgba(255, 255, 255, 0.9);
   border: none;
-  color: white;
+  color: #8D485F;
   font-size: 1.5rem;
-  padding: 0.5rem;
+  padding: 0;
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.carousel-btn:hover {
+  background: white;
+  transform: translateY(-50%) scale(1.1);
 }
 
 .carousel-btn.prev {
-  left: 10px;
+  left: -25px;
 }
 
 .carousel-btn.next {
-  right: 10px;
+  right: -25px;
 }
 
 .carousel-dots {
@@ -59,4 +105,50 @@
 
 .dot.active {
   background: white;
+}
+
+.carousel-text {
+  width: 990px;
+  max-width: 100%;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.carousel-text p {
+  font-family: "Inter", serif;
+  color: var(--color-primary);
+  line-height: 1.5;
+  font-weight: 300;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.carousel-text p:last-child {
+  margin-bottom: 0;
+}
+
+.carousel-buttons {
+  display: flex;
+  gap: 5.0rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.carousel-register-btn,
+.carousel-learn-more-btn {
+  padding: 1.2rem 1.8rem;
+  border-radius: 8px;
+  border: none;
+  background: #8D485F;
+  color: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Inter", serif;
+}
+
+.carousel-register-btn:hover,
+.carousel-learn-more-btn:hover {
+  transform: scale(1.05);
 }

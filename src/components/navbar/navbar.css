@@ -11,12 +11,6 @@
     z-index: 9999;
     height: 67px;
     width: 100%;
-    transition: filter 0.3s ease;
-}
-
-body.popup-open .navbar {
-    filter: blur(4px);
-    pointer-events: none;
 }
 
 .logo {
@@ -40,35 +34,13 @@ body.popup-open .navbar {
     display: inline-block;
     color: rgb(141, 72, 95);
     padding: 10px 15px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.3s ease;
     text-decoration: none;
     cursor: pointer;
-    text-transform: uppercase;
-    font-weight: 500;
-    position: relative;
-    background: transparent;
 }
 
 .tab:hover {
-    background: transparent;
-    color: rgb(141, 72, 95);
-    transform: translateY(-2px);
-}
-
-.tab::after {
-    content: '';
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 60%;
-    height: 2px;
-    background: rgb(141, 72, 95);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.tab:hover::after {
-    transform: translateX(-50%) scaleX(1);
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Menu Icon */
@@ -78,36 +50,33 @@ body.popup-open .navbar {
     display: none;
     position:fixed;
     top: 15px;
-    right: 20px;
-    z-index: 10000;
+    right: 10px;
 }/* Style label tag */
 
 .hamb-line {
-    background: #8D485F;
+    background: black;
     display: block;
-    height: 3px;
+    height: 2px;
     position: relative;
-    width: 28px;
-    border-radius: 2px;
-    transition: all .3s ease-out;
+    width: 24px;
+
 } /* Style span tag */
 
 .hamb-line::before,
 .hamb-line::after{
-    background: #8D485F;
+    background: black;
     content: '';
     display: block;
     height: 100%;
     position: absolute;
-    transition: all .3s ease-out;
+    transition: all .2s ease-out;
     width: 100%;
-    border-radius: 2px;
 }
 .hamb-line::before{
-    top: 8px;
+    top: 5px;
 }
 .hamb-line::after{
-    top: -8px;
+    top: -5px;
 }
 
 .side-menu {
@@ -121,48 +90,24 @@ body.popup-open .navbar {
 
     .tab {
         position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+        display: block;
         width: 100%;
-        min-height: 60px;
-        padding: 0 25px;
-        border-bottom: 1px solid rgba(141, 72, 95, 0.1);
-        color: #8D485F;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: transparent;
         text-align: left;
-        box-sizing: border-box;
-        line-height: 1.5;
-    }
-
-    .tab:hover {
-        background: transparent;
-        padding-left: 35px;
-        transform: translateX(5px);
-    }
-
-    .tab::after {
-        display: none;
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .tabs {
         max-height: 0;
-        width: 0;
+        width: 200px;
         flex-direction: column;
         overflow: hidden;
-        background: linear-gradient(135deg, #ffffff 0%, #fef5f8 100%);
-        right: 0;
+        background-color: #f9f9f9;
+        right: 10px;
         position: fixed;
-        top: 0;
-        height: 100vh;
-        box-shadow: -4px 0 20px rgba(0,0,0,0.15);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 9998;
-        padding-top: 80px;
+        top: 67px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        border-radius: 4px;
     }
 
     .hamb {
@@ -171,9 +116,8 @@ body.popup-open .navbar {
     
     /* Toggle menu icon */
     .side-menu:checked ~ .tabs{
-        max-height: 100vh;
-        width: 280px;
-        overflow-y: auto;
+        max-height: 500px;
+        overflow: visible;
     }
 
     .side-menu:checked ~ .hamb .hamb-line {
@@ -181,33 +125,10 @@ body.popup-open .navbar {
     }
     .side-menu:checked ~ .hamb .hamb-line::before {
         transform: rotate(-45deg);
-        top: 0;
-        background: #8D485F;
+        top:0;
     }
     .side-menu:checked ~ .hamb .hamb-line::after {
         transform: rotate(45deg);
-        top: 0;
-        background: #8D485F;
-    }
-
-    /* Backdrop overlay */
-    .menu-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: 9997;
-        animation: fadeIn 0.3s ease;
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
+        top:0;
     }
 }

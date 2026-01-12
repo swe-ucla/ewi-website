@@ -75,7 +75,7 @@ const eventsList: EventData[] = [
 const EventsSection = () => {
   return (
     <section className="events-section">
-      <h1 className="section-title">Upcoming Events</h1>
+      <h1 className="section-title">events</h1>
       <div className="events-grid">
         {eventsList.map((event) => (
           <Event key={event.number} {...event} />

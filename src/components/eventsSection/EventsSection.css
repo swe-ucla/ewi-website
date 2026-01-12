@@ -2,6 +2,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .event-card {
@@ -40,14 +43,38 @@
 
 .events-section {
   color: var(--color-dark-pink);
+  padding: 0 1rem;
+  max-width: 100%;
+  margin-top: 4rem;
 }
 
 .section-title {
-  font-family: Katibeh;
-  font-size: 4rem;
-
-  line-height: 1;
+  font-family: 'Katibeh', serif;
+  font-size: 130px;
+  line-height: 0.74;
+  color: #8d485f;
+  background: transparent;
+  text-shadow: 2px 2px 4px #ecbad0;
+  letter-spacing: -1.3px;
   text-align: center;
+  margin: 0 auto 2rem;
+  max-width: 1072px;
+  height: 96.21px;
+  text-transform: none;
+  width: 100%;
+}
+
+@media screen and (max-width: 1024px) {
+  .section-title {
+    font-size: 80px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .section-title {
+    font-size: 60px;
+    margin-bottom: 3rem;
+  }
 }
 
 .event-card-left {

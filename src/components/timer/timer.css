@@ -1,4 +1,199 @@
-.countdown__container {
-    font-size: 20px;
-    margin-bottom: 1rem;
+@import url('https://fonts.googleapis.com/css2?family=Katibeh&family=Inter:wght@400;500;600;700&display=swap');
+
+.timer-section-wrapper {
+  position: absolute;
+  top: 48.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 10;
+}
+
+.timer-logistics {
+  position: absolute;
+  bottom: calc(100% + 1.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  white-space: nowrap;
+  flex-wrap: nowrap;
+}
+
+.logistics-date {
+  font-family: 'Katibeh', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #3E4C13;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.logistics-time {
+  font-family: 'Katibeh', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #8D485F;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.logistics-location {
+  font-family: 'Katibeh', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #3E4C13;
+  text-align: center;
+  line-height: 1.2;
+  font-style: italic;
+}
+
+.timer-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.timer-container {
+  position: relative;
+  width: 898px;
+  max-width: 100%;
+  height: 246px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer-flower {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: auto;
+  height: 100px;
+  object-fit: contain;
+}
+
+.timer-leaves {
+  position: absolute;
+  bottom: -45px;
+  right: 0;
+  transform: translateX(75%);
+  z-index: 2;
+  width: auto;
+  height: 150px;
+  object-fit: contain;
+}
+
+.timer-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 0;
+}
+
+.timer-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.timer-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+}
+
+.timer-number {
+  font-family: 'Katibeh', serif;
+  font-size: 6rem;
+  font-weight: 400;
+  line-height: 0.9;
+  color: #3E4C13;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.timer-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #3E4C13;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media screen and (max-width: 1024px) {
+  .timer-container {
+    width: 100%;
+    max-width: 898px;
+  }
+
+  .timer-number {
+    font-size: 4rem;
+  }
+
+  .timer-label {
+    font-size: 0.875rem;
+  }
+
+  .timer-logistics {
+    gap: 2rem;
+  }
+
+  .logistics-date,
+  .logistics-time,
+  .logistics-location {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .timer-container {
+    height: auto;
+    min-height: 200px;
+  }
+
+  .timer-number {
+    font-size: 3rem;
+  }
+
+  .timer-label {
+    font-size: 0.75rem;
+  }
+
+  .timer-content {
+    padding: 1rem 0.5rem;
+  }
+
+  .timer-logistics {
+    gap: 1.5rem;
+  }
+
+  .logistics-date,
+  .logistics-time,
+  .logistics-location {
+    font-size: 1.5rem;
+  }
 }
