@@ -30,21 +30,27 @@
 }
 
 .title-line-1 {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+.title-line-1 .title-text {
+  display: inline-block;
 }
 
 .flower-container {
-  position: relative;
+  position: absolute;
   display: inline-block;
   vertical-align: middle;
-  flex-shrink: 0;
+  left: calc(43% + 3.5ch - 0.1em);
+  top: 20%;
+  transform: translateY(-50%);
 }
 
 .flower-icon {
   width: auto;
-  height: 0.8em;
+  height: 1em;
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
@@ -59,7 +65,7 @@
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 0.6em;
+  height: 0.75em;
 }
 
 .title-line-2 {
@@ -83,9 +89,9 @@
 
 .deadline-text {
   font-family: 'Noto Sans', sans-serif;
-  font-weight: 500;
-  font-size: 1.5rem;
-  color: #fff;
+  font-weight: 400;
+  font-size: 28px;
+  color: white;
   background: transparent;
   text-align: center;
   margin: 0;
@@ -156,7 +162,7 @@
   }
 
   .deadline-text {
-    font-size: 1rem;
+    font-size: 24px;
   }
 
   .apply-button {
@@ -180,7 +186,7 @@
   }
 
   .deadline-text {
-    font-size: 1rem;
+    font-size: 22px;
   }
 
   .apply-button {

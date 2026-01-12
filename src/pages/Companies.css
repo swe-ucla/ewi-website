@@ -1,0 +1,157 @@
+/* ================== COMPANIES SECTION ==================== */
+.companies-section {
+  margin-top: 0;
+  width: 100%;
+  position: relative;
+}
+
+/* ================== HEADER SECTION ==================== */
+.companies-header {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  background: linear-gradient(180deg, #ced3bd 0%, #9da77a 30%, #9da77a 60%, #ced3bd 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  overflow: hidden;
+}
+
+.companies-header-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+}
+
+.companies-title {
+  font-family: 'DM Serif Text', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #3e4c13;
+  text-transform: lowercase;
+  margin: 0;
+  text-align: center;
+}
+
+/* Decorative Flowers */
+.companies-flower {
+  position: absolute;
+  z-index: 5;
+  opacity: 0.9;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.flower-1 {
+  top: 3%;
+  left: 2%;
+  width: 90px;
+  height: 90px;
+  transform: rotate(-15deg);
+}
+
+.flower-2 {
+  top: 12%;
+  left: 5%;
+  width: 65px;
+  height: 65px;
+  transform: rotate(20deg);
+}
+
+.flower-3 {
+  top: 3%;
+  right: 2%;
+  width: 90px;
+  height: 90px;
+  transform: rotate(15deg);
+}
+
+.flower-4 {
+  top: 12%;
+  right: 5%;
+  width: 65px;
+  height: 65px;
+  transform: rotate(-20deg);
+}
+
+/* ================== CONTENT SECTION ==================== */
+.companies-content {
+  padding-top: 0;
+  padding-bottom: 4rem;
+  background: linear-gradient(180deg, #ced3bd 0%, #f0f2ed 50%, #ffffff 100%);
+  min-height: 60vh;
+}
+
+/* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
+@media screen and (max-width: 1024px) {
+  .companies-header {
+    min-height: 250px;
+    padding: 3rem 1.5rem;
+  }
+
+  .companies-title {
+    font-size: 2.5rem;
+  }
+
+  .flower-1 {
+    width: 70px;
+    height: 70px;
+  }
+
+  .flower-2 {
+    width: 50px;
+    height: 50px;
+  }
+
+  .flower-3 {
+    width: 70px;
+    height: 70px;
+  }
+
+  .flower-4 {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
+@media screen and (max-width: 600px) {
+  .companies-header {
+    min-height: 200px;
+    padding: 2rem 1rem;
+  }
+
+  .companies-title {
+    font-size: 2rem;
+  }
+
+  .flower-1 {
+    top: 2%;
+    left: 1%;
+    width: 60px;
+    height: 60px;
+  }
+
+  .flower-2 {
+    top: 10%;
+    left: 4%;
+    width: 45px;
+    height: 45px;
+  }
+
+  .flower-3 {
+    top: 2%;
+    right: 1%;
+    width: 60px;
+    height: 60px;
+  }
+
+  .flower-4 {
+    top: 10%;
+    right: 4%;
+    width: 45px;
+    height: 45px;
+  }
+}
+

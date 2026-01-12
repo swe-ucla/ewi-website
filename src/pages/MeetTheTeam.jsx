@@ -1,9 +1,7 @@
 import CommitteeGrid from "../components/committeeGrid/committeeGrid";
 
 const MeetTheTeam = () => {
-  <>
-    <CommitteeGrid />
-  </>;
+  return <CommitteeGrid />;
 };
 
 export default MeetTheTeam;

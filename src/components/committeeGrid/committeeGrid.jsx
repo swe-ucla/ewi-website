@@ -1,94 +1,189 @@
 import React from "react";
 import "./committeeGrid.css";
 import PeopleCard from "../peopleCard/PeopleCard";
-import KHANH from "../../assets/KhanhTran_Headshot.jpg";
-import JOCELYN from "../../assets/JocelynBarrera_Headshot.png";
-import JULIA from "../../assets/JuliaChen_Headshot.JPG";
-import LAVENDER from "../../assets/LavenderHwang_Headshot.JPG";
-import FIONA from "../../assets/FionaPeng_Headshot.jpg";
-import SUSIE from "../../assets/SusieKIm_Headshot.JPG";
+import KHANH from "../../assets/Khanh_EWIHeadshot.jpg";
+import JACQUELINE from "../../assets/Jacqueline_EWIHeadshot.jpg";
+import JEIA from "../../assets/Jeia_EWIHeadshot.jpg";
+import JOLENE from "../../assets/Jolene_EWIHeadshot.jpg";
+import LILLIAN from "../../assets/Lillian_EWIHeadshot.JPG";
+import SUSIE from "../../assets/Susie_EWIHeadshot.jpeg";
+import CLARISSE from "../../assets/Clarisse_EWIHeadshot.jpg";
+import APARNA from "../../assets/Aparna_EWIHeadshot.JPG";
+import MEETTHETEAM_TITLE from "../../assets/meetheteam-title.png";
+import MEETTHETEAM_FLOWER from "../../assets/meettheteam-flower.png";
+import BUTTERFLY from "../../assets/butterfly.png";
 
 const teamData = [
   {
     id: 1,
     image: KHANH,
     name: "Khanh Tran",
-    position: "Logistics Chair",
-    year: "Test Year",
-    major: "Test Major",
+    position: "Internal Director",
+    year: "3rd Year",
+    major: "Bioengineering",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Khanh is a third year student at UCLA studying Bioengineering and currently serves as the Internal Director for SWE@UCLA's Evening with Industry Committee. Outside of SWE, she is also an Undergraduate Researcher at Dr. Yang's Immunoengineering Lab and the Research Team Project Manager in the Biomedical Engineering Society (BMES@UCLA). In her spare time, she enjoys singing with her a cappella group at UCLA! Previously, she has also been the Logistics and Student Liaison Chair, developing EWI 2025 and 2024, respectively.",
+    linkedInURL: "https://www.linkedin.com/in/khanh-b-tran/",
   },
   {
     id: 2,
-    image: JOCELYN,
-    name: "Jocelyn Barrera",
-    position: "Professional Development Chair",
-    year: "Test Year",
-    major: "Test Major",
+    image: LILLIAN,
+    name: "Lillian Gonick",
+    position: "External Director",
+    year: "3rd Year",
+    major: "Linguistics and Computer Science",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Lillian is majoring in Linguistics and Computer Science and minoring in Data Science Engineering. She currently serves as the External Director for EWI 2025. In addition to SWE@UCLA, Lillian is involved with ACM Hack and the Vietnamese Student Union. She is pursuing a career as a Software Engineer. Previously, she served as the Corporate Relations Chair for EWI 2024.",
+    linkedInURL: "https://www.linkedin.com/in/lilliangonick/",
   },
   {
     id: 3,
-    image: JULIA,
-    name: "Julia Chen",
-    position: "Design & Media Chair",
-    year: "Test Year",
-    major: "Test Major",
+    image: SUSIE,
+    name: "Susie Kim",
+    position: "Logistics Chair",
+    year: "2nd Year",
+    major: "Computer Science",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Susie is a second year computer science student and is serving as the logistics chair for EWI 2025. She contributes to building internal tools as a software engineer for the Daily Bruin and is involved in building full-stack applications for LA Blueprint. She is passionate about integrating and advancing technology into an accessible tool for everyone. She has previously served as the Student Liaison Chair for EWI 2025.",
+    linkedInURL: "https://www.linkedin.com/in/susiekim101/",
   },
   {
     id: 4,
-    image: LAVENDER,
-    name: "Lavender Hwang",
-    position: "Corporate Relations Chair",
-    year: "Test Year",
-    major: "Test Major",
+    image: JEIA,
+    name: "Jeia So",
+    position: "Design and Media Chair",
+    year: "2nd Year",
+    major: "Mechanical Engineering",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Jeia is a second year studying Mechanical Engineering and she is the Design and Media Chair for EWI 2026! She has been involved with undergraduate research as part of the Mechanics of Soft Materials Lab, and an instructor for the drones E1 class on campus. She hopes to pursue a career in robotics or bionics. In her free time, she enjoys drawing, dancing, and looking for new food spots.",
+    linkedInURL: "https://www.linkedin.com/in/jeiaso/",
   },
   {
     id: 5,
-    image: FIONA,
-    name: "Fiona Peng",
-    position: "Publicity Chair",
-    year: "Test Year",
-    major: "Test Major",
+    image: CLARISSE,
+    name: "Clarisse Kim",
+    position: "Corporate Relations Chair",
+    year: "1st Year",
+    major: "Mechanical Engineering",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Clarisse is a first-year mechanical engineering major and the Corporate Relations Chair for EWI 2025. She has been involved with Design Build Fly @UCLA and ASME and hopes to pursue a career in product design or consulting. When she isn't hunched over her laptop, she can be found eating her weight in MadeGood granola bars or playing (though mainly losing) at claw machines. She's excited to contribute to the EWI committee!",
+    linkedInURL: "https://www.linkedin.com/in/clarisse-kim/",
   },
   {
     id: 6,
-    image: SUSIE,
-    name: "Susie Kim",
-    position: "Student Liaison Chair",
-    year: "Test Year",
-    major: "Test Major",
+    image: JOLENE,
+    name: "Jolene Young",
+    position: "Student Liaison",
+    year: "2nd Year",
+    major: "Materials Engineering",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      "Jolene is a second year student studying Materials Engineering and is the Student Liaison for EWI 2026. She has also been involved with Materials Research Society (MRS) and American Society of Civil Engineers (ASCE), and hopes to create innovative materials and designs that promote sustainability in products and built environments. Outside of academics, she is on Samahang Modern and enjoys trying new cafes and restaurants.",
+    linkedInURL: "https://linkedin.com/in/jolene-young",
+  },
+  {
+    id: 7,
+    image: JACQUELINE,
+    name: "Jacqueline Vargas",
+    position: "Professional Development Chair",
+    year: "3rd Year",
+    major: "Chemical Engineering",
+    description:
+      "Jacqueline is a third-year student studying chemical engineering and is the professional development chair for EWI 2026. She has been involved with Special Olympics, American Institute of Chemical Engineers, and Society of Latin Engineers, and hopes to pursue a career in the energy sector. In her spare time, she enjoys puzzles, listening to music, and scrapbooking.",
+    linkedInURL: "https://www.linkedin.com/in/jacquelinekvargas/",
+  },
+  {
+    id: 8,
+    image: APARNA,
+    name: "Aparna Petluri",
+    position: "Publicity Chair",
+    year: "3rd Year",
+    major: "Data Theory",
+    description:
+      "Aparna Petluri is a third year student studying Data Theory, and is the Publicity Chair for EWI 2025. She is currently also involved in UCLA's DATARes through DataBlog, and hopes to pursue a career as a statistician. In her spare time, she enjoys reading, going to the gym, and spending time with friends.",
+    linkedInURL: "https://www.linkedin.com/in/aparna-petluri-7b4479242/",
   },
 ];
 
 const committeeGrid = () => {
+  const directors = teamData.filter(
+    (person) => person.name === "Khanh Tran" || person.name === "Lillian Gonick"
+  );
+  const chairs = teamData.filter(
+    (person) => person.name !== "Khanh Tran" && person.name !== "Lillian Gonick"
+  );
+
   return (
-    <section id="meet-the-team">
-      <h2>Meet the Team</h2>
-      <div className="container meet-the-team__container">
-        {teamData.map(
-          ({ id, image, name, position, description, year, major }) => (
-            <PeopleCard
-              key={id}
-              image={image}
-              name={name}
-              position={position}
-              description={description}
-              year={year}
-              major={major}
-            />
-          )
-        )}
+    <section id="meet-the-team" className="meet-the-team-section">
+      {/* Header Section with Decorative Elements */}
+      <div className="meet-the-team-header">
+        {/* Decorative Flowers */}
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-1" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-2" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-3" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-4" />
+        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-5" />
+        
+        {/* Dashed Line */}
+        <svg className="meet-the-team-dashed-line" viewBox="0 0 400 200" preserveAspectRatio="none">
+          <path
+            d="M 50 50 Q 200 150 350 50"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.6)"
+            strokeWidth="2"
+            strokeDasharray="5,5"
+          />
+        </svg>
+
+        {/* Header Content */}
+        <div className="meet-the-team-header-content">
+          <img src={MEETTHETEAM_TITLE} alt="meet the team" className="meet-the-team-title-image" />
+          <img src={BUTTERFLY} alt="butterfly" className="meet-the-team-butterfly" />
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div className="container meet-the-team-content">
+        {/* Directors Section */}
+        <div className="committee-section">
+          <h2 className="committee-section-heading">directors</h2>
+          <div className="committee-grid directors-grid">
+            {directors.map(
+              ({ id, image, name, position, description, year, major, linkedInURL }) => (
+                <PeopleCard
+                  key={id}
+                  image={image}
+                  name={name}
+                  position={position}
+                  description={description}
+                  year={year}
+                  major={major}
+                  linkedInURL={linkedInURL}
+                />
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Chairs Section */}
+        <div className="committee-section">
+          <h2 className="committee-section-heading">chairs</h2>
+          <div className="committee-grid chairs-grid">
+            {chairs.map(
+              ({ id, image, name, position, description, year, major, linkedInURL }) => (
+                <PeopleCard
+                  key={id}
+                  image={image}
+                  name={name}
+                  position={position}
+                  description={description}
+                  year={year}
+                  major={major}
+                  linkedInURL={linkedInURL}
+                />
+              )
+            )}
+          </div>
+        </div>
       </div>
     </section>
   );
