@@ -14,27 +14,19 @@
 }
 
 .company-registration-content {
-  width: 100%;
-  max-width: 1200px;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  width: 50%;
+  max-width: 800px;
+  gap: 1.5rem;
 }
 
 .company-registration-title {
-  font-family: 'Katibeh', serif;
-  font-size: 130px;
-  line-height: 0.65;
-  color: #3e4c13;
-  background: transparent;
-  text-shadow: 2px 2px 4px #9da77a;
-  letter-spacing: -1.3px;
-  text-align: center;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  height: auto;
+  margin-top: 6rem;
+  width: 80%;
+  max-width: 1000px;
 }
 
 .title-line-1 {
@@ -88,6 +80,13 @@
   width: 100%;
 }
 
+.deadlines-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
 .deadline-text {
   font-family: 'Noto Sans', sans-serif;
   font-weight: 400;
@@ -98,6 +97,14 @@
   margin: 0;
 }
 
+.deadline-early {
+  color: #fff;
+}
+
+.deadline-regular {
+  color: #fff;
+}
+
 .apply-button {
   background: #6e7a47;
   color: white;
@@ -106,7 +113,7 @@
   border-radius: 10px;
   font-family: 'Noto Sans', sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 1rem;
   letter-spacing: -0.2px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -115,6 +122,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
 .apply-button:hover {
@@ -159,7 +168,7 @@
   .apply-button {
     width: 160px;
     height: 55px;
-    font-size: 18px;
+    font-size: 1rem;
   }
 }
 
@@ -183,7 +192,7 @@
   .apply-button {
     width: 140px;
     height: 50px;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .subtitle-text {

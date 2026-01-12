@@ -29,10 +29,10 @@ const WhyGetInvolved = () => {
         <div className="why-get-involved-layout">
           <div className="why-get-involved-text">
             <p>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor.
+              At EWI, you'll connect with students beyond their resumes through meaningful conversations over dinner. Students join you at your table, where they ask thoughtful questions and share their interests and goals. This format creates a more personal experience than traditional career fairs, giving you a clearer picture of which candidates would be the best fit for your organization.
             </p>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor.
+              We're excited about the opportunity to partner with you and explore how we can work together!
             </p>
           </div>
           <form className="why-get-involved-form" onSubmit={handleSubmit}>
