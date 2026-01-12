@@ -1,7 +1,8 @@
 .contact-section {
   margin-top: 0;
   width: 100%;
-  background: white;
+  background: linear-gradient(179.17deg, #9DA77A 5.11%, #CED3BD 61.23%, #FFFFFF 97.17%);
+  min-height: 100vh;
 }
 
 /* ================== HEADER SECTION ==================== */
@@ -24,19 +25,6 @@
   z-index: 1;
 }
 
-.contact-header-bg-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url("../../assets/hero_background.svg");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1;
-}
-
 .contact-header-text-container {
   position: relative;
   z-index: 10;
@@ -45,7 +33,7 @@
   justify-content: center;
   width: 100%;
   padding-top: 0;
-  margin-top: -50px;
+  margin-top: -120px;
 }
 
 .contact-header-text {
@@ -58,7 +46,22 @@
   text-align: center;
   letter-spacing: 0.02em;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.contact-header-text-span {
   display: inline-block;
+}
+
+.contact-leaf-left,
+.contact-leaf-right {
+  width: auto;
+  height: 6rem;
+  object-fit: contain;
+  display: block;
 }
 
 .contact-butterfly-text {
@@ -110,8 +113,9 @@
 /* ================== FORM SECTION ==================== */
 .contact-form-section {
   width: 100%;
-  background: white;
-  padding: 5rem 0 6rem;
+  background: transparent;
+  padding: 0 0 6rem;
+  margin-top: -15rem;
   display: flex;
   justify-content: center;
 }
@@ -194,11 +198,17 @@
 @media screen and (max-width: 1024px) {
   .contact-header-text-container {
     padding-top: 0;
-    margin-top: -40px;
+    margin-top: -100px;
   }
   
   .contact-header-text {
     font-size: 4rem;
+    gap: 1.2rem;
+  }
+  
+  .contact-leaf-left,
+  .contact-leaf-right {
+    height: 2rem;
   }
   
   .contact-butterfly-text {
@@ -212,7 +222,8 @@
   }
   
   .contact-form-section {
-    padding: 4rem 0 5rem;
+    padding: 0 0 5rem;
+    margin-top: -12rem;
   }
   
   .contact-flower {
@@ -224,11 +235,17 @@
 @media screen and (max-width: 600px) {
   .contact-header-text-container {
     padding-top: 0;
-    margin-top: -30px;
+    margin-top: -80px;
   }
   
   .contact-header-text {
     font-size: 3rem;
+    gap: 1rem;
+  }
+  
+  .contact-leaf-left,
+  .contact-leaf-right {
+    height: 2.5rem;
   }
   
   .contact-butterfly-text {
@@ -242,7 +259,8 @@
   }
   
   .contact-form-section {
-    padding: 3rem 0 4rem;
+    padding: 0 0 4rem;
+    margin-top: -10rem;
   }
   
   .contact-form {
