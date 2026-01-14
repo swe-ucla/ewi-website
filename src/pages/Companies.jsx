@@ -6,6 +6,16 @@ import WhyGetInvolved from "../components/whyGetInvolved/WhyGetInvolved";
 import Testimonials from "../components/testimonials/Testimonials";
 import SweSponsor from "../components/sweSponsor/SweSponsor";
 
+const company_testimonials = [
+  {
+    id: 1,
+    quote: "Quote",
+    source: " - Source",
+    image: null, // Add student image path when available
+    name: "Student Name",
+  },
+];
+
 const Companies = () => {
   const location = useLocation();
 
@@ -25,7 +35,7 @@ const Companies = () => {
       <GetInvolved />
       <WhyGetInvolved />
       <div className="container">
-        <Testimonials />
+        <Testimonials testimonials={company_testimonials} />
       </div>
       <SweSponsor />
     </div>
