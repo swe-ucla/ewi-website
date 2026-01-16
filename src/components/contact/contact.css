@@ -194,6 +194,11 @@
   background: #9da77a;
 }
 
+
+body.contact-page footer::before {
+  display: none;
+}
+
 /* ================== MEDIA QUERIES ==================== */
 @media screen and (max-width: 1024px) {
   .contact-header-text-container {
