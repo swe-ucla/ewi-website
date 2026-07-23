@@ -3,7 +3,6 @@ import './contact.css'
 import { useRef } from 'react';
 import emailjs from 'emailjs-com'
 import GeneralQA from '../generalQA/GeneralQA';
-import butterfly from "../../assets/butterfly.png";
 import leafLeft from "../../assets/leafLeft.png";
 import leafRight from "../../assets/leafRight.png";
 

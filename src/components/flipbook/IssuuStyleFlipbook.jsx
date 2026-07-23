@@ -15,7 +15,6 @@ const IssuuStyleFlipbook = ({ pdfFile, scale = 1.0 }) => {
   const [zoom, setZoom] = useState(1.0);
   const [isZooming, setIsZooming] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isDocumentLoaded, setIsDocumentLoaded] = useState(false);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -25,7 +24,6 @@ const IssuuStyleFlipbook = ({ pdfFile, scale = 1.0 }) => {
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
     setCurrentPage(0); // Start with cover page on right
-    setIsDocumentLoaded(true);
   };
 
   const goToPrevPage = () => {
@@ -116,18 +114,6 @@ const IssuuStyleFlipbook = ({ pdfFile, scale = 1.0 }) => {
     e.preventDefault();
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || zoom <= 1.0) return;
-    setPan({
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y
-    });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
   // Handle touch events for mobile
   const handleTouchStart = (e) => {
     if (zoom <= 1.0) return;
@@ -139,21 +125,6 @@ const IssuuStyleFlipbook = ({ pdfFile, scale = 1.0 }) => {
         y: e.touches[0].clientY - pan.y
       });
     }
-  };
-
-  const handleTouchMove = (e) => {
-    if (!isDragging || zoom <= 1.0) return;
-    if (e.touches.length === 1) {
-      e.preventDefault();
-      setPan({
-        x: e.touches[0].clientX - dragStart.x,
-        y: e.touches[0].clientY - dragStart.y
-      });
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
   };
 
   useEffect(() => {
