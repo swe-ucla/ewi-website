@@ -1,7 +1,5 @@
 import React from 'react';
 import './CompanyHero.css';
-import IssuuStyleFlipbook from '../flipbook/IssuuStyleFlipbook';
-import company_guide from '../../assets/EWI 2025 Company Survival Guide.pdf';
 
 const heading = "For Companies";
 const subheading = "subhead";
