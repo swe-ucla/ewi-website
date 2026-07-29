@@ -1,22 +1,22 @@
 import React from "react";
-import Header from "../components/header/Header";
-import Attend from "../components/attend/attend";
-import Carousel from "../components/carousel/Carousel";
-import CompanyGrid from "../components/companyGrid/CompanyGrid";
-import EventsSection from "../components/eventsSection/EventsSection.tsx";
-import GoogleMap from "../components/googleMap/GoogleMap";
+import HomeHero from "../components/home/HomeHero";
+import HomeCountdown from "../components/home/HomeCountdown";
+import HomeWhatIsEwi from "../components/home/HomeWhatIsEwi";
+import HomeEvents from "../components/home/HomeEvents";
+import HomeTestimonials from "../components/home/HomeTestimonials";
+import HomeCompanies from "../components/home/HomeCompanies";
 import "./Home.css";
 
 const Home = () => {
   return (
-    <div className="home">
-      <Header />
-      <Attend />
-      <Carousel />
-      <CompanyGrid />
-      <EventsSection />
-      <GoogleMap />
-    </div>
+    <main className="home">
+      <HomeHero />
+      <HomeCountdown />
+      <HomeWhatIsEwi />
+      <HomeEvents />
+      <HomeTestimonials />
+      <HomeCompanies />
+    </main>
   );
 };
 

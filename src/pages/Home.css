@@ -1,5 +1,21 @@
 .home {
-  position: relative;
-  padding-bottom: 0;
+  width: 100%;
+  padding-bottom: 4rem;
+  font-family: "Inter", "Poppins", sans-serif;
+  color: #000;
+  background: #fff;
 }
 
+/* Divider between sections */
+.home > * + * {
+  border-top: 1px solid #ebebeb;
+}
+
+.home-wire-box {
+  background: #e3e3e3;
+  border: none;
+}
+
+.home-wire-box--dark {
+  background: #d0d0d0;
+}
