@@ -6,6 +6,8 @@
   --navbar-height: 67px;
   --navbar-padding-x: 2rem;
   --navbar-tab-gap: 1.25rem;
+  --navbar-logo-width: 120px;
+
 
   display: flex;
   justify-content: space-between;
@@ -27,16 +29,16 @@ body.popup-open .navbar {
 }
 
 .navbar__logo {
-  width: 150px;
-  height: auto;
-  display: inline-block;
   flex-shrink: 0;
+  width: var(--navbar-logo-width);
+  display: block;
 }
 
 .navbar__logo img {
   width: 100%;
   height: auto;
   object-fit: contain;
+  display: block;
 }
 
 .navbar__tabs {
