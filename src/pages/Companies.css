@@ -1,41 +1,12 @@
 /* ================== COMPANIES SECTION ==================== */
-.companies-section {
-  margin-top: 0;
+.companies-page {
   width: 100%;
-  position: relative;
+  font-family: "Inter", "Poppins", sans-serif;
+  color: #000;
+  background: #fff;
 }
 
-
-
-/* ================== CONTENT SECTION ==================== */
-.companies-content {
-  padding-top: 0;
-  padding-bottom: 4rem;
-  min-height: 60vh;
+/* Override footer gradient. */
+.companies-page ~ footer::before {
+  background-image: none;
 }
-
-/* ================ MEDIA QUERIES (MEDIUM DEVICES) ================= */
-@media screen and (max-width: 1024px) {
-  .companies-header {
-    min-height: 250px;
-    padding: 3rem 1.5rem;
-  }
-
-  .companies-title {
-    font-size: 2.5rem;
-  }
-}
-
-/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
-@media screen and (max-width: 600px) {
-  .companies-header {
-    min-height: 200px;
-    padding: 2rem 1rem;
-  }
-
-  .companies-title {
-    font-size: 2rem;
-  }
-
-}
-

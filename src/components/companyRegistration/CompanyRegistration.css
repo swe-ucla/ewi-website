@@ -2,7 +2,13 @@
 
 .company-registration {
   width: 100%;
+  background: transparent;
   padding: 0;
+}
+
+.company-registration-hero {
+  width: 100%;
+  padding: 0rem 2rem 3rem;
   display: flex;
   justify-content: center;
 }
@@ -12,26 +18,128 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 50%;
+  max-width: 800px;
   gap: 1.5rem;
-  padding: 4rem;
 }
 
 .company-registration-title {
-  font-weight: 700;
-  font-size: 5rem;
+  margin-top: 6rem;
+  width: 80%;
+  max-width: 1000px;
+}
+
+.title-line-1 {
+  position: relative;
+  display: block;
+  text-align: center;
+}
+
+.title-line-1 .title-text {
+  display: inline-block;
+}
+
+.flower-container {
+  position: absolute;
+  display: inline-block;
+  vertical-align: middle;
+  left: calc(43% + 3.5ch - 0.1em);
+  top: 20%;
+  transform: translateY(-50%);
+}
+
+.flower-icon {
+  width: auto;
+  height: 1em;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.flower-icon.leaves {
+  position: relative;
+}
+
+.flower-icon.flower {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 0.75em;
+}
+
+.title-line-2 {
+  display: block;
+}
+
+.company-registration-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.deadlines-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.deadline-text {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  color: white;
+  background: transparent;
+  text-align: center;
+  margin: 0;
+}
+
+.deadline-early {
+  color: #fff;
+}
+
+.deadline-regular {
+  color: #fff;
 }
 
 .apply-button {
-  background: #EAEAEA;
+  background: #6e7a47;
+  color: white;
   border: none;
   padding: 21px 14px;
-  font-size: 1.2rem;
+  border-radius: 10px;
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.2px;
   cursor: pointer;
-  width: 120px;
-  height: 30px;
+  transition: all 0.3s ease;
+  width: 180px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.apply-button:hover {
+  background: #5a6540;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.subtitle-text {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #3e4c13;
+  text-align: center;
+  margin: 0;
+  background: transparent;
 }
 
 .company-registration-document {

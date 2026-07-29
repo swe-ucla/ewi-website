@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import CompanyRegistration from "../components/companyRegistration/CompanyRegistration";
-import GetInvolved from "../components/getInvolved/GetInvolved";
-import WhyGetInvolved from "../components/whyGetInvolved/WhyGetInvolved";
-import PricingTiers from "../components/pricingTiers/PricingTiers";
+import CompanyHero from "../components/company/CompanyHero";
+import CompanyPricingTiers from "../components/company/CompanyPricingTiers";
+import CompanyGetInvolved from "../components/company/CompanyGetInvolved";
+import CompanySurvivalGuide from "../components/company/CompanySurvivalGuide";
 
 const Companies = () => {
   const location = useLocation();
@@ -14,9 +14,10 @@ const Companies = () => {
 
   return (
     <div className="companies-page">
-      <CompanyRegistration />
-      <PricingTiers />
-      <WhyGetInvolved />
+      <CompanyHero />
+      <CompanyPricingTiers />
+      <CompanyGetInvolved />
+      <CompanySurvivalGuide />
     </div>
   );
 };

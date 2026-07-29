@@ -1,35 +1,36 @@
 import React from "react";
-import "./pricingTiers.css";
-
+import "./CompanyPricingTiers.css";
 
 const tiers = [
     {
-        name: "tier 1",
+        name: "pricing tier 1",
         perks: "description"
     },
     {
-        name: "tier 2",
+        name: "pricing tier 2",
         perks: "description"
     },
     {
-        name: "tier 3",
+        name: "pricing tier 3",
         perks: "description"
     }
 ]
 
-const PricingTiers = () => {
+const CompanyPricingTiers = () => {
     return (
         <div className="pricing-tiers">
             <div className="pricing-container">
                 {tiers.map((tier) => (
                     <div className="pricing-box" key={tier.name}>
-                        <h3>{tier.name}</h3>
-                        <p>{tier.perks}</p>
-                    </div>   
+                        <div className="pricing-title">
+                            <h3>{tier.name}</h3>
+                        </div>
+                        <p className="pricing-perks">{tier.perks}</p>
+                    </div>
                 ))}
             </div>
         </div>
     );
 };
 
-export default PricingTiers;
+export default CompanyPricingTiers;
