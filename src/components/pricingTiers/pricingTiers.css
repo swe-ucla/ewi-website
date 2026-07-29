@@ -1,0 +1,19 @@
+.pricing-tiers {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.pricing-container {
+    display: flex;
+    gap: 5rem;
+}
+
+.pricing-box{
+    background-color: #EAEAEA;
+    width: 25rem;
+    height: 25rem;
+    justify-items: center;
+    align-content: center;
+}
