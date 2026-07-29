@@ -8,7 +8,7 @@ import "./HomeEvents.css";
 const HomeEvents = () => {
   return (
     <HomeSection title="Events">
-      <ul className="home-events__list" role="list" aria-label="Featured events">
+      <ul className="home-events__list" aria-label="Featured events">
         {homeFeaturedEvents.map((event) => (
           <li key={event.id}>
             <HomeEventItem {...event} />

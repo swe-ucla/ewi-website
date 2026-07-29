@@ -1,13 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { homeEventConfig } from "./homeEventConfig";
 import "./HomeHero.css";
 
 const scrollToTop = () => window.scrollTo(0, 0);
 
 const HomeHero = () => {
-  const { date, time, location } = homeEventConfig;
-
   return (
     <header className="home-hero">
       <h1 className="home-hero__title">EWI 50</h1>
