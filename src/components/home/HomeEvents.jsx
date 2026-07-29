@@ -8,12 +8,14 @@ import "./HomeEvents.css";
 const HomeEvents = () => {
   return (
     <HomeSection title="Events">
-      <div className="home-events__list">
+      <ul className="home-events__list" role="list" aria-label="Featured events">
         {homeFeaturedEvents.map((event) => (
-          <HomeEventItem key={event.id} {...event} />
+          <li key={event.id}>
+            <HomeEventItem {...event} />
+          </li>
         ))}
-      </div>
-      <Link to="/students" className="home-events__link">
+      </ul>
+      <Link to="/students" className="home-events__link" aria-label="View student page for more event details">
         View student page for more details →
       </Link>
     </HomeSection>

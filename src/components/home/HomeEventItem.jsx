@@ -19,6 +19,7 @@ const HomeEventItem = ({
           className="home-event-item__rsvp"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label={`RSVP for ${title} (opens in new tab)`}
           onClick={(e) => e.stopPropagation()}
         >
           RSVP ↗

@@ -8,12 +8,14 @@ import "./HomeCompanies.css";
 const HomeCompanies = () => {
   return (
     <HomeSection title="Companies">
-      <div className="home-companies__grid">
+      <ul className="home-companies__grid" role="list" aria-label="Featured companies">
         {homeFeaturedCompanies.map((company) => (
-          <HomeCompanyLogo key={company.id} name={company.name} logo={company.logo} />
+          <li key={company.id}>
+            <HomeCompanyLogo name={company.name} logo={company.logo} />
+          </li>
         ))}
-      </div>
-      <Link to="/companies" className="home-companies__link">
+      </ul>
+      <Link to="/companies" className="home-companies__link" aria-label="See all attending companies">
         See all attending companies →
       </Link>
     </HomeSection>
