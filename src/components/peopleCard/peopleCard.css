@@ -4,64 +4,79 @@
   --people-card-text-muted: #666666;
   --people-card-border: #e0e0e0;
   --people-card-accent: #333333;
-  --people-card-image-size: 180px;
+  --people-card-aspect-ratio: 3 / 4;
   --people-card-popup-image-size: 72px;
-  --people-card-hover-lift: -4px;
+  --people-card-hover-lift: -3px;
   --people-card-transition: transform 0.2s ease;
   --people-card-overlay-bg: rgba(0, 0, 0, 0.45);
+
+  width: 100%;
 }
 
 .people-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  width: 100%;
   cursor: pointer;
   transition: var(--people-card-transition);
-  width: 100%;
+  border: 1px solid var(--people-card-border);
+  overflow: hidden;
+  background: var(--people-card-border);
 }
 
 .people-card:hover {
   transform: translateY(var(--people-card-hover-lift));
 }
 
-.people-card__image-wrap {
-  width: var(--people-card-image-size);
-  height: var(--people-card-image-size);
+.people-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--people-card-aspect-ratio);
   overflow: hidden;
-  margin-bottom: 1rem;
-  flex-shrink: 0;
-  background: var(--people-card-border);
 }
 
 .people-card__image {
   width: 100%;
   height: 100%;
-  max-width: var(--people-card-image-size);
-  max-height: var(--people-card-image-size);
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
+}
+
+.people-card:hover .people-card__image {
+  transform: scale(1.03);
+}
+
+.people-card__caption {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.35) 45%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
 .people-card__name {
   font-family: "Inter", sans-serif;
-  font-size: 1.2rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--people-card-text);
-  text-align: center;
-  width: 100%;
+  margin: 0 0 0.15rem 0;
+  color: #ffffff;
   line-height: 1.2;
 }
 
 .people-card__position {
   font-family: "Inter", sans-serif;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 400;
   margin: 0;
-  color: var(--people-card-text-muted);
-  text-align: center;
-  width: 100%;
+  color: rgba(255, 255, 255, 0.85);
   line-height: 1.3;
 }
 
@@ -129,7 +144,6 @@
 }
 
 .people-card__popup-name {
-  font-family: "Inter", sans-serif;
   font-size: 1.35rem;
   font-weight: 600;
   color: var(--people-card-text);
@@ -144,59 +158,12 @@
   align-items: flex-start;
 }
 
-.people-card__popup-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  flex-shrink: 0;
-  width: var(--people-card-popup-image-size);
-}
-
-.people-card__popup-image-wrap {
-  width: var(--people-card-popup-image-size);
-  height: var(--people-card-popup-image-size);
-  overflow: hidden;
-  background: var(--people-card-border);
-  flex-shrink: 0;
-}
-
-.people-card__popup-image {
-  width: var(--people-card-popup-image-size);
-  height: var(--people-card-popup-image-size);
-  max-width: var(--people-card-popup-image-size);
-  max-height: var(--people-card-popup-image-size);
-  object-fit: cover;
-  display: block;
-}
-
-.people-card__linkedin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: var(--people-card-accent);
-  color: #ffffff;
-  text-decoration: none;
-  transition: background 0.15s ease;
-}
-
-.people-card__linkedin:hover {
-  background: #000000;
-}
-
-.people-card__linkedin-icon {
-  width: 16px;
-  height: 16px;
-}
-
 .people-card__popup-details {
-  flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 0.25rem;
 }
 
 .people-card__popup-detail {
@@ -206,7 +173,6 @@
 }
 
 .people-card__popup-label {
-  font-family: "Inter", sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--people-card-text-muted);
@@ -215,10 +181,22 @@
 }
 
 .people-card__popup-value {
-  font-family: "Inter", sans-serif;
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--people-card-text);
+}
+
+.people-card__linkedin {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2rem;
+  color: var(--people-card-text);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.people-card__linkedin:hover {
+  color: var(--people-card-accent);
 }
 
 .people-card__popup-about {
@@ -229,17 +207,16 @@
 }
 
 .people-card__popup-about-title {
-  font-family: "Inter", sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--people-card-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin: 0 0 0.5rem 0;
+  padding: 0;
 }
 
 .people-card__popup-about-text {
-  font-family: "Inter", sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   color: var(--people-card-text);
@@ -249,16 +226,15 @@
 
 @media screen and (max-width: 1024px) {
   .people-card-component {
-    --people-card-image-size: 160px;
     --people-card-popup-image-size: 64px;
   }
 
   .people-card__name {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
 
   .people-card__position {
-    font-size: 0.95rem;
+    font-size: 0.75rem;
   }
 
   .people-card__popup {
@@ -276,16 +252,19 @@
 
 @media screen and (max-width: 600px) {
   .people-card-component {
-    --people-card-image-size: 140px;
     --people-card-popup-image-size: 64px;
   }
 
+  .people-card__caption {
+    padding: 0.625rem;
+  }
+
   .people-card__name {
-    font-size: 1rem;
+    font-size: 0.85rem;
   }
 
   .people-card__position {
-    font-size: 0.9rem;
+    font-size: 0.72rem;
   }
 
   .people-card__overlay {

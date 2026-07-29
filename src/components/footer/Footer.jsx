@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import "./Footer.css";
 import SWE_LOGO from "../../assets/purple-swe-logo.svg";
 import { BsLinkedin, BsInstagram } from "react-icons/bs";
-import { HiOutlineMail } from "react-icons/hi";
 
 const EWI_EMAIL = "ewi.swe.ucla@gmail.com";
 
