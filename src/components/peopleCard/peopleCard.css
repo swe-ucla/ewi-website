@@ -5,8 +5,6 @@
   --people-card-border: #e0e0e0;
   --people-card-accent: #333333;
   --people-card-aspect-ratio: 3 / 4;
-  --people-card-popup-image-size: 72px;
-  --people-card-hover-lift: -3px;
   --people-card-transition: transform 0.2s ease;
   --people-card-overlay-bg: rgba(0, 0, 0, 0.45);
 
@@ -23,10 +21,6 @@
   background: var(--people-card-border);
 }
 
-.people-card:hover {
-  transform: translateY(var(--people-card-hover-lift));
-}
-
 .people-card__media {
   position: relative;
   width: 100%;
@@ -39,11 +33,11 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease;
 }
 
 .people-card:hover .people-card__image {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .people-card__caption {
@@ -63,7 +57,6 @@
 }
 
 .people-card__name {
-  font-family: "Inter", sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
   margin: 0 0 0.15rem 0;
@@ -72,7 +65,6 @@
 }
 
 .people-card__position {
-  font-family: "Inter", sans-serif;
   font-size: 0.8rem;
   font-weight: 400;
   margin: 0;
@@ -184,6 +176,7 @@
   font-size: 0.95rem;
   font-weight: 400;
   color: var(--people-card-text);
+  line-height: 1.2;
 }
 
 .people-card__linkedin {

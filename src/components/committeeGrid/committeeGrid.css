@@ -7,7 +7,7 @@
   --committee-grid-subtitle-size: 1.35rem;
   --committee-grid-text: #000000;
   --committee-grid-text-muted: #666666;
-  --committee-grid-max-width: 1100px;
+  --committee-grid-max-width: 54rem;
 
   margin-top: 0;
   margin-bottom: 0;
@@ -61,7 +61,6 @@
 }
 
 .committee-grid__subtitle {
-  font-family: "Inter", sans-serif;
   font-size: var(--committee-grid-subtitle-size);
   font-weight: 600;
   color: var(--committee-grid-text-muted);
