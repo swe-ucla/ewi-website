@@ -1,213 +1,214 @@
-/* Navbar.css */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 2rem;
-    background-color:white;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    height: 67px;
-    width: 100%;
-    transition: filter 0.3s ease;
+  --navbar-bg: #f0f0f0;
+  --navbar-text: #000000;
+  --navbar-text-muted: #666666;
+  --navbar-border: #e0e0e0;
+  --navbar-height: 67px;
+  --navbar-padding-x: 2rem;
+  --navbar-tab-gap: 1.25rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--navbar-padding-x);
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  height: var(--navbar-height);
+  width: 100%;
+  transition: filter 0.3s ease;
 }
 
 body.popup-open .navbar {
-    filter: blur(4px);
-    pointer-events: none;
+  filter: blur(4px);
+  pointer-events: none;
 }
 
-.logo {
-    width: 150px; /* Adjust according to your logo's size */
-    height: auto;
-    display: inline-block;
+.navbar__logo {
+  width: 150px;
+  height: auto;
+  display: inline-block;
+  flex-shrink: 0;
 }
 
-.tabs {
-    display: flex;
-    gap: 20px;
-    height: 100%;
-    width: 100%;
-    max-height: none;
-    top: 0;
-    position: relative;
-    justify-content: right;
+.navbar__logo img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
-.tab {
-    display: inline-block;
-    color: rgb(141, 72, 95);
-    padding: 10px 15px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-weight: 500;
-    position: relative;
-    background: transparent;
+.navbar__tabs {
+  display: flex;
+  gap: var(--navbar-tab-gap);
+  height: 100%;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-.tab:hover {
-    background: transparent;
-    color: rgb(141, 72, 95);
-    transform: translateY(-2px);
+.navbar__tab {
+  display: inline-block;
+  color: var(--navbar-text);
+  padding: 0.625rem 0.75rem;
+  transition: color 0.2s ease;
+  text-decoration: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-family: "Inter", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  position: relative;
+  background: transparent;
 }
 
-.tab::after {
-    content: '';
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 60%;
-    height: 2px;
-    background: rgb(141, 72, 95);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.navbar__tab:hover {
+  color: var(--navbar-text-muted);
 }
 
-.tab:hover::after {
-    transform: translateX(-50%) scaleX(1);
+.navbar__tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0.35rem;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 1px;
+  background: var(--navbar-text);
+  transition: transform 0.2s ease;
 }
 
-/* Menu Icon */
-.hamb{
-    cursor: pointer;
-    padding: 20px;
-    display: none;
-    position:fixed;
-    top: 15px;
-    right: 20px;
-    z-index: 10000;
-}/* Style label tag */
-
-.hamb-line {
-    background: #8D485F;
-    display: block;
-    height: 3px;
-    position: relative;
-    width: 28px;
-    border-radius: 2px;
-    transition: all .3s ease-out;
-} /* Style span tag */
-
-.hamb-line::before,
-.hamb-line::after{
-    background: #8D485F;
-    content: '';
-    display: block;
-    height: 100%;
-    position: absolute;
-    transition: all .3s ease-out;
-    width: 100%;
-    border-radius: 2px;
-}
-.hamb-line::before{
-    top: 8px;
-}
-.hamb-line::after{
-    top: -8px;
+.navbar__tab:hover::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
-.side-menu {
-    display: none;
-} /* Hide checkbox */
+.navbar__menu-toggle {
+  cursor: pointer;
+  padding: 1.25rem;
+  display: none;
+  position: fixed;
+  top: 0.5rem;
+  right: 1.25rem;
+  z-index: 10000;
+}
+
+.navbar__menu-toggle-line {
+  background: var(--navbar-text);
+  display: block;
+  height: 2px;
+  position: relative;
+  width: 24px;
+  transition: all 0.2s ease-out;
+}
+
+.navbar__menu-toggle-line::before,
+.navbar__menu-toggle-line::after {
+  background: var(--navbar-text);
+  content: "";
+  display: block;
+  height: 100%;
+  position: absolute;
+  transition: all 0.2s ease-out;
+  width: 100%;
+}
+
+.navbar__menu-toggle-line::before {
+  top: 7px;
+}
+
+.navbar__menu-toggle-line::after {
+  top: -7px;
+}
+
+.navbar__menu-input {
+  display: none;
+}
+
+.navbar__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 9997;
+  animation: navbar-fade-in 0.2s ease;
+}
+
+@keyframes navbar-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 @media screen and (max-width: 600px) {
-    .navbar {
-        height: 67px;
-    }
+  .navbar {
+    --navbar-padding-x: 1rem;
+  }
 
-    .tab {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
-        min-height: 60px;
-        padding: 0 25px;
-        border-bottom: 1px solid rgba(141, 72, 95, 0.1);
-        color: #8D485F;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        background: transparent;
-        text-align: left;
-        box-sizing: border-box;
-        line-height: 1.5;
-    }
+  .navbar__tab {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--navbar-border);
+    font-size: 0.8rem;
+    text-align: left;
+    box-sizing: border-box;
+  }
 
-    .tab:hover {
-        background: transparent;
-        padding-left: 35px;
-        transform: translateX(5px);
-    }
+  .navbar__tab:hover {
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--navbar-text);
+    padding-left: 1.75rem;
+  }
 
-    .tab::after {
-        display: none;
-    }
+  .navbar__tab::after {
+    display: none;
+  }
 
-    .tabs {
-        max-height: 0;
-        width: 0;
-        flex-direction: column;
-        overflow: hidden;
-        background: linear-gradient(135deg, #ffffff 0%, #fef5f8 100%);
-        right: 0;
-        position: fixed;
-        top: 0;
-        height: 100vh;
-        box-shadow: -4px 0 20px rgba(0,0,0,0.15);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 9998;
-        padding-top: 80px;
-    }
+  .navbar__tabs {
+    max-height: 0;
+    width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--navbar-bg);
+    right: 0;
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    z-index: 9998;
+    padding-top: 5rem;
+    align-items: stretch;
+  }
 
-    .hamb {
-        display: block;
-    }
-    
-    /* Toggle menu icon */
-    .side-menu:checked ~ .tabs{
-        max-height: 100vh;
-        width: 280px;
-        overflow-y: auto;
-    }
+  .navbar__menu-toggle {
+    display: block;
+  }
 
-    .side-menu:checked ~ .hamb .hamb-line {
-        background: transparent;
-    }
-    .side-menu:checked ~ .hamb .hamb-line::before {
-        transform: rotate(-45deg);
-        top: 0;
-        background: #8D485F;
-    }
-    .side-menu:checked ~ .hamb .hamb-line::after {
-        transform: rotate(45deg);
-        top: 0;
-        background: #8D485F;
-    }
+  .navbar__menu-input:checked ~ .navbar__tabs {
+    max-height: 100vh;
+    width: 260px;
+    overflow-y: auto;
+  }
 
-    /* Backdrop overlay */
-    .menu-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.4);
-        z-index: 9997;
-        animation: fadeIn 0.3s ease;
-    }
-}
+  .navbar__menu-input:checked ~ .navbar__menu-toggle .navbar__menu-toggle-line {
+    background: transparent;
+  }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  .navbar__menu-input:checked ~ .navbar__menu-toggle .navbar__menu-toggle-line::before {
+    transform: rotate(-45deg);
+    top: 0;
+  }
+
+  .navbar__menu-input:checked ~ .navbar__menu-toggle .navbar__menu-toggle-line::after {
+    transform: rotate(45deg);
+    top: 0;
+  }
 }

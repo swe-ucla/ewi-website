@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./peopleCard.css";
+import "./PeopleCard.css";
 
 const PeopleCard = ({ image, name, position, description, year, major, linkedInURL }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
