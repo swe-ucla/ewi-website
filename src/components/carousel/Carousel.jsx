@@ -32,7 +32,7 @@ const Carousel = ({ images = defaultImages, autoPlay = true, interval = 3000 }) 
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     }, interval);
     return () => clearInterval(timer);
-  }, [currentIndex, autoPlay, interval, images.length]);
+  }, [autoPlay, interval, images.length]);
 
   if (images.length === 0) return <p>No images</p>;
 
