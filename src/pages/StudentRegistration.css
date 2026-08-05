@@ -242,6 +242,9 @@ input[type="file"].input-box::file-selector-button {
     margin: 0;
     font-size: 0.8rem;
     color: #999;
+}
+
+.student-resume .hint {
     text-align: center;
 }
 

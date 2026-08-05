@@ -145,6 +145,10 @@ const StudentRegistrationForm = () => {
         return "";
     }
 
+    const valdiateCheckbox = (label, isChecked) => {
+        return isChecked ? "" : `You must agree to ${label}`;
+    }
+
     // cloudinary upload
     const uploadToCloudinary = async (file) => {
         console.log("Will upload to Cloudinary (placeholder): ", file.name);
@@ -170,14 +174,14 @@ const StudentRegistrationForm = () => {
             needSponsorship: validateField("Sponsorship status", formData.needSponsorship), 
             checkInTime: validateField("Check-in time", formData.checkInTime), 
             resume: validateFile("Resume", formData.resume), 
-            membershipId: validateNumeric("National SWE ID", formData.membershipId),
-            membershipProof: validateFile("Proof of membership", formData.membershipProof),
+            membershipId: "",
+            membershipProof: null,
             companyPreferences: validateCompanyPreferences(formData.companyPreferences),
             meal: validateField("Meal", formData.meal),
             dessert: validateField("Dessert", formData.dessert), 
             dietaryRestrictions: "",
-            photoConsent: "", 
-            willCall: "", 
+            photoConsent: valdiateCheckbox("the photo consent", formData.photoConsent), 
+            willCall: validateField("Will call status", formData.willCall), 
             additionalComments: "", 
         };
 
@@ -186,27 +190,29 @@ const StudentRegistrationForm = () => {
 
         setIsSubmitting(true);
 
-        let resumeUrl = null;
-        let membershipProofUrl = null;
         try {
+            let resumeUrl = null;
+            let membershipProofUrl = null;
+
             if (formData.resume) {
                 resumeUrl = await uploadToCloudinary(formData.resume);
             }
             if (formData.membershipProof) {
                 membershipProofUrl = await uploadToCloudinary(formData.membershipProof);
             }
+            
+            const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
+            console.log("Would save to Firestore:", dataToSave);
+            await new Promise((resolve) => setTimeout(resolve, 500));
+
+            alert("Registration submitted successfully");
         } catch (error) {
             console.error("File upload failed: ", error);
+            alert("There was an error submitting your registration. Please try again.");
+        } finally {
             setIsSubmitting(false);
-            alert("File upload failed. Please try again.");
-            return;
         }
 
-        const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
-        console.log("Would save to Firestore:", dataToSave);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        return { status: "success" };
     };
 
     return (
@@ -240,7 +246,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-pronouns">
-                        <label className="student-reg-labels">Pronouns</label>
+                        <label className="student-reg-labels">Pronouns*</label>
                         <select className="select-box" value={formData.pronouns} name="pronouns" onChange={handleChange}>
                             <option value="" disabled hidden>Select one</option>
                             <option value="she/her/hers">she/her/hers</option>
@@ -272,7 +278,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="uid">
-                        <label className="student-reg-labels">UID</label>
+                        <label className="student-reg-labels">UID*</label>
                         <input className="input-box" value={formData.uid} name="uid" onChange={handleChange}/>
                         {errors.uid && <span className="error">{errors.uid}</span>}
                     </div>
@@ -281,7 +287,7 @@ const StudentRegistrationForm = () => {
                 <fieldset className="student-details">
                     <h3 className="student-reg-subtitle">Student Details</h3>
                     <div className="student-year">
-                        <label className="student-reg-labels">Year</label>
+                        <label className="student-reg-labels">Year*</label>
                         <select className="select-box" value={formData.year} name="year" onChange={handleChange}>
                             <option value="" disabled hidden>Select one</option>
                             <option value="first-year">First</option>
@@ -297,7 +303,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="transfer-status">
-                        <label className="student-reg-labels">Transfer?</label>
+                        <label className="student-reg-labels">Transfer?*</label>
                         <select className="select-box" value={formData.transfer} name="transfer" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             <option value="yes">Yes</option>
@@ -307,7 +313,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-major">
-                        <label className="student-reg-labels">Major</label>
+                        <label className="student-reg-labels">Major*</label>
                         <select className="select-box" value={formData.major} name="major" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             {studentMajors.map((major) => (
@@ -332,7 +338,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-position-type">
-                        <label className="student-reg-labels">What type of position are you looking for?</label>
+                        <label className="student-reg-labels">What type of position are you looking for?*</label>
                         <select className="select-box" value={formData.positionType} name="positionType" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             <option value="full-time">Full-time</option>
@@ -343,7 +349,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-sponsorship">
-                        <label className="student-reg-labels">Need Sponsorship?</label>
+                        <label className="student-reg-labels">Need Sponsorship?*</label>
                         <select className="select-box" value={formData.needSponsorship} name="needSponsorship" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             <option value="yes">Yes</option>
@@ -353,7 +359,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-checkin">
-                        <label className="student-reg-labels">When do you plan to come for check-in?</label>
+                        <label className="student-reg-labels">When do you plan to come for check-in?*</label>
                         <select className="select-box" value={formData.checkInTime} name="checkInTime" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             {checkInTimes.map((timeSlot) => (
@@ -416,12 +422,13 @@ const StudentRegistrationForm = () => {
 
                 <fieldset className="student-company-preferences">
                     <h3 className="student-reg-subtitle">Company Preferences</h3>
-                    <p>Rank your top 10 companies in order of preference.</p>
+                    <p>Please rank your top 10 companies in the order you would like to be seated with at dinner. (Again, seating will be assigned on a first-come, first-serve basis, 
+                        and please read through the company sheet thoroughly before making your selections).</p>
                     {errors.companyPreferences && <span className="error">{errors.companyPreferences}</span>}
 
                     <div className="company-preferences-grid">
                         <div className="company-choice">
-                            <label className="student-reg-labels">1st choice</label>
+                            <label className="student-reg-labels">1st choice*</label>
                             <select className="select-box" value={formData.companyPreferences[0]} onChange={(e) => handleCompanyRankChange(0, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -430,7 +437,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">2nd choice</label>
+                            <label className="student-reg-labels">2nd choice*</label>
                             <select className="select-box" value={formData.companyPreferences[1]} onChange={(e) => handleCompanyRankChange(1, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -439,7 +446,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">3rd choice</label>
+                            <label className="student-reg-labels">3rd choice*</label>
                             <select className="select-box" value={formData.companyPreferences[2]} onChange={(e) => handleCompanyRankChange(2, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -448,7 +455,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">4th choice</label>
+                            <label className="student-reg-labels">4th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[3]} onChange={(e) => handleCompanyRankChange(3, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -457,7 +464,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">5th choice</label>
+                            <label className="student-reg-labels">5th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[4]} onChange={(e) => handleCompanyRankChange(4, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -466,7 +473,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">6th choice</label>
+                            <label className="student-reg-labels">6th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[5]} onChange={(e) => handleCompanyRankChange(5, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -475,7 +482,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">7th choice</label>
+                            <label className="student-reg-labels">7th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[6]} onChange={(e) => handleCompanyRankChange(6, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -484,7 +491,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">8th choice</label>
+                            <label className="student-reg-labels">8th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[7]} onChange={(e) => handleCompanyRankChange(7, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -493,7 +500,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">9th choice</label>
+                            <label className="student-reg-labels">9th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[8]} onChange={(e) => handleCompanyRankChange(8, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -502,7 +509,7 @@ const StudentRegistrationForm = () => {
                             </select>
                         </div>
                         <div className="company-choice">
-                            <label className="student-reg-labels">10th choice</label>
+                            <label className="student-reg-labels">10th choice*</label>
                             <select className="select-box" value={formData.companyPreferences[9]} onChange={(e) => handleCompanyRankChange(9, e.target.value)}>
                                 <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
@@ -516,7 +523,7 @@ const StudentRegistrationForm = () => {
                 <fieldset className="student-meal-preferences">
                     <h3 className="student-reg-subtitle">Meal Preferences</h3>
                     <div className="meal-choice">
-                        <label className="student-reg-labels">Meal</label>
+                        <label className="student-reg-labels">Meal*</label>
                         <select className="select-box" value={formData.meal} name="meal" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             {mealPreferences.map((meal) => (
@@ -527,7 +534,7 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="dessert-choice">
-                        <label className="student-reg-labels">Dessert</label>
+                        <label className="student-reg-labels">Dessert*</label>
                         <select className="select-box" value={formData.dessert} name="dessert" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             {dessertPreferences.map((dessert) => (
@@ -548,17 +555,21 @@ const StudentRegistrationForm = () => {
                     <div className="photo-consent">
                         <label className="student-reg-labels">
                             <input type="checkbox" value={formData.photoConsent} name="photoConsent" onChange={handleCheckboxChange}/>
-                            I consent to SWE's use of my photos or videos from EWI 2026 for promotional purposes.
+                            I consent to SWE's use of my photos or videos from EWI 2026 for promotional purposes*.
+                            {errors.photoConsent && <span className="error">{errors.photoConsent}</span>}
                         </label>
                     </div>
 
                     <div className="will-call">
-                        <label className="student-reg-labels">Would you like to be considered for the will call?</label>
+                        <label className="student-reg-labels">Would you like to be considered for the will call?*</label>
+                        <p className="hint">Indicating "No" does NOT mean you are removed from the waitlist. We will only resort to the will call for no-shows on the day of the event.</p>
                         <select className="select-box" value={formData.willCall} name="willCall" onChange={handleChange}>
                             <option value="" disabled  hidden>Select one</option>
                             <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="no">No, but I'd like to stay on the waitlist</option>
                         </select>
+                        {errors.willCall && <span className="error">{errors.willCall}</span>}
+
                     </div>
 
                     <div className="additional-comments">
@@ -571,7 +582,7 @@ const StudentRegistrationForm = () => {
                     {isSubmitting ? "Submitting..." : "Submit" }
                 </button>
                 {Object.values(errors).some((msg) => msg) && (
-                    <p className="submit-error">Please fix the errors before submitting</p>
+                    <p className="submit-error">Please fix the errors before submitting.</p>
                 )}
 
             </form>
