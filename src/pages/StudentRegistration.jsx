@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import "./StudentRegistration.css";
 
+const CLOUDINARY_URL = "...";
+const CLOUDINARY_UPLOAD_PRESET = "...";
+
 const companiesList = [
     { id: 1, name: "City of Los Angeles Bureau of Engineering" },
     { id: 2, name: "Crane" },
@@ -51,6 +54,7 @@ const checkInTimes = [
     { id: 5, time: "6:30 - 6:45 PM"},
 
 ]
+
 const StudentRegistrationForm = () => {
     const [formData, setFormData] = useState({
         email: "",
@@ -76,9 +80,13 @@ const StudentRegistrationForm = () => {
         willCall: "",
         additionalComments: "",
     });
+    const [errors, setErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const resumeInputRef = useRef(null);
+    const membershipProofInputRef = useRef(null);
 
-    {/* handling form changes */}
+    // handling form change
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -96,9 +104,6 @@ const StudentRegistrationForm = () => {
             return { ...prev, companyPreferences: updated };
         }) 
     }
-
-    const resumeInputRef = useRef(null);
-    const membershipProofInputRef = useRef(null);
 
     const handleResumeChange = (e) => {
         setFormData((prev) => ({ ...prev, resume: e.target.files[0] || null }));
@@ -118,9 +123,7 @@ const StudentRegistrationForm = () => {
         if (membershipProofInputRef.current) membershipProofInputRef.current.value = "";
     };
 
-    {/* input validation */}
-    const [ errors, setErrors ] = useState({});
-
+    // input validation
     const validateField = (label, value) => {
         return value && value.toString().trim() ? "" : `${label} is required`;
     }
@@ -142,8 +145,15 @@ const StudentRegistrationForm = () => {
         return "";
     }
 
-    {/* handle submission */}
-    const handleSubmit = (e) => {
+    // cloudinary upload
+    const uploadToCloudinary = async (file) => {
+        console.log("Will upload to Cloudinary (placeholder): ", file.name);
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        return `https://placeholder-url.com/${file.name}`;
+    }
+
+    // handle submission
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const newErrors = {
@@ -174,7 +184,29 @@ const StudentRegistrationForm = () => {
         setErrors(newErrors);
         if (Object.values(newErrors).some((msg) => msg)) return;
 
-        console.log("Valid! Submitting:", formData);
+        setIsSubmitting(true);
+
+        let resumeUrl = null;
+        let membershipProofUrl = null;
+        try {
+            if (formData.resume) {
+                resumeUrl = await uploadToCloudinary(formData.resume);
+            }
+            if (formData.membershipProof) {
+                membershipProofUrl = await uploadToCloudinary(formData.membershipProof);
+            }
+        } catch (error) {
+            console.error("File upload failed: ", error);
+            setIsSubmitting(false);
+            alert("File upload failed. Please try again.");
+            return;
+        }
+
+        const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
+        console.log("Would save to Firestore:", dataToSave);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        return { status: "success" };
     };
 
     return (
@@ -210,7 +242,7 @@ const StudentRegistrationForm = () => {
                     <div className="student-pronouns">
                         <label className="student-reg-labels">Pronouns</label>
                         <select className="select-box" value={formData.pronouns} name="pronouns" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled hidden>Select one</option>
                             <option value="she/her/hers">she/her/hers</option>
                             <option value="he/him/hims">he/him/hims</option>
                             <option value="they/them/theirs">they/them/theirs</option>
@@ -251,7 +283,7 @@ const StudentRegistrationForm = () => {
                     <div className="student-year">
                         <label className="student-reg-labels">Year</label>
                         <select className="select-box" value={formData.year} name="year" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled hidden>Select one</option>
                             <option value="first-year">First</option>
                             <option value="second-year">Second</option>
                             <option value="third-year">Third</option>
@@ -267,7 +299,7 @@ const StudentRegistrationForm = () => {
                     <div className="transfer-status">
                         <label className="student-reg-labels">Transfer?</label>
                         <select className="select-box" value={formData.transfer} name="transfer" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>
@@ -277,7 +309,7 @@ const StudentRegistrationForm = () => {
                     <div className="student-major">
                         <label className="student-reg-labels">Major</label>
                         <select className="select-box" value={formData.major} name="major" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             {studentMajors.map((major) => (
                                 <option key={major.id} value={major.name}>{major.name}</option>
                             ))}
@@ -302,7 +334,7 @@ const StudentRegistrationForm = () => {
                     <div className="student-position-type">
                         <label className="student-reg-labels">What type of position are you looking for?</label>
                         <select className="select-box" value={formData.positionType} name="positionType" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             <option value="full-time">Full-time</option>
                             <option value="coop">Co-op</option>
                             <option value="internship">Internship</option>
@@ -313,7 +345,7 @@ const StudentRegistrationForm = () => {
                     <div className="student-sponsorship">
                         <label className="student-reg-labels">Need Sponsorship?</label>
                         <select className="select-box" value={formData.needSponsorship} name="needSponsorship" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>
@@ -323,7 +355,7 @@ const StudentRegistrationForm = () => {
                     <div className="student-checkin">
                         <label className="student-reg-labels">When do you plan to come for check-in?</label>
                         <select className="select-box" value={formData.checkInTime} name="checkInTime" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             {checkInTimes.map((timeSlot) => (
                                 <option key={timeSlot.id} value={timeSlot.time}>{timeSlot.time}</option>
                             ))}
@@ -391,7 +423,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">1st choice</label>
                             <select className="select-box" value={formData.companyPreferences[0]} onChange={(e) => handleCompanyRankChange(0, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -400,7 +432,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">2nd choice</label>
                             <select className="select-box" value={formData.companyPreferences[1]} onChange={(e) => handleCompanyRankChange(1, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -409,7 +441,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">3rd choice</label>
                             <select className="select-box" value={formData.companyPreferences[2]} onChange={(e) => handleCompanyRankChange(2, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -418,7 +450,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">4th choice</label>
                             <select className="select-box" value={formData.companyPreferences[3]} onChange={(e) => handleCompanyRankChange(3, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -427,7 +459,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">5th choice</label>
                             <select className="select-box" value={formData.companyPreferences[4]} onChange={(e) => handleCompanyRankChange(4, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -436,7 +468,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">6th choice</label>
                             <select className="select-box" value={formData.companyPreferences[5]} onChange={(e) => handleCompanyRankChange(5, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -445,7 +477,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">7th choice</label>
                             <select className="select-box" value={formData.companyPreferences[6]} onChange={(e) => handleCompanyRankChange(6, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -454,7 +486,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">8th choice</label>
                             <select className="select-box" value={formData.companyPreferences[7]} onChange={(e) => handleCompanyRankChange(7, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -463,7 +495,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">9th choice</label>
                             <select className="select-box" value={formData.companyPreferences[8]} onChange={(e) => handleCompanyRankChange(8, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -472,7 +504,7 @@ const StudentRegistrationForm = () => {
                         <div className="company-choice">
                             <label className="student-reg-labels">10th choice</label>
                             <select className="select-box" value={formData.companyPreferences[9]} onChange={(e) => handleCompanyRankChange(9, e.target.value)}>
-                                <option value="" disabled selected hidden>Select one</option>
+                                <option value="" disabled  hidden>Select one</option>
                                 {companiesList.map((company) => (
                                     <option key={company.id} value={company.name}>{company.name}</option>
                                 ))}
@@ -486,7 +518,7 @@ const StudentRegistrationForm = () => {
                     <div className="meal-choice">
                         <label className="student-reg-labels">Meal</label>
                         <select className="select-box" value={formData.meal} name="meal" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             {mealPreferences.map((meal) => (
                                 <option key={meal.id} value={meal.name}>{meal.name}</option>
                             ))}
@@ -497,7 +529,7 @@ const StudentRegistrationForm = () => {
                     <div className="dessert-choice">
                         <label className="student-reg-labels">Dessert</label>
                         <select className="select-box" value={formData.dessert} name="dessert" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             {dessertPreferences.map((dessert) => (
                                 <option key={dessert.id} value={dessert.name}>{dessert.name}</option>
                             ))}
@@ -523,7 +555,7 @@ const StudentRegistrationForm = () => {
                     <div className="will-call">
                         <label className="student-reg-labels">Would you like to be considered for the will call?</label>
                         <select className="select-box" value={formData.willCall} name="willCall" onChange={handleChange}>
-                            <option value="" disabled selected hidden>Select one</option>
+                            <option value="" disabled  hidden>Select one</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>
@@ -535,7 +567,9 @@ const StudentRegistrationForm = () => {
                     </div>
                 </fieldset>
 
-                <button className="student-reg-submit" type="submit">Submit</button>
+                <button className="student-reg-submit" type="submit">
+                    {isSubmitting ? "Submitting..." : "Submit" }
+                </button>
                 {Object.values(errors).some((msg) => msg) && (
                     <p className="submit-error">Please fix the errors before submitting</p>
                 )}

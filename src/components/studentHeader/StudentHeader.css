@@ -33,7 +33,7 @@
 }
 
 .student-header button,
-.student-header a.button-link {
+.student-header div.button-link {
   padding: 1rem 1.5rem;
   border-radius: 8px;
   border: none;
