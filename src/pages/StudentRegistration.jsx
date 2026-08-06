@@ -1,4 +1,6 @@
 import React, { useRef, useState } from "react";
+import { db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
 import "./StudentRegistration.css";
 
 const CLOUDINARY_URL = "...";
@@ -202,10 +204,9 @@ const StudentRegistrationForm = () => {
             }
             
             const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
-            console.log("Would save to Firestore:", dataToSave);
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            await addDoc(collection(db, "Registrations"), dataToSave);
 
-            alert("Registration submitted successfully");
+            console.log("Registration submitted successfully");
         } catch (error) {
             console.error("File upload failed: ", error);
             alert("There was an error submitting your registration. Please try again.");

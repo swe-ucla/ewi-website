@@ -2,6 +2,22 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Firebase Configuration
+ 
+This project uses Firebase (Firestore). The Firebase config values are hardcoded directly in `src/firebase.js` since they are Firebase cient-side config values.
+ 
+**Where the config lives:** `src/firebase.js`
+ 
+**Values used** (all sourced from Firebase Console → Project Settings → Your apps → SDK setup and configuration):
+- `apiKey`
+- `authDomain`
+- `projectId`
+- `storageBucket`
+- `messagingSenderId`
+- `appId`
+ 
+**To get/update these values:** Firebase Console → gear icon → Project Settings → scroll to "Your apps" → select the web app → the `firebaseConfig` object shown there contains all the values used in `src/firebase.js`.
+ 
 ## Available Scripts
 
 In the project directory, you can run: 
