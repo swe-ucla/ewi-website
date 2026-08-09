@@ -1,0 +1,122 @@
+.company-get-involved {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.company-get-involved-container {
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.company-get-involved-title {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.company-stats-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5rem;
+}
+
+.company-stat-box {
+  background-color: #EAEAEA;
+  width: 22rem;
+  min-height: 16rem;
+  padding: 2rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.company-stat-title {
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-stat-title h3 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.company-stat-description {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.company-questions-box {
+  background-color: #EAEAEA;
+  width: 12rem;
+  height: 3rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.company-questions-icon {
+  font-size: 1.5rem;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 1024px) {
+  .company-get-involved-title {
+    font-size: 2.5rem;
+  }
+
+  .company-stats-container {
+    gap: 2rem;
+  }
+
+  .company-stat-box {
+    width: 20rem;
+    min-height: 10rem;
+    padding: 1.5rem 1.75rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .company-get-involved {
+    padding: 3rem 1rem;
+  }
+
+  .company-get-involved-container {
+    gap: 2rem;
+    padding: 0;
+  }
+
+  .company-get-involved-title {
+    font-size: 2rem;
+  }
+
+  .company-stats-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .company-stat-box {
+    width: 100%;
+    max-width: 25rem;
+    min-height: 10rem;
+    padding: 1.5rem 1.75rem;
+  }
+}

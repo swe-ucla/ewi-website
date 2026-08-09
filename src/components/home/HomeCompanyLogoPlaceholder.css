@@ -1,0 +1,10 @@
+.home-company-logo {
+  aspect-ratio: 3 / 2;
+  border: 1px solid #333;
+  background: var(--color-bg-variant, #e6e8ef);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #555;
+}
