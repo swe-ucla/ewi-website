@@ -1,5 +1,5 @@
 import React from "react";
-import "./committeeGrid.css";
+import "./CommitteeGrid.css";
 import PeopleCard from "../peopleCard/PeopleCard";
 import KHANH from "../../assets/Khanh_EWIHeadshot.jpg";
 import JACQUELINE from "../../assets/Jacqueline_EWIHeadshot.jpg";
