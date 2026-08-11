@@ -1,0 +1,69 @@
+.home-testimonial-slide__name {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  letter-spacing: 0.01em;
+}
+
+.home-testimonial-slide__body {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.home-testimonial-slide__picture-wrap {
+  flex: 0 0 6rem;
+}
+
+.home-testimonial-slide__picture {
+  width: 6rem;
+  height: 6rem;
+  object-fit: cover;
+  display: block;
+  border-radius: 50%;
+  border: 2px solid #aaa;
+  background: #d0d0d0;
+}
+
+.home-testimonial-slide__picture--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #666;
+  background: #ddd;
+  border-radius: 50%;
+  border: 2px solid #aaa;
+}
+
+.home-testimonial-slide__quote {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.home-testimonial-slide__quote p {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+  text-align: left;
+  color: #2a2a2a;
+  font-style: italic;
+}
+
+.home-testimonial-slide__quote p::before {
+  content: "\201C";
+  color: #555;
+  font-size: 1.2em;
+  font-style: normal;
+}
+
+.home-testimonial-slide__quote p::after {
+  content: "\201D";
+  color: #555;
+  font-size: 1.2em;
+  font-style: normal;
+}
