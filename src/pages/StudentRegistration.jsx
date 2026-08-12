@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import "./StudentRegistration.css";
 
 const CLOUDINARY_URL = "...";
@@ -84,6 +85,8 @@ const StudentRegistrationForm = () => {
     });
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
+    const navigate = useNavigate();
 
     const resumeInputRef = useRef(null);
     const membershipProofInputRef = useRef(null);
@@ -158,6 +161,51 @@ const StudentRegistrationForm = () => {
         return `https://placeholder-url.com/${file.name}`;
     }
 
+    // handle duplicate
+    const checkDuplicate = async (email) => {
+        const docRef = doc(db, "Registrations", email);
+        const docSnap = await getDoc(docRef);
+        return docSnap.exists();
+    };
+
+    // uploads files and writes the registration, uses email as key
+    const submitRegistration = async () => {
+        let resumeUrl = null;
+        let membershipProofUrl = null;
+
+        if (formData.resume) {
+            resumeUrl = await uploadToCloudinary(formData.resume);
+        }
+        if (formData.membershipProof) {
+            membershipProofUrl = await uploadToCloudinary(formData.membershipProof);
+        }
+
+        const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
+        await setDoc(doc(db, "Registrations", formData.email), dataToSave);
+
+        console.log("Registration submitted successfully");
+        navigate("/student-registration/success");
+    };
+
+    // handle overwrite of previous submission
+    const handleOverwrite = async () => {
+        setShowDuplicateAlert(false);
+        setIsSubmitting(true);
+        try {
+            await submitRegistration();
+        } catch (error) {
+            console.error("Registration submission failed: ", error);
+            alert("There was an error submitting your registration. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // leave form filled/untouched
+    const handleCancelOverwrite = () => {
+        setShowDuplicateAlert(false);
+    };
+
     // handle submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -168,23 +216,23 @@ const StudentRegistrationForm = () => {
             otherPronouns: formData.pronouns === "other" ? validateField("Pronouns", formData.otherPronouns) : "",
             fullName: validateField("Full name", formData.fullName),
             uid: validateNumeric("UID", formData.uid),
-            year: validateField("Year", formData.year), 
+            year: validateField("Year", formData.year),
             transfer: validateField("Transfer status", formData.transfer),
-            major: validateField("Major", formData.major), 
-            otherMajor: formData.major === "Other" ? validateField("Major", formData.otherMajor) : "", 
-            positionType: validateField("Position type", formData.positionType), 
-            needSponsorship: validateField("Sponsorship status", formData.needSponsorship), 
-            checkInTime: validateField("Check-in time", formData.checkInTime), 
-            resume: validateFile("Resume", formData.resume), 
+            major: validateField("Major", formData.major),
+            otherMajor: formData.major === "Other" ? validateField("Major", formData.otherMajor) : "",
+            positionType: validateField("Position type", formData.positionType),
+            needSponsorship: validateField("Sponsorship status", formData.needSponsorship),
+            checkInTime: validateField("Check-in time", formData.checkInTime),
+            resume: validateFile("Resume", formData.resume),
             membershipId: "",
             membershipProof: null,
             companyPreferences: validateCompanyPreferences(formData.companyPreferences),
             meal: validateField("Meal", formData.meal),
-            dessert: validateField("Dessert", formData.dessert), 
+            dessert: validateField("Dessert", formData.dessert),
             dietaryRestrictions: "",
-            photoConsent: valdiateCheckbox("the photo consent", formData.photoConsent), 
-            willCall: validateField("Will call status", formData.willCall), 
-            additionalComments: "", 
+            photoConsent: valdiateCheckbox("the photo consent", formData.photoConsent),
+            willCall: validateField("Will call status", formData.willCall),
+            additionalComments: "",
         };
 
         setErrors(newErrors);
@@ -193,22 +241,15 @@ const StudentRegistrationForm = () => {
         setIsSubmitting(true);
 
         try {
-            let resumeUrl = null;
-            let membershipProofUrl = null;
-
-            if (formData.resume) {
-                resumeUrl = await uploadToCloudinary(formData.resume);
+            const isDuplicate = await checkDuplicate(formData.email);
+            if (isDuplicate) {
+                setShowDuplicateAlert(true);
+                return;
             }
-            if (formData.membershipProof) {
-                membershipProofUrl = await uploadToCloudinary(formData.membershipProof);
-            }
-            
-            const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
-            await addDoc(collection(db, "Registrations"), dataToSave);
 
-            console.log("Registration submitted successfully");
+            await submitRegistration();
         } catch (error) {
-            console.error("File upload failed: ", error);
+            console.error("Registration submission failed: ", error);
             alert("There was an error submitting your registration. Please try again.");
         } finally {
             setIsSubmitting(false);
@@ -218,6 +259,35 @@ const StudentRegistrationForm = () => {
 
     return (
         <div className="student-reg-page">
+
+            {showDuplicateAlert && (
+                <div className="duplicate-alert-overlay" role="alertdialog" aria-labelledby="duplicate-alert-title" aria-describedby="duplicate-alert-message">
+                    <div className="duplicate-alert-box">
+                        <h3 id="duplicate-alert-title" className="duplicate-alert-title">You've already registered</h3>
+                        <p id="duplicate-alert-message" className="duplicate-alert-message">
+                            We found an existing registration for this email. Submitting again will overwrite
+                            your previous registration. Are you sure you want to continue?
+                        </p>
+                        <div className="duplicate-alert-actions">
+                            <button
+                                type="button"
+                                className="duplicate-alert-cancel-btn"
+                                onClick={handleCancelOverwrite}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                className="duplicate-alert-overwrite-btn"
+                                onClick={handleOverwrite}
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? "Overwriting..." : "Overwrite"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="student-reg-header">
                 <h1 className="student-reg-title">Student Registration</h1>

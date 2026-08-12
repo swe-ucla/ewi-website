@@ -7,6 +7,7 @@ import MeetTheTeam from "./pages/MeetTheTeam";
 import ContactUs from "./pages/ContactUs";
 import Footer from "./components/footer/Footer";
 import StudentRegistrationForm from "./pages/StudentRegistration";
+import RegistrationSuccess from "./pages/RegistrationSuccess";
 
 import {
   BrowserRouter as Router,
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/meet-the-team" element={<MeetTheTeam />} />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route path="/student-registration" element={<StudentRegistrationForm />} />
+          <Route path="/student-registration/success" element={<RegistrationSuccess />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
         <Footer />

@@ -289,6 +289,94 @@ input[type="file"].input-box::file-selector-button {
     text-align: center;
 }
 
+/* duplicate submission alert */
+.duplicate-alert-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 1000;
+}
+
+.duplicate-alert-box {
+    width: 100%;
+    max-width: 26rem;
+    background: #fff;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.duplicate-alert-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+}
+
+.duplicate-alert-message {
+    margin: 0 0 1.5rem;
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+.duplicate-alert-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.duplicate-alert-cancel-btn,
+.duplicate-alert-overwrite-btn {
+    flex: 1;
+    padding: 0.85rem 1.5rem;
+    border-radius: 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.duplicate-alert-cancel-btn {
+    border: 1.5px solid #c2c2c2;
+    background: #fff;
+    color: #333;
+}
+
+.duplicate-alert-cancel-btn:hover {
+    background: #f2f2f2;
+}
+
+.duplicate-alert-overwrite-btn {
+    border: none;
+    background: #c0392b;
+    color: #fff;
+}
+
+.duplicate-alert-overwrite-btn:hover {
+    background: #a53125;
+}
+
+.duplicate-alert-overwrite-btn:disabled {
+    background: #d99a92;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .duplicate-alert-box {
+        padding: 1.5rem;
+    }
+
+    .duplicate-alert-actions {
+        flex-direction: column;
+    }
+}
+
 /* tablet and below */
 @media (max-width: 768px) {
     .student-reg-header {
