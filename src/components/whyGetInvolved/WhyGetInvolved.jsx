@@ -25,7 +25,7 @@ const WhyGetInvolved = () => {
   return (
     <div className="why-get-involved">
       <div className="why-get-involved-content">
-        <h2 className="why-get-involved-title">why get involved?</h2>
+        <h2 className="why-get-involved-title">Why get involved?</h2>
         <div className="why-get-involved-layout">
           <div className="why-get-involved-text">
             <p>
