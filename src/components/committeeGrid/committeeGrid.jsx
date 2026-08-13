@@ -1,5 +1,5 @@
 import React from "react";
-import "./committeeGrid.css";
+import "./CommitteeGrid.css";
 import PeopleCard from "../peopleCard/PeopleCard";
 import KHANH from "../../assets/Khanh_EWIHeadshot.jpg";
 import JACQUELINE from "../../assets/Jacqueline_EWIHeadshot.jpg";
@@ -9,9 +9,6 @@ import LILLIAN from "../../assets/Lillian_EWIHeadshot.JPG";
 import SUSIE from "../../assets/Susie_EWIHeadshot.jpeg";
 import CLARISSE from "../../assets/Clarisse_EWIHeadshot.jpg";
 import APARNA from "../../assets/Aparna_EWIHeadshot.JPG";
-import MEETTHETEAM_TITLE from "../../assets/meettheteam.svg";
-import MEETTHETEAM_FLOWER from "../../assets/meettheteamflower.svg";
-import BUTTERFLY from "../../assets/butterfly.png";
 
 const teamData = [
   {
@@ -104,49 +101,24 @@ const teamData = [
   },
 ];
 
-const committeeGrid = () => {
-  const directors = teamData.filter(
-    (person) => person.name === "Khanh Tran" || person.name === "Lillian Gonick"
-  );
-  const chairs = teamData.filter(
-    (person) => person.name !== "Khanh Tran" && person.name !== "Lillian Gonick"
-  );
+const DIRECTOR_NAMES = new Set(["Khanh Tran", "Lillian Gonick"]);
+
+const CommitteeGrid = () => {
+  const directors = teamData.filter((person) => DIRECTOR_NAMES.has(person.name));
+  const chairs = teamData.filter((person) => !DIRECTOR_NAMES.has(person.name));
 
   return (
-    <section id="meet-the-team" className="meet-the-team-section">
-      {/* Header Section with Decorative Elements */}
-      <div className="meet-the-team-header">
-        {/* Decorative Flowers */}
-        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-1" />
-        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-2" />
-        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-3" />
-        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-4" />
-        <img src={MEETTHETEAM_FLOWER} alt="flower" className="meet-the-team-flower flower-5" />
-        
-        {/* Dashed Line */}
-        <svg className="meet-the-team-dashed-line" viewBox="0 0 400 200" preserveAspectRatio="none">
-          <path
-            d="M 50 50 Q 200 150 350 50"
-            fill="none"
-            stroke="rgba(255, 255, 255, 0.6)"
-            strokeWidth="2"
-            strokeDasharray="5,5"
-          />
-        </svg>
-
-        {/* Header Content */}
-        <div className="meet-the-team-header-content">
-          <img src={MEETTHETEAM_TITLE} alt="meet the team" className="meet-the-team-title-image" />
-          <img src={BUTTERFLY} alt="butterfly" className="meet-the-team-butterfly" />
+    <section id="meet-the-team" className="committee-grid">
+      <header className="committee-grid__header">
+        <div className="committee-grid__header-content">
+          <h1 className="committee-grid__title">Meet the Team</h1>
         </div>
-      </div>
+      </header>
 
-      {/* Content Section */}
-      <div className="container meet-the-team-content">
-        {/* Directors Section */}
-        <div className="committee-section">
-          <h2 className="committee-section-heading">directors</h2>
-          <div className="committee-grid directors-grid">
+      <div className="container committee-grid__content">
+        <div className="committee-grid__section">
+          <h2 className="committee-grid__subtitle">Directors</h2>
+          <div className="committee-grid__cards committee-grid__cards--directors">
             {directors.map(
               ({ id, image, name, position, description, year, major, linkedInURL }) => (
                 <PeopleCard
@@ -164,10 +136,9 @@ const committeeGrid = () => {
           </div>
         </div>
 
-        {/* Chairs Section */}
-        <div className="committee-section">
-          <h2 className="committee-section-heading">chairs</h2>
-          <div className="committee-grid chairs-grid">
+        <div className="committee-grid__section">
+          <h2 className="committee-grid__subtitle">Chairs</h2>
+          <div className="committee-grid__cards committee-grid__cards--chairs">
             {chairs.map(
               ({ id, image, name, position, description, year, major, linkedInURL }) => (
                 <PeopleCard
@@ -189,4 +160,4 @@ const committeeGrid = () => {
   );
 };
 
-export default committeeGrid;
+export default CommitteeGrid;
