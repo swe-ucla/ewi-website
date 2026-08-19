@@ -81,6 +81,48 @@ const Admin = () => {
     return acc;
   }, {});
 
+  const exportMealCSV = () => {
+    const headers = ["Full Name", "Email", "Status", "Pronouns", "Meal", "Dessert", "Dietary Restrictions"];
+    const rows = registrations.map((r) =>
+      [
+        r.fullName, r.email, r.status,
+        r.pronouns === "other" ? r.otherPronouns : r.pronouns,
+        r.meal, r.dessert, r.dietaryRestrictions,
+      ].map(escapeCSV)
+    );
+    const csv = [headers.map(escapeCSV), ...rows].map((row) => row.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ewi_meal_preferences.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportCompanyPrefsCSV = () => {
+    const headers = [
+      "Full Name", "Email", "Status", "Year", "Major",
+      "Company Pref 1", "Company Pref 2", "Company Pref 3", "Company Pref 4", "Company Pref 5",
+      "Company Pref 6", "Company Pref 7", "Company Pref 8", "Company Pref 9", "Company Pref 10",
+    ];
+    const rows = registrations.map((r) =>
+      [
+        r.fullName, r.email, r.status, r.year,
+        r.major === "Other" ? r.otherMajor : r.major,
+        ...(r.companyPreferences || new Array(10).fill("")),
+      ].map(escapeCSV)
+    );
+    const csv = [headers.map(escapeCSV), ...rows].map((row) => row.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ewi_company_preferences.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const exportCSV = () => {
     const headers = [
       "Full Name", "Email", "UID", "Status", "Pronouns", "Year", "Transfer",
@@ -193,8 +235,14 @@ const Admin = () => {
             </button>
           ))}
         </div>
+        <button className="export-btn" onClick={exportMealCSV}>
+          Export Meals
+        </button>
+        <button className="export-btn" onClick={exportCompanyPrefsCSV}>
+          Export Company Prefs
+        </button>
         <button className="export-btn" onClick={exportCSV}>
-          Export CSV
+          Export All (CSV)
         </button>
       </div>
 
