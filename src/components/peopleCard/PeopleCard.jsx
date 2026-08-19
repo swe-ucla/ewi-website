@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BsLinkedin } from "react-icons/bs";
-import "./PeopleCard.css";
+import "./peopleCard.css";
 
 const PeopleCard = ({ image, name, position, description, year, major, linkedInURL }) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
