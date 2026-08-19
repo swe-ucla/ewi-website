@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./navbar.css";
+import "./Navbar.css";
 import LOGO from "../../assets/ewilogo.svg";
 import { Link } from "react-router-dom";
 
@@ -19,65 +19,58 @@ const Navbar = () => {
     if (checkbox) {
       checkbox.checked = isMenuOpen;
     }
-    
-    // Close menu on escape key
+
     const handleEscape = (e) => {
       if (e.key === "Escape" && isMenuOpen) {
         setIsMenuOpen(false);
       }
     };
-    
+
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isMenuOpen]);
 
   return (
-    <div className="navbar">
-      <div className="logo">
+    <nav className="navbar">
+      <div className="navbar__logo">
         <Link to="/">
-          <img src={LOGO} alt={"logo"} />
+          <img src={LOGO} alt="EWI logo" />
         </Link>
       </div>
 
-      {/* mini menu */}
-      <input 
-        className="side-menu" 
-        type="checkbox" 
-        id="side-menu" 
+      <input
+        className="navbar__menu-input"
+        type="checkbox"
+        id="side-menu"
         checked={isMenuOpen}
         onChange={handleMenuToggle}
       />
-      <label className="hamb" htmlFor="side-menu">
-        <span className="hamb-line"></span>
+      <label className="navbar__menu-toggle" htmlFor="side-menu">
+        <span className="navbar__menu-toggle-line"></span>
       </label>
 
-      {/* Backdrop overlay */}
       {isMenuOpen && (
-        <div 
-          className="menu-backdrop" 
-          onClick={handleMenuToggle}
-        ></div>
+        <div className="navbar__backdrop" onClick={handleMenuToggle}></div>
       )}
 
-      {/* full size navbar */}
-      <div className="tabs">
-        <Link className="tab" to="/home" onClick={handleLinkClick}>
-          HOME
+      <div className="navbar__tabs">
+        <Link className="navbar__tab" to="/home" onClick={handleLinkClick}>
+          Home
         </Link>
-        <Link className="tab" to="/students" onClick={handleLinkClick}>
-          STUDENTS
+        <Link className="navbar__tab" to="/students" onClick={handleLinkClick}>
+          Students
         </Link>
-        <Link className="tab" to="/companies" onClick={handleLinkClick}>
-          COMPANIES
+        <Link className="navbar__tab" to="/companies" onClick={handleLinkClick}>
+          Companies
         </Link>
-        <Link className="tab" to="/meet-the-team" onClick={handleLinkClick}>
-          MEET THE TEAM
+        <Link className="navbar__tab" to="/meet-the-team" onClick={handleLinkClick}>
+          Meet the Team
         </Link>
-        <Link className="tab" to="/contact-us" onClick={handleLinkClick}>
-          CONTACT US
+        <Link className="navbar__tab" to="/contact-us" onClick={handleLinkClick}>
+          Contact Us
         </Link>
       </div>
-    </div>
+    </nav>
   );
 };
 
