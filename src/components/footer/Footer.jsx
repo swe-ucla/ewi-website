@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Footer.css";
+import "./footer.css";
 import SWE_LOGO from "../../assets/purple-swe-logo.svg";
 import { BsLinkedin, BsInstagram } from "react-icons/bs";
 
