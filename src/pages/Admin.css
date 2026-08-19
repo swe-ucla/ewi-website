@@ -1,0 +1,281 @@
+.admin-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f5f7;
+}
+
+.admin-login-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(141, 72, 95, 0.12);
+  padding: 3rem 2.5rem;
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+}
+
+.admin-login-card h1 {
+  font-family: "DM Serif Text", serif;
+  font-size: 2rem;
+  color: #3e4c13;
+  margin-bottom: 0.75rem;
+}
+
+.admin-login-card p {
+  font-family: "Poppins", sans-serif;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+
+.admin-signin-btn {
+  background-color: #8d485f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.admin-signin-btn:hover {
+  opacity: 0.88;
+}
+
+.admin-signout-btn {
+  background: transparent;
+  border: 1px solid #8d485f;
+  color: #8d485f;
+  border-radius: 8px;
+  padding: 0.4rem 1rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-signout-btn:hover {
+  background-color: #8d485f;
+  color: white;
+}
+
+/* PAGE LAYOUT */
+.admin-page {
+  min-height: 100vh;
+  background-color: #f9f5f7;
+  padding: 2rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.admin-header h1 {
+  font-family: "DM Serif Text", serif;
+  font-size: 1.8rem;
+  color: #3e4c13;
+}
+
+.admin-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.admin-user {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* STATS BAR */
+.admin-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 110px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card.registered { border-top: 3px solid #9da77a; }
+.stat-card.waitlisted { border-top: 3px solid #8d485f; }
+.stat-card.total      { border-top: 3px solid #3e4c13; }
+.stat-card.meal       { border-top: 3px solid #c4a882; }
+
+.stat-num {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #3e4c13;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 0.3rem;
+  text-align: center;
+}
+
+/* TOOLBAR */
+.admin-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.admin-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.45rem 1rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: #8d485f;
+  color: #8d485f;
+}
+
+.filter-btn.active {
+  background-color: #8d485f;
+  border-color: #8d485f;
+  color: white;
+}
+
+.export-btn {
+  background-color: #3e4c13;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.export-btn:hover {
+  opacity: 0.88;
+}
+
+/* TABLE */
+.admin-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.admin-table thead {
+  background-color: #3e4c13;
+  color: white;
+}
+
+.admin-table th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+}
+
+.admin-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0eef1;
+  color: #333;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #fdf8fa;
+}
+
+/* STATUS BADGE */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.registered {
+  background-color: #eef3e0;
+  color: #3e4c13;
+}
+
+.status-badge.waitlisted {
+  background-color: #fde8ee;
+  color: #8d485f;
+}
+
+.status-badge.unknown {
+  background-color: #f0f0f0;
+  color: #888;
+}
+
+/* MISC */
+.admin-empty {
+  text-align: center;
+  color: #aaa;
+  padding: 2.5rem;
+  font-size: 0.9rem;
+}
+
+.admin-loading-text {
+  text-align: center;
+  color: #888;
+  padding: 2rem;
+  font-size: 0.9rem;
+}
+
+.admin-error {
+  color: #c0392b;
+  background: #fdecea;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}

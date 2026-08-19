@@ -1,4 +1,4 @@
-import CommitteeGrid from "../components/committeeGrid/CommitteeGrid";
+import CommitteeGrid from "../components/committeeGrid/committeeGrid";
 
 const MeetTheTeam = () => {
   return <CommitteeGrid />;
