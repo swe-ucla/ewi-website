@@ -4,8 +4,6 @@ import { db } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import "./StudentRegistration.css";
 
-const CLOUDINARY_URL = "...";
-const CLOUDINARY_UPLOAD_PRESET = "...";
 
 const companiesList = [
     { id: 1, name: "City of Los Angeles Bureau of Engineering" },
