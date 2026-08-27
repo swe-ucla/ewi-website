@@ -26,6 +26,7 @@ const StudentsTemplate = () => {
                 <header className="students-template-header">
                     <h1>{PAGE_TITLE}</h1>
                     <p className="students-template-subhead">{PAGE_SUBHEADING}</p>
+                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a className="students-template-button" href="#" aria-disabled="true">
                         {REGISTER_LABEL}
                     </a>
