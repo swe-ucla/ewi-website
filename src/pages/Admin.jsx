@@ -2,23 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import PieChartView from "../components/admin/PieChartView";
+import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV } from "../components/admin/adminExports";
+import companiesData from "../data/companies.json";
 
 const provider = new GoogleAuthProvider();
+const COMPANIES = companiesData.companies;
 
-const escapeCSV = (val) => {
-  if (val === null || val === undefined) return "";
-  const str = String(val);
-  if (str.includes(",") || str.includes('"') || str.includes("\n")) {
-    return `"${str.replace(/"/g, '""')}"`;
-  }
-  return str;
-};
 
 const Admin = () => {
   const [user, setUser] = useState(null);
@@ -26,7 +17,10 @@ const Admin = () => {
   const [authLoading, setAuthLoading] = useState(true);
   const [registrations, setRegistrations] = useState([]);
   const [dataLoading, setDataLoading] = useState(false);
-  const [filter, setFilter] = useState("all");
+  const [activeTab, setActiveTab] = useState("companies");
+  const [confirmRemove, setConfirmRemove] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("name");
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -70,97 +64,34 @@ const Admin = () => {
 
   const handleSignOut = () => signOut(auth);
 
-  const filtered = registrations.filter((r) =>
-    filter === "all" ? true : r.status === filter
-  );
-
-  const registered = registrations.filter((r) => r.status === "registered").length;
-  const waitlisted = registrations.filter((r) => r.status === "waitlisted").length;
-  const mealCounts = registrations.reduce((acc, r) => {
-    if (r.meal) acc[r.meal] = (acc[r.meal] || 0) + 1;
-    return acc;
-  }, {});
-
-  const exportMealCSV = () => {
-    const headers = ["Full Name", "Email", "Status", "Pronouns", "Meal", "Dessert", "Dietary Restrictions"];
-    const rows = registrations.map((r) =>
-      [
-        r.fullName, r.email, r.status,
-        r.pronouns === "other" ? r.otherPronouns : r.pronouns,
-        r.meal, r.dessert, r.dietaryRestrictions,
-      ].map(escapeCSV)
-    );
-    const csv = [headers.map(escapeCSV), ...rows].map((row) => row.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ewi_meal_preferences.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExport = (e) => {
+    const val = e.target.value;
+    if (val === "meals") exportMealCSV(registrations);
+    else if (val === "companies") exportCompanyPrefsCSV(registrations);
+    else if (val === "all") exportAllCSV(registrations);
+    e.target.value = "";
   };
 
-  const exportCompanyPrefsCSV = () => {
-    const headers = [
-      "Full Name", "Email", "Status", "Year", "Major",
-      "Company Pref 1", "Company Pref 2", "Company Pref 3", "Company Pref 4", "Company Pref 5",
-      "Company Pref 6", "Company Pref 7", "Company Pref 8", "Company Pref 9", "Company Pref 10",
-    ];
-    const rows = registrations.map((r) =>
-      [
-        r.fullName, r.email, r.status, r.year,
-        r.major === "Other" ? r.otherMajor : r.major,
-        ...(r.companyPreferences || new Array(10).fill("")),
-      ].map(escapeCSV)
-    );
-    const csv = [headers.map(escapeCSV), ...rows].map((row) => row.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ewi_company_preferences.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const attending = registrations.filter((r) => r.status === "registered").length;
+  const onWaitList = registrations.filter((r) => r.status === "waitlisted").length;
+  const onWillCall = registrations.filter((r) => r.willCall).length;
 
-  const exportCSV = () => {
-    const headers = [
-      "Full Name", "Email", "UID", "Status", "Pronouns", "Year", "Transfer",
-      "Major", "Position Type", "Need Sponsorship", "Check-in Time",
-      "National SWE ID", "Meal", "Dessert", "Dietary Restrictions",
-      "Photo Consent", "Will Call",
-      "Company Pref 1", "Company Pref 2", "Company Pref 3", "Company Pref 4",
-      "Company Pref 5", "Company Pref 6", "Company Pref 7", "Company Pref 8",
-      "Company Pref 9", "Company Pref 10",
-      "Resume URL", "Membership Proof URL", "Additional Comments",
-    ];
-
-    const rows = registrations.map((r) =>
-      [
-        r.fullName, r.email, r.uid, r.status,
-        r.pronouns === "other" ? r.otherPronouns : r.pronouns,
-        r.year, r.transfer,
-        r.major === "Other" ? r.otherMajor : r.major,
-        r.positionType, r.needSponsorship, r.checkInTime,
-        r.membershipId, r.meal, r.dessert, r.dietaryRestrictions,
-        r.photoConsent ? "Yes" : "No", r.willCall,
-        ...(r.companyPreferences || new Array(10).fill("")),
-        r.resume, r.membershipProof, r.additionalComments,
-      ].map(escapeCSV)
-    );
-
-    const csv = [headers.map(escapeCSV), ...rows]
-      .map((row) => row.join(","))
-      .join("\n");
-
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ewi_registrations.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const sortedFiltered = registrations
+    .filter((r) => {
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        (r.fullName || "").toLowerCase().includes(q) ||
+        (r.uid || "").toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy === "name") return (a.fullName || "").localeCompare(b.fullName || "");
+      if (sortBy === "status") return (a.status || "").localeCompare(b.status || "");
+      if (sortBy === "year") return (a.year || "").localeCompare(b.year || "");
+      if (sortBy === "major") return (a.major || "").localeCompare(b.major || "");
+      return 0;
+    });
 
   if (authLoading) {
     return <div className="admin-center"><p className="admin-loading-text">Loading...</p></div>;
@@ -195,7 +126,7 @@ const Admin = () => {
   return (
     <div className="admin-page">
       <div className="admin-header">
-        <h1>EWI Registrations</h1>
+        <h1>Admin Dashboard</h1>
         <div className="admin-header-right">
           <span className="admin-user">{user.email}</span>
           <button className="admin-signout-btn" onClick={handleSignOut}>Sign out</button>
@@ -203,101 +134,163 @@ const Admin = () => {
       </div>
 
       <div className="admin-stats">
-        <div className="stat-card registered">
-          <span className="stat-num">{registered}</span>
-          <span className="stat-label">Registered</span>
-        </div>
-        <div className="stat-card waitlisted">
-          <span className="stat-num">{waitlisted}</span>
-          <span className="stat-label">Waitlisted</span>
-        </div>
-        <div className="stat-card total">
+        <div className="stat-card">
           <span className="stat-num">{registrations.length}</span>
-          <span className="stat-label">Total</span>
+          <span className="stat-label">total responses</span>
         </div>
-        {Object.entries(mealCounts).map(([meal, count]) => (
-          <div key={meal} className="stat-card meal">
-            <span className="stat-num">{count}</span>
-            <span className="stat-label">{meal.split("(")[0].trim()}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="admin-toolbar">
-        <div className="admin-filters">
-          {["all", "registered", "waitlisted"].map((f) => (
-            <button
-              key={f}
-              className={`filter-btn ${filter === f ? "active" : ""}`}
-              onClick={() => setFilter(f)}
-            >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
+        <div className="stat-card">
+          <span className="stat-num">{attending}</span>
+          <span className="stat-label">attending</span>
         </div>
-        <button className="export-btn" onClick={exportMealCSV}>
-          Export Meals
-        </button>
-        <button className="export-btn" onClick={exportCompanyPrefsCSV}>
-          Export Company Prefs
-        </button>
-        <button className="export-btn" onClick={exportCSV}>
-          Export All (CSV)
-        </button>
+        <div className="stat-card">
+          <span className="stat-num">{onWaitList}</span>
+          <span className="stat-label">on wait list</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-num">{onWillCall}</span>
+          <span className="stat-label">on will call</span>
+        </div>
       </div>
 
       {error && <p className="admin-error">{error}</p>}
 
+      <div className="admin-tabs">
+        {["companies", "majors", "years"].map((tab) => (
+          <button
+            key={tab}
+            className={`filter-btn ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab === "companies" ? "Companies" : tab === "majors" ? "Majors" : "Years"}
+          </button>
+        ))}
+      </div>
+
       {dataLoading ? (
         <p className="admin-loading-text">Loading registrations...</p>
       ) : (
-        <div className="admin-table-wrapper">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>UID</th>
-                <th>Status</th>
-                <th>Year</th>
-                <th>Major</th>
-                <th>1st Choice</th>
-                <th>2nd Choice</th>
-                <th>3rd Choice</th>
-                <th>Meal</th>
-                <th>Check-in Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={11} className="admin-empty">
-                    No registrations found.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((r, i) => (
-                  <tr key={r.email || i}>
-                    <td>{r.fullName}</td>
-                    <td>{r.email}</td>
-                    <td>{r.uid}</td>
-                    <td>
-                      <span className={`status-badge ${r.status || "unknown"}`}>
-                        {r.status || "—"}
-                      </span>
-                    </td>
-                    <td>{r.year}</td>
-                    <td>{r.major === "Other" ? r.otherMajor : r.major}</td>
-                    <td>{r.companyPreferences?.[0] || "—"}</td>
-                    <td>{r.companyPreferences?.[1] || "—"}</td>
-                    <td>{r.companyPreferences?.[2] || "—"}</td>
-                    <td>{r.meal}</td>
-                    <td>{r.checkInTime}</td>
+        <>
+          {activeTab === "companies" && (
+            <div className="admin-table-wrapper">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>company</th>
+                    <th>capacity</th>
+                    <th># of first choices</th>
+                    <th></th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {COMPANIES.map((company) => (
+                    <tr key={company}>
+                      <td>{company}</td>
+                      <td>—</td>
+                      <td>
+                        {registrations.filter((r) => r.companyPreferences?.[0] === company).length}
+                      </td>
+                      <td>
+                        <button className="remove-btn" onClick={() => setConfirmRemove(company)}>remove</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === "majors" && (
+            <PieChartView
+              data={Object.entries(
+                registrations.reduce((acc, r) => {
+                  const m = r.major === "Other" ? (r.otherMajor || "Other") : (r.major || "Unknown");
+                  acc[m] = (acc[m] || 0) + 1;
+                  return acc;
+                }, {})
+              ).map(([name, value]) => ({ name, value }))}
+            />
+          )}
+
+          {activeTab === "years" && (
+            <PieChartView
+              data={Object.entries(
+                registrations.reduce((acc, r) => {
+                  const y = r.year || "Unknown";
+                  acc[y] = (acc[y] || 0) + 1;
+                  return acc;
+                }, {})
+              ).map(([name, value]) => ({ name, value }))}
+            />
+          )}
+
+          <div className="admin-search-row">
+            <input
+              className="admin-search-input"
+              type="text"
+              placeholder="Search name/uid"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <select
+              className="admin-sort-select"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="name">Sort by: Name</option>
+              <option value="status">Sort by: Status</option>
+              <option value="year">Sort by: Year</option>
+              <option value="major">Sort by: Major</option>
+            </select>
+            <select className="admin-export-select" onChange={handleExport} defaultValue="">
+              <option value="" disabled>Export...</option>
+              <option value="meals">Export Meals</option>
+              <option value="companies">Export Company Prefs</option>
+              <option value="all">Export All</option>
+            </select>
+          </div>
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>major/Yr</th>
+                  <th>status</th>
+                  <th>top choice</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedFiltered.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="admin-empty">No registrations found.</td>
+                  </tr>
+                ) : (
+                  sortedFiltered.map((r, i) => (
+                    <tr key={r.email || i}>
+                      <td>{r.fullName}</td>
+                      <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
+                      <td>
+                        <span className={`status-badge ${r.status || "unknown"}`}>
+                          {r.status || "—"}
+                        </span>
+                      </td>
+                      <td>{r.companyPreferences?.[0] || "—"}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+      {confirmRemove && (
+        <div className="modal-overlay" onClick={() => setConfirmRemove(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <p>Are you sure you want to delete <strong>{confirmRemove}</strong>?</p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setConfirmRemove(null)}>Cancel</button>
+              <button className="modal-delete" onClick={() => setConfirmRemove(null)}>Delete</button>
+            </div>
+          </div>
         </div>
       )}
     </div>
