@@ -1,9 +1,9 @@
 import React from "react";
 import "./registrationTimeline.css";
 
-const STEPS = ["early registration", "normal registration", "waitlist", "EWI"];
+export const STEPS = ["early registration", "normal registration", "waitlist", "EWI"];
 
-const getCurrentStep = (dates) => {
+export const getCurrentStep = (dates) => {
   const now = new Date();
 
   if (now < dates.earlyRegistrationStart) {
