@@ -1,4 +1,5 @@
 import React from "react";
+const StudentRegistration = React.lazy(() => import("../StudentRegistration/StudentRegistration"));
 import "./studentInfo.css";
 import PDFViewerStudent from "./PDFViewerStudent";
 import SendMessage from "../sendMessage/sendMessage";
@@ -11,7 +12,13 @@ const StudentInfo = () => {
     <div className="container student__content">
       <div className="student__info">
         <h2>Registration</h2>
-        <p>Coming soon...</p>
+        <p>Register for Evening With Industry below.</p>
+        {/* Student registration form integrated below */}
+        <div style={{ marginTop: "1rem" }}>
+          <React.Suspense fallback={<div>Loading form...</div>}>
+            <StudentRegistration />
+          </React.Suspense>
+        </div>
         {/* 
         <div className="student__paragraph">
           <p>

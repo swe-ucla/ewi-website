@@ -68,3 +68,45 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## Student registration backend (Firebase)
+
+This project includes a Firebase Cloud Function endpoint and a front-end registration form to accept student registrations and optional PDF uploads.
+
+High-level steps to provision and run:
+
+1. Create a Firebase project in the Firebase Console using your SWE Dev email.
+2. Enable Firestore and Firebase Storage.
+3. Deploy the Cloud Function located in the `functions/` folder.
+
+Local development and environment variables:
+
+- Create a local `.env.local` file at the repo root (do NOT commit this file).
+- Add the following environment variables:
+
+```
+REACT_APP_FIREBASE_API_KEY=your_firebase_api_key
+REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
+REACT_APP_FIREBASE_APP_ID=...
+
+# URL to deployed Cloud Functions (or Functions emulator base URL)
+REACT_APP_FIREBASE_FUNCTIONS_URL=https://us-central1-your_project.cloudfunctions.net
+```
+
+Functions deployment (from the `functions/` folder):
+
+```bash
+cd functions
+npm install
+# if first time: firebase login
+firebase deploy --only functions
+```
+
+Notes:
+- The Cloud Function `registerStudent` accepts POST requests with JSON payload. If you include a file, the client sends it as a base64 string using the `fileBase64` and `fileName` fields.
+- Duplicate email handling: the function returns 409 with `error: "duplicate"` when an existing registration is found and `overwrite` is false. The UI offers an overwrite option.
+- Files are uploaded to Firebase Storage under `student-uploads/` and a signed URL is saved in Firestore.
+
