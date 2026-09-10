@@ -1,0 +1,138 @@
+.reg-timeline-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.reg-timeline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 640px;
+  min-width: 480px; /* keeps labels from overlapping; wrapper scrolls if the viewport is narrower */
+  margin: 0 auto;
+  padding: 28px 48px 52px; /* side padding must clear the widest label's overhang so it never clips against the scrollable wrapper */
+  box-sizing: border-box;
+}
+
+.reg-timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 46px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.reg-timeline-circle {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.reg-timeline-circle--completed {
+  background-color: #14AE5C;
+}
+
+.reg-timeline-circle--active {
+  background-color: #ffffff;
+  border: 4px solid #3b82f6;
+}
+
+.reg-timeline-circle--upcoming {
+  background-color: #9B9B9B
+}
+
+.reg-timeline-check {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.reg-timeline-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+}
+
+.reg-timeline-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  width: max-content;
+  font-size: 14px;
+  color: #333333;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.reg-timeline-line {
+  height: 3px;
+  flex: 1 1 auto;
+  min-width: 30px;
+  margin-top: 21.5px; /* aligns with vertical center of the circles */
+  flex-shrink: 1;
+  position: relative;
+  z-index: 0;
+}
+
+.reg-timeline-line--solid {
+  background-color: #14AE5C; /* green, matches completed steps */
+}
+
+.reg-timeline-line--dashed {
+  background: repeating-linear-gradient(
+    to right,
+    #3b82f6 0,
+    #3b82f6 6px,
+    transparent 6px,
+    transparent 12px
+  ); /* blue dashed */
+}
+
+@media (max-width: 640px) {
+  .reg-timeline {
+    min-width: 300px;
+    padding: 28px 40px 60px;
+  }
+
+  .reg-timeline-step {
+    width: 34px;
+  }
+
+  .reg-timeline-circle {
+    width: 34px;
+    height: 34px;
+  }
+
+  .reg-timeline-check {
+    font-size: 16px;
+  }
+
+  .reg-timeline-dot {
+    width: 20px;
+    height: 20px;
+  }
+
+  .reg-timeline-label {
+    width: 72px;
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  .reg-timeline-line {
+    margin-top: 15.5px;
+    min-width: 40px;
+  }
+}

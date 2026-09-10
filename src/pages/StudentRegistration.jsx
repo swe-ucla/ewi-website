@@ -2,9 +2,21 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import RegistrationTimeline, { getCurrentStep, STEPS } from "../components/registrationTimeline/registrationTimeline";
+import registrationTimelineDates from "../data/registrationDates";
 import { sanitizeCloudinaryId, uploadToCloudinary } from "../utils/cloudinary";
 import companiesData from "../data/companies.json";
 import "./StudentRegistration.css";
+
+// maps the timeline's current step to one of the 3 registration statuses
+// empty str if registration hasn't opened yet or the event date has passed
+const getRegistrationStatus = (dates) => {
+    const currentStep = getCurrentStep(dates);
+    if (currentStep < 0 || currentStep >= STEPS.length - 1) {
+        return "";
+    }
+    return STEPS[currentStep];
+};
 
 const companiesList = companiesData.companies.map((name, index) => ({
     id: index + 1,
@@ -168,7 +180,13 @@ const StudentRegistrationForm = () => {
             });
         }
 
-        const dataToSave = { ...formData, resume: resumeUrl, membershipProof: membershipProofUrl };
+        const dataToSave = {
+            ...formData,
+            registrationStatus: getRegistrationStatus(registrationTimelineDates), // computed at submit time
+            resume: resumeUrl,
+            resumeFilename: formData.resume ? formData.resume.name : null,
+            membershipProof: membershipProofUrl,
+        };
         await setDoc(doc(db, "Registrations", formData.email), dataToSave);
 
         console.log("Registration submitted successfully");
@@ -280,6 +298,7 @@ const StudentRegistrationForm = () => {
             <div className="student-reg-header">
                 <h1 className="student-reg-title">Student Registration</h1>
                 <p>November, 20, 2026 - X:XX PM to X:XX PM - Carnesale Commons - Cost</p>
+                <RegistrationTimeline dates={registrationTimelineDates} />
                 <div className="ewi-info">
                     <p className="ewi-info-bold">What is EWI?</p>
                     <p className="ewi-desc">

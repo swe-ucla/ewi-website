@@ -20,7 +20,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 1rem
+}
+
+.student-reg-title,
+.student-reg-header > p {
+    text-align: center;
 }
 
 .student-reg-title {
