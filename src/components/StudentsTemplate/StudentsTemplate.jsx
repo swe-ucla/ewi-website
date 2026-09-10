@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./StudentsTemplate.css";
 
 const PAGE_TITLE = "For Students";
@@ -26,10 +27,9 @@ const StudentsTemplate = () => {
                 <header className="students-template-header">
                     <h1>{PAGE_TITLE}</h1>
                     <p className="students-template-subhead">{PAGE_SUBHEADING}</p>
-                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <a className="students-template-button" href="#" aria-disabled="true">
+                    <Link className="students-template-button" to="/student-registration">
                         {REGISTER_LABEL}
-                    </a>
+                    </Link>
                 </header>
 
                 <section className="students-template-section">
