@@ -1,102 +1,116 @@
-@import url('https://fonts.googleapis.com/css2?family=Katibeh&display=swap');
+.footer {
+  --footer-bg: #f0f0f0;
+  --footer-text: #000000;
+  --footer-text-muted: #666666;
+  --footer-border: #e0e0e0;
+  --footer-logo-width: 100px;
 
-footer {
-  background: none;
-  position: relative;
-
-  display: flex;
-  justify-content: center;
-  min-height: 300px;
-}
-
-footer::before {
-  content: "";
-  position: absolute;
-  bottom: -40px;
-  left: 0;
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
   width: 100%;
-  height: 1200px;
-  background-image: url("../../assets/hero_gradient_bottom.png");
-  background-size: 100% auto;
-  background-position: center bottom;
-  background-repeat: no-repeat;
-  z-index: -2;
-  pointer-events: none;
 }
 
-.footer-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.footer-content {
-  position: absolute;
-  bottom: -7.5rem;
-  left: 50%;
-  transform: translateX(-50%); /* center horizontally */
-
+.footer__content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  width: 80%;
+  width: var(--container-width-lg);
   max-width: 1200px;
-  z-index: 1;
-  font-size: 2.2rem;
-  background-color: none;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 0.75rem;
+  gap: 1.5rem;
 }
 
-footer p {
-  color: #FFE1ED;
-  background-color: transparent;
-  font-family: 'Katibeh', cursive;
+.footer__logo {
+  flex-shrink: 0;
+  width: var(--footer-logo-width);
+  display: block;
+}
+
+.footer__logo img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.footer__contact {
+  flex: 1;
+  color: var(--footer-text-muted);
+  background: transparent;
+  font-family: "Inter", sans-serif;
   font-weight: 400;
-  text-shadow: 1px 1px 2px #ecbad06a;
-  font-size: 2.4rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
-.footer-socials {
+.footer__email {
+  color: var(--footer-text);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.footer__email:hover {
+  color: var(--footer-text-muted);
+}
+
+.footer__socials {
   display: flex;
-  justify-content: space-between;
-  background-color: none;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
 }
 
-footer a {
-  text-decoration: none;
-}
-
-.footer-socials a {
-  color: #FFE1ED;
-  border: none;
-  padding: 0.8rem;
+.footer__social-link {
+  color: var(--footer-text);
+  padding: 0.5rem;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: color 0.15s ease;
 }
 
-.footer-socials a:hover {
+.footer__social-link:hover {
   background: transparent;
-  color: #8D485F;
+  color: var(--footer-text-muted);
 }
 
-/* ================ MEDIA QUERIES (SMALL DEVICES) ================= */
-@media screen and (max-width: 600px) {
-  .footer-content {
+.footer__credit {
+  width: var(--container-width-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 1.25rem;
+  color: var(--footer-text-muted);
+  background: transparent;
+  font-family: "Inter", sans-serif;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .footer__content {
     flex-direction: column;
     align-items: center;
-  }
-
-  .footer-socials {
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  footer p {
-    font-size: 1rem;
     text-align: center;
+    padding: 1.25rem 1rem 0.5rem;
+    gap: 1rem;
+  }
+
+  .footer__contact {
+    font-size: 0.8rem;
+  }
+
+  .footer__socials {
+    gap: 0.5rem;
+  }
+
+  .footer__credit {
+    padding: 0 1rem 1rem;
   }
 }

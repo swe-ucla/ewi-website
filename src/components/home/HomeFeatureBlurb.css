@@ -1,0 +1,129 @@
+.home-what-is-ewi__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+/* ratio-box: square container — sets height from width via padding-top */
+.home-feature-blurb__ratio {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+}
+
+/* flip card: absolutely fills the ratio box */
+.home-feature-blurb {
+  position: absolute;
+  inset: 0;
+  perspective: 800px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.home-feature-blurb:focus {
+  outline: none;
+}
+
+.home-feature-blurb:focus-visible .home-feature-blurb__inner {
+  outline: 2px solid #000;
+  outline-offset: 3px;
+}
+
+/* rotating inner */
+.home-feature-blurb__inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.55s ease;
+}
+
+.home-feature-blurb:hover .home-feature-blurb__inner,
+.home-feature-blurb--flipped .home-feature-blurb__inner {
+  transform: rotateY(180deg);
+}
+
+/* shared face styles */
+.home-feature-blurb__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+
+/* front */
+.home-feature-blurb__front {
+  background: #e3e3e3;
+}
+
+.home-feature-blurb__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.home-feature-blurb__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.home-feature-blurb__front-title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: clamp(0.55rem, 1.8vw, 0.9rem);
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  text-align: center;
+}
+
+/* back */
+.home-feature-blurb__back {
+  background: #d8d8d8;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.home-feature-blurb__back-title {
+  font-size: clamp(0.6rem, 2vw, 1rem);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  text-align: center;
+}
+
+.home-feature-blurb__text {
+  font-size: clamp(0.5rem, 1.6vw, 0.85rem);
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .home-what-is-ewi__grid {
+    grid-template-columns: 1fr;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-feature-blurb__inner {
+    transition: none;
+  }
+}

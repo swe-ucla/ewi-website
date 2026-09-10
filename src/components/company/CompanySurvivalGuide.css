@@ -1,0 +1,55 @@
+.company-survival-section {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.company-survival-guide {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 0.5rem;
+}
+
+.company-survival-title{
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.company-registration-document {
+  width: 100%;
+  max-width: 1200px;
+  margin: 3rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 1024px) {
+  .company-survival-title {
+    font-size: 2.5rem;
+  }
+
+  .company-registration-document {
+    margin: 2rem auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .company-survival-guide {
+    padding: 3rem 1rem 2rem;
+  }
+
+  .company-survival-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .company-registration-document {
+    margin: 1.5rem auto;
+  }
+}

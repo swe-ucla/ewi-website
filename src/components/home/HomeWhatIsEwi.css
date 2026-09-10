@@ -1,0 +1,9 @@
+/* Grid layout lives in HomeFeatureBlurb.css */
+
+.home-what-is-ewi__intro {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #333;
+  max-width: 32rem;
+  margin: 0 auto 1rem;
+}

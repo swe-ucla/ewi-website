@@ -1,0 +1,49 @@
+.home-event-item {
+  width: 100%;
+  padding: 1.1rem 1.25rem;
+  text-align: left;
+}
+
+.home-event-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.home-event-item__number {
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-event-item__rsvp {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: underline;
+}
+
+.home-event-item__rsvp:hover {
+  opacity: 0.85;
+}
+
+.home-event-item__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+  line-height: 1.3;
+}
+
+.home-event-item__datetime {
+  font-size: 0.9rem;
+  color: #444;
+  margin: 0 0 0.4rem;
+}
+
+.home-event-item__description {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0;
+  color: #222;
+}
