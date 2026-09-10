@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Navbar.css";
+import "./navbar.css";
 import LOGO from "../../assets/ewilogo.svg";
 import { Link } from "react-router-dom";
 
