@@ -4,6 +4,8 @@ import { db } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import RegistrationTimeline, { getCurrentStep, STEPS } from "../components/registrationTimeline/registrationTimeline";
 import registrationTimelineDates from "../data/registrationDates";
+import { sanitizeCloudinaryId, uploadToCloudinary } from "../utils/cloudinary";
+import companiesData from "../data/companies.json";
 import "./StudentRegistration.css";
 
 // maps the timeline's current step to one of the 3 registration statuses
@@ -16,22 +18,10 @@ const getRegistrationStatus = (dates) => {
     return STEPS[currentStep];
 };
 
-const companiesList = [
-    { id: 1, name: "City of Los Angeles Bureau of Engineering" },
-    { id: 2, name: "Crane" },
-    { id: 3, name: "GHD" },
-    { id: 4, name: "Gilead Sciences" },
-    { id: 5, name: "Parker Aerospace" },
-    { id: 6, name: "PPG Industries" },
-    { id: 7, name: "Qvest" },
-    { id: 8, name: "Rehrig Pacific" },
-    { id: 9, name: "SoCalGas" },
-    { id: 10, name: "TP-Link Systems Inc." },
-    { id: 11, name: "TriMas Aerospace" },
-    { id: 12, name: "Niagara Bottling" },
-    { id: 13, name: "Lockheed Martin" },
-    { id: 14, name: "Accenture" },
-]
+const companiesList = companiesData.companies.map((name, index) => ({
+    id: index + 1,
+    name,
+}));
 
 const studentMajors = [
     { id: 1, name: "Aerospace Engineering" },
@@ -163,13 +153,6 @@ const StudentRegistrationForm = () => {
         return isChecked ? "" : `You must agree to ${label}`;
     }
 
-    // cloudinary upload
-    const uploadToCloudinary = async (file) => {
-        console.log("Will upload to Cloudinary (placeholder): ", file.name);
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return `https://placeholder-url.com/${file.name}`;
-    }
-
     // handle duplicate
     const checkDuplicate = async (email) => {
         const docRef = doc(db, "Registrations", email);
@@ -182,11 +165,19 @@ const StudentRegistrationForm = () => {
         let resumeUrl = null;
         let membershipProofUrl = null;
 
+        const fileId = sanitizeCloudinaryId(formData.email);
+
         if (formData.resume) {
-            resumeUrl = await uploadToCloudinary(formData.resume);
+            resumeUrl = await uploadToCloudinary(formData.resume, {
+                folder: "ewi-2026/resumes",
+                publicId: fileId,
+            });
         }
         if (formData.membershipProof) {
-            membershipProofUrl = await uploadToCloudinary(formData.membershipProof);
+            membershipProofUrl = await uploadToCloudinary(formData.membershipProof, {
+                folder: "ewi-2026/membership-proof",
+                publicId: fileId,
+            });
         }
 
         const dataToSave = {
