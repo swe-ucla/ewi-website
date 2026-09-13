@@ -5,21 +5,35 @@ admin.initializeApp();
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
 
-// Helper to upload base64 file to Storage and return a signed URL
+const ALLOWED_MIME_TYPES = {
+    "25504446": "application/pdf",  // %PDF
+    "ffd8ffe0": "image/jpeg",
+    "ffd8ffe1": "image/jpeg",
+    "ffd8ffdb": "image/jpeg",
+    "89504e47": "image/png",
+};
+
+// Uploads file to Storage and returns only the storage path — no URL stored
 async function uploadFileBase64(base64, filename) {
     const buffer = Buffer.from(base64, "base64");
+
+    // Validate file type by checking magic bytes
+    const magic = buffer.subarray(0, 4).toString("hex").toLowerCase();
+    if (!ALLOWED_MIME_TYPES[magic]) {
+        throw new Error("Invalid file type. Only PDF and images are allowed.");
+    }
+    const contentType = ALLOWED_MIME_TYPES[magic];
+
     const dest = `student-uploads/${Date.now()}_${filename.replace(/[^a-zA-Z0-9.\-_]/g, "_")}`;
     const file = bucket.file(dest);
-    await file.save(buffer, { resumable: false, contentType: "application/octet-stream" });
-    // Create a signed URL valid for 7 days
-    const [url] = await file.getSignedUrl({ action: "read", expires: Date.now() + 7 * 24 * 60 * 60 * 1000 });
-    return { storagePath: dest, url };
+    await file.save(buffer, { resumable: false, contentType });
+    return { storagePath: dest };
 }
 
 exports.registerStudent = functions.https.onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
     if (req.method === "OPTIONS") {
         return res.status(204).send("");
     }
@@ -48,12 +62,9 @@ exports.registerStudent = functions.https.onRequest(async (req, res) => {
         const studentsRef = db.collection("studentRegistrations");
         const existingQuery = await studentsRef.where("email", "==", email).limit(1).get();
         if (!existingQuery.empty && !overwrite) {
-            const doc = existingQuery.docs[0];
             return res.status(409).json({
                 error: "duplicate",
                 message: "A registration with this email already exists.",
-                id: doc.id,
-                data: doc.data(),
             });
         }
 
@@ -72,7 +83,6 @@ exports.registerStudent = functions.https.onRequest(async (req, res) => {
             preferences: preferences || [],
             waitlist: !!waitlist,
             storagePath: uploadMeta ? uploadMeta.storagePath : null,
-            fileUrl: uploadMeta ? uploadMeta.url : null,
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
         };
 
@@ -85,18 +95,45 @@ exports.registerStudent = functions.https.onRequest(async (req, res) => {
             docRef = await studentsRef.add(payload);
         }
 
-        const savedDoc = await docRef.get();
-        return res.status(200).json({ id: docRef.id, data: savedDoc.data() });
+        return res.status(200).json({ id: docRef.id });
     } catch (err) {
         console.error("registerStudent error:", err);
         return res.status(500).json({ error: "internal", message: err.message });
     }
 });
 
+// Generates a fresh 1-hour signed URL for a resume — admin only
+exports.getResumeUrl = functions.https.onRequest(async (req, res) => {
+    res.set("Access-Control-Allow-Origin", "*");
+    res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    if (req.method === "OPTIONS") return res.status(204).send("");
+    if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+    const token = (req.headers.authorization || "").split("Bearer ")[1];
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+    try {
+        const decoded = await admin.auth().verifyIdToken(token);
+        const adminDoc = await db.collection("admins").doc(decoded.email).get();
+        if (!adminDoc.exists) return res.status(403).json({ error: "Forbidden" });
+    } catch {
+        return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const { storagePath } = req.body || {};
+    if (!storagePath) return res.status(400).json({ error: "Missing storagePath" });
+
+    try {
+        const file = bucket.file(storagePath);
+        const [url] = await file.getSignedUrl({ action: "read", expires: Date.now() + 60 * 60 * 1000 });
+        return res.status(200).json({ url });
+    } catch (err) {
+        console.error("getResumeUrl error:", err);
+        return res.status(500).json({ error: "internal", message: err.message });
+    }
+});
+
 // ─── Table Matching Algorithm ────────────────────────────────────────────────
-// TODO: protect runMatchingAlgorithm with Firebase Auth — only verified admin
-// users should be able to call this endpoint. Add token verification once the
-// admin portal and Firebase Auth are set up.
 
 function normalizeMajor(major) {
     if (!major) return major;
@@ -362,9 +399,20 @@ function matchToFirstAvail(students, companies, matches, infoDict, noPreferences
 exports.runMatchingAlgorithm = functions.https.onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
     if (req.method === "OPTIONS") return res.status(204).send("");
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+
+    // Verify Firebase Auth token and confirm user is in admins collection
+    const token = (req.headers.authorization || "").split("Bearer ")[1];
+    if (!token) return res.status(401).json({ error: "Unauthorized" });
+    try {
+        const decoded = await admin.auth().verifyIdToken(token);
+        const adminDoc = await db.collection("admins").doc(decoded.email).get();
+        if (!adminDoc.exists) return res.status(403).json({ error: "Forbidden" });
+    } catch {
+        return res.status(403).json({ error: "Forbidden" });
+    }
 
     try {
         let { students, companies, reps, manualMatches } = req.body || {};

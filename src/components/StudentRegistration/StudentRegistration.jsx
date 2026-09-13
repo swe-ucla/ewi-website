@@ -23,7 +23,6 @@ const StudentRegistration = () => {
     const [preferences, setPreferences] = useState(Array(10).fill(""));
     const [file, setFile] = useState(null);
     const [status, setStatus] = useState(null);
-    const [duplicateData, setDuplicateData] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,7 +52,6 @@ const StudentRegistration = () => {
 
             const data = await res.json();
             if (res.status === 409 && data.error === "duplicate") {
-                setDuplicateData(data);
                 setStatus("duplicate");
             } else if (!res.ok) {
                 setStatus("error");
@@ -143,10 +141,9 @@ const StudentRegistration = () => {
                 </div>
             </form>
 
-            {status === "duplicate" && duplicateData && (
+            {status === "duplicate" && (
                 <div className="duplicate-warning">
                     <p>A registration with this email already exists.</p>
-                    <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(duplicateData.data, null, 2)}</pre>
                     <button onClick={() => submit(true)} className="btn">Overwrite</button>
                     <button onClick={() => setStatus(null)} className="btn">Cancel</button>
                 </div>

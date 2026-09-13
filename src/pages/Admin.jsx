@@ -22,6 +22,9 @@ const Admin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [error, setError] = useState(null);
+  const [matchingResults, setMatchingResults] = useState(null);
+  const [matchingLoading, setMatchingLoading] = useState(false);
+  const [matchingError, setMatchingError] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
@@ -42,7 +45,7 @@ const Admin = () => {
     const fetchData = async () => {
       setDataLoading(true);
       try {
-        const snapshot = await getDocs(collection(db, "Registrations"));
+        const snapshot = await getDocs(collection(db, "studentRegistrations"));
         setRegistrations(snapshot.docs.map((d) => d.data()));
       } catch (err) {
         setError("Failed to load registrations. Check Firestore rules.");
@@ -63,6 +66,45 @@ const Admin = () => {
   };
 
   const handleSignOut = () => signOut(auth);
+
+  const handleRunMatching = async () => {
+    setMatchingLoading(true);
+    setMatchingError(null);
+    setMatchingResults(null);
+    try {
+      const students = registrations.map((r) => ({
+        fullName: r.fullName,
+        major: r.major,
+        year: r.year,
+        role: r.role,
+        isInternational: r.isInternational,
+        preferences: r.preferences || [],
+      }));
+
+      const companies = COMPANIES.map((name) => ({
+        name,
+        rolesHired: "",
+        majorsHired: "",
+        requiresCitizenship: "",
+      }));
+
+      const idToken = await user.getIdToken();
+      const res = await fetch(`${process.env.REACT_APP_FIREBASE_FUNCTIONS_URL}/runMatchingAlgorithm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
+        body: JSON.stringify({ students, companies, reps: [], manualMatches: {} }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Matching failed");
+      setMatchingResults(data.matches);
+    } catch (err) {
+      console.error("Matching error:", err);
+      setMatchingError(err.message);
+    } finally {
+      setMatchingLoading(false);
+    }
+  };
 
   const handleExport = (e) => {
     const val = e.target.value;
@@ -155,13 +197,13 @@ const Admin = () => {
       {error && <p className="admin-error">{error}</p>}
 
       <div className="admin-tabs">
-        {["companies", "majors", "years"].map((tab) => (
+        {["companies", "majors", "years", "matching"].map((tab) => (
           <button
             key={tab}
             className={`filter-btn ${activeTab === tab ? "active" : ""}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === "companies" ? "Companies" : tab === "majors" ? "Majors" : "Years"}
+            {tab === "companies" ? "Companies" : tab === "majors" ? "Majors" : tab === "years" ? "Years" : "Run Matching"}
           </button>
         ))}
       </div>
@@ -221,6 +263,42 @@ const Admin = () => {
                 }, {})
               ).map(([name, value]) => ({ name, value }))}
             />
+          )}
+
+          {activeTab === "matching" && (
+            <div className="admin-matching">
+              <p className="admin-matching-desc">Runs the table sorting algorithm against all current student registrations.</p>
+              <button
+                className="admin-signin-btn"
+                onClick={handleRunMatching}
+                disabled={matchingLoading}
+              >
+                {matchingLoading ? "Running..." : "Run Matching Algorithm"}
+              </button>
+              {matchingError && <p className="admin-error" style={{ marginTop: "1rem" }}>{matchingError}</p>}
+              {matchingResults && (
+                <div className="admin-table-wrapper" style={{ marginTop: "1.5rem" }}>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Company</th>
+                        <th># Students</th>
+                        <th>Students</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(matchingResults).map(([company, data]) => (
+                        <tr key={company}>
+                          <td>{company}</td>
+                          <td>{data.students.length}</td>
+                          <td>{data.students.join(", ") || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           )}
 
           <div className="admin-search-row">
