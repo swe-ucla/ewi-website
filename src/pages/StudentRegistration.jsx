@@ -134,18 +134,25 @@ const StudentRegistrationForm = () => {
 
     const validateFile = (label, file) => (file ? "" : `${label} is required`);
 
-    const validateNumeric = (label, value) => {
+    const validateUID = (label, value) => {
         if (!value || !value.toString().trim()) return `${label} is required`;
-        return /^\d+$/.test(value.toString().trim()) ? "" : `${label} must contain numbers only`;
+        const trimmed = value.toString().trim();
+        if (!/^\d+$/.test(trimmed)) return `${label} must contain numbers only`;
+        if (trimmed.length !== 9) return `${label} must be 9 digits long`;
+        return "";
     }
 
     const validateCompanyPreferences = (preferences) => {
         const filled = preferences.filter((p) => p !== "");
-  
+
         if (filled.length < preferences.length) {
             return "Please rank all 10 company preferences";
         }
-        
+
+        if (new Set(filled).size !== filled.length) {
+            return "Please select 10 different companies — no repeats allowed";
+        }
+
         return "";
     }
 
@@ -221,7 +228,7 @@ const StudentRegistrationForm = () => {
             pronouns: validateField("Pronouns", formData.pronouns),
             otherPronouns: formData.pronouns === "other" ? validateField("Pronouns", formData.otherPronouns) : "",
             fullName: validateField("Full name", formData.fullName),
-            uid: validateNumeric("UID", formData.uid),
+            uid: validateUID("UID", formData.uid),
             year: validateField("Year", formData.year),
             transfer: validateField("Transfer status", formData.transfer),
             major: validateField("Major", formData.major),
