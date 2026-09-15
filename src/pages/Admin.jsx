@@ -174,8 +174,8 @@ const Admin = () => {
       ) : (
         <>
           {activeTab === "companies" && (
-            <div className="admin-table-wrapper">
-              <table className="admin-table">
+            <div className="admin-table-wrapper companies-table-wrapper">
+              <table className="admin-table companies-table">
                 <thead>
                   <tr>
                     <th>company</th>
@@ -187,12 +187,12 @@ const Admin = () => {
                 <tbody>
                   {COMPANIES.map((company) => (
                     <tr key={company}>
-                      <td>{company}</td>
-                      <td>—</td>
-                      <td>
+                      <td className="company-name-cell">{company}</td>
+                      <td data-label="capacity">—</td>
+                      <td data-label="# of first choices">
                         {registrations.filter((r) => r.companyPreferences?.[0] === company).length}
                       </td>
-                      <td>
+                      <td className="remove-cell">
                         <button className="remove-btn" onClick={() => setConfirmRemove(company)}>remove</button>
                       </td>
                     </tr>
