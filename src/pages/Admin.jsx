@@ -5,6 +5,7 @@ import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import PieChartView from "../components/admin/PieChartView";
 import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV } from "../components/admin/adminExports";
+import { exportResumesByMajorZip, exportAllResumesZip } from "../utils/resumeExports";
 import companiesData from "../data/companies.json";
 
 const provider = new GoogleAuthProvider();
@@ -69,6 +70,8 @@ const Admin = () => {
     if (val === "meals") exportMealCSV(registrations);
     else if (val === "companies") exportCompanyPrefsCSV(registrations);
     else if (val === "all") exportAllCSV(registrations);
+    else if (val === "resumes") exportAllResumesZip();
+    else if (val === "resumes-by-major") exportResumesByMajorZip();
     e.target.value = "";
   };
 
@@ -246,6 +249,8 @@ const Admin = () => {
               <option value="meals">Export Meals</option>
               <option value="companies">Export Company Prefs</option>
               <option value="all">Export All</option>
+              <option value="resumes">Export Resumes</option>
+              <option value="resumes-by-major">Export Resumes by Major</option>
             </select>
           </div>
           <div className="admin-table-wrapper">
