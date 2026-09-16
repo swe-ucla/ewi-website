@@ -36,7 +36,8 @@
 .filter-btn,
 .remove-btn,
 .modal-cancel,
-.modal-delete {
+.modal-delete,
+.add-company-btn {
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -151,6 +152,38 @@
 
 .admin-search-input { flex: 1; min-width: 160px; }
 .admin-export-select { margin-left: auto; }
+
+/* ADD COMPANY */
+.admin-add-company-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.admin-add-company-row .admin-search-input { flex: 1; min-width: 160px; }
+.capacity-input { width: 140px; flex: none; }
+
+.add-company-btn {
+  background: black;
+  color: white;
+  border: none;
+  padding: 0.45rem 1rem;
+  white-space: nowrap;
+}
+.add-company-btn:hover { opacity: 0.8; }
+
+/* CAPACITY CELL */
+.capacity-display { cursor: pointer; }
+.capacity-display:hover { opacity: 0.7; }
+td[data-label="capacity"] input.capacity-input {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  outline: none;
+}
 
 /* MODAL */
 .modal-overlay {

@@ -1,11 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, runTransaction } from "firebase/firestore";
 import RegistrationTimeline, { getCurrentStep, STEPS } from "../components/registrationTimeline/registrationTimeline";
 import registrationTimelineDates from "../data/registrationDates";
 import { sanitizeCloudinaryId, uploadToCloudinary } from "../utils/cloudinary";
-import companiesData from "../data/companies.json";
 import "./StudentRegistration.css";
 
 // maps the timeline's current step to one of the 3 registration statuses
@@ -18,10 +17,7 @@ const getRegistrationStatus = (dates) => {
     return STEPS[currentStep];
 };
 
-const companiesList = companiesData.companies.map((name, index) => ({
-    id: index + 1,
-    name,
-}));
+const companyRankLabels = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"];
 
 const studentMajors = [
     { id: 1, name: "Aerospace Engineering" },
@@ -85,10 +81,33 @@ const StudentRegistrationForm = () => {
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
+    const [companies, setCompanies] = useState([]);
     const navigate = useNavigate();
 
     const resumeInputRef = useRef(null);
     const membershipProofInputRef = useRef(null);
+
+    const fetchCompanies = async () => {
+        const snapshot = await getDocs(collection(db, "Companies"));
+        setCompanies(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+    };
+
+    useEffect(() => {
+        fetchCompanies().catch((err) => console.error("Failed to load companies:", err));
+    }, []);
+
+    const renderCompanyOptions = (rankIndex) => {
+        const currentValue = formData.companyPreferences[rankIndex];
+        return companies.map((company) => {
+            const isFull = company.capacity != null && company.firstChoiceCount >= company.capacity;
+            const disabled = isFull && company.name !== currentValue;
+            return (
+                <option key={company.id} value={company.name} disabled={disabled}>
+                    {company.name}{isFull ? " (full)" : ""}
+                </option>
+            );
+        });
+    };
 
     // handling form change
     const handleChange = (e) => {
@@ -194,10 +213,60 @@ const StudentRegistrationForm = () => {
             resumeFilename: formData.resume ? formData.resume.name : null,
             membershipProof: membershipProofUrl,
         };
-        await setDoc(doc(db, "Registrations", formData.email), dataToSave);
+
+        const registrationRef = doc(db, "Registrations", formData.email);
+        const newFirstChoiceName = formData.companyPreferences[0];
+        const newCompanyRef = newFirstChoiceName ? doc(db, "Companies", newFirstChoiceName) : null;
+
+        await runTransaction(db, async (tx) => {
+            const registrationSnap = await tx.get(registrationRef);
+            const oldFirstChoiceName = registrationSnap.exists()
+                ? registrationSnap.data().companyPreferences?.[0]
+                : null;
+            const firstChoiceChanged = oldFirstChoiceName !== newFirstChoiceName;
+
+            const oldCompanyRef = firstChoiceChanged && oldFirstChoiceName
+                ? doc(db, "Companies", oldFirstChoiceName)
+                : null;
+
+            const newCompanySnap = firstChoiceChanged && newCompanyRef ? await tx.get(newCompanyRef) : null;
+            const oldCompanySnap = oldCompanyRef ? await tx.get(oldCompanyRef) : null;
+
+            if (newCompanySnap && newCompanySnap.exists()) {
+                const { capacity, firstChoiceCount } = newCompanySnap.data();
+                if (capacity != null && firstChoiceCount >= capacity) {
+                    throw new Error("CAPACITY_FULL");
+                }
+            }
+
+            tx.set(registrationRef, dataToSave);
+
+            if (newCompanySnap && newCompanySnap.exists()) {
+                tx.update(newCompanyRef, { firstChoiceCount: newCompanySnap.data().firstChoiceCount + 1 });
+            }
+            if (oldCompanySnap && oldCompanySnap.exists()) {
+                const current = oldCompanySnap.data().firstChoiceCount || 0;
+                tx.update(oldCompanyRef, { firstChoiceCount: Math.max(0, current - 1) });
+            }
+        });
 
         console.log("Registration submitted successfully");
         navigate("/student-registration/success");
+    };
+
+    // shared handling for submitRegistration failures, including a full first-choice company
+    const handleRegistrationError = async (error) => {
+        console.error("Registration submission failed: ", error);
+        if (error.message === "CAPACITY_FULL") {
+            alert("That company just reached capacity for first choices — please pick a different first choice.");
+            try {
+                await fetchCompanies();
+            } catch (refreshErr) {
+                console.error("Failed to refresh companies:", refreshErr);
+            }
+        } else {
+            alert("There was an error submitting your registration. Please try again.");
+        }
     };
 
     // handle overwrite of previous submission
@@ -207,8 +276,7 @@ const StudentRegistrationForm = () => {
         try {
             await submitRegistration();
         } catch (error) {
-            console.error("Registration submission failed: ", error);
-            alert("There was an error submitting your registration. Please try again.");
+            await handleRegistrationError(error);
         } finally {
             setIsSubmitting(false);
         }
@@ -262,8 +330,7 @@ const StudentRegistrationForm = () => {
 
             await submitRegistration();
         } catch (error) {
-            console.error("Registration submission failed: ", error);
-            alert("There was an error submitting your registration. Please try again.");
+            await handleRegistrationError(error);
         } finally {
             setIsSubmitting(false);
         }
@@ -512,96 +579,19 @@ const StudentRegistrationForm = () => {
                     {errors.companyPreferences && <span className="error">{errors.companyPreferences}</span>}
 
                     <div className="company-preferences-grid">
-                        <div className="company-choice">
-                            <label className="student-reg-labels">1st choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[0]} onChange={(e) => handleCompanyRankChange(0, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">2nd choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[1]} onChange={(e) => handleCompanyRankChange(1, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">3rd choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[2]} onChange={(e) => handleCompanyRankChange(2, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">4th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[3]} onChange={(e) => handleCompanyRankChange(3, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">5th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[4]} onChange={(e) => handleCompanyRankChange(4, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">6th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[5]} onChange={(e) => handleCompanyRankChange(5, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">7th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[6]} onChange={(e) => handleCompanyRankChange(6, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">8th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[7]} onChange={(e) => handleCompanyRankChange(7, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">9th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[8]} onChange={(e) => handleCompanyRankChange(8, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="company-choice">
-                            <label className="student-reg-labels">10th choice*</label>
-                            <select className="select-box" value={formData.companyPreferences[9]} onChange={(e) => handleCompanyRankChange(9, e.target.value)}>
-                                <option value="" disabled  hidden>Select one</option>
-                                {companiesList.map((company) => (
-                                    <option key={company.id} value={company.name}>{company.name}</option>
-                                ))}
-                            </select>
-                        </div>
+                        {companyRankLabels.map((label, rankIndex) => (
+                            <div className="company-choice" key={rankIndex}>
+                                <label className="student-reg-labels">{label} choice*</label>
+                                <select
+                                    className="select-box"
+                                    value={formData.companyPreferences[rankIndex]}
+                                    onChange={(e) => handleCompanyRankChange(rankIndex, e.target.value)}
+                                >
+                                    <option value="" disabled hidden>Select one</option>
+                                    {renderCompanyOptions(rankIndex)}
+                                </select>
+                            </div>
+                        ))}
                     </div>
                 </fieldset>
 
