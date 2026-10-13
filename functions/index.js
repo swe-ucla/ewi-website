@@ -59,7 +59,7 @@ exports.registerStudent = functions.https.onRequest(async (req, res) => {
 
         if (!email) return res.status(400).json({ error: "Missing required field: email" });
 
-        const studentsRef = db.collection("studentRegistrations");
+        const studentsRef = db.collection("Registrations");
         const existingQuery = await studentsRef.where("email", "==", email).limit(1).get();
         if (!existingQuery.empty && !overwrite) {
             return res.status(409).json({
@@ -135,14 +135,20 @@ exports.getResumeUrl = functions.https.onRequest(async (req, res) => {
 
 // ─── Table Matching Algorithm ────────────────────────────────────────────────
 
-function normalizeMajor(major) {
-    if (!major) return major;
+// A major can fall into several buckets (e.g. "Computational Biology" → CS and Bioengineering)
+function majorBuckets(major) {
+    if (!major) return [];
     const m = major.toLowerCase();
-    if (["dse", "data", "computing", "computation", "computer", "ling", "cog"].some(k => m.includes(k))) return "Computer Science";
-    if (m.includes("undeclared")) return "Undeclared";
-    if (m.includes("math")) return "Mathematics";
-    if (m.includes("bio")) return "Bioengineering";
-    return major;
+    const buckets = [];
+    if (["dse", "data", "computing", "computation", "computer", "ling", "cog"].some(k => m.includes(k))) buckets.push("Computer Science");
+    if (m.includes("undeclared")) buckets.push("Undeclared");
+    if (m.includes("math")) buckets.push("Mathematics");
+    if (m.includes("bio")) buckets.push("Bioengineering");
+    return buckets.length ? buckets : [major];
+}
+
+function splitMajors(majorsHired) {
+    return (majorsHired || "").split(", ").map(m => m.trim());
 }
 
 const COMPANY_NAME_MAP = {
@@ -159,24 +165,24 @@ function normalizeCompanyName(name) {
     return COMPANY_NAME_MAP[name.trim().toLowerCase()] || name.trim();
 }
 
-// Finds common substrings between s1 and s2 (port of Python SequenceMatcher logic)
+// Port of Python SequenceMatcher.find_longest_match loop; removes every occurrence like str.replace
 function findSimilarStrings(s1, s2, minLength = 2) {
     const common = [];
     let a = s1, b = s2;
     while (true) {
-        let bestLen = 0, bestI = 0, bestJ = 0;
-        for (let i = 0; i <= a.length - minLength; i++) {
-            for (let j = 0; j <= b.length - minLength; j++) {
+        let bestLen = 0, bestI = 0;
+        for (let i = 0; i < a.length; i++) {
+            for (let j = 0; j < b.length; j++) {
                 let len = 0;
                 while (i + len < a.length && j + len < b.length && a[i + len] === b[j + len]) len++;
-                if (len > bestLen) { bestLen = len; bestI = i; bestJ = j; }
+                if (len > bestLen) { bestLen = len; bestI = i; }
             }
         }
         if (bestLen < minLength) break;
         const substr = a.slice(bestI, bestI + bestLen);
         common.push(substr);
-        a = a.slice(0, bestI) + a.slice(bestI + bestLen);
-        b = b.slice(0, bestJ) + b.slice(bestJ + bestLen);
+        a = a.split(substr).join("");
+        b = b.split(substr).join("");
     }
     return common;
 }
@@ -187,13 +193,14 @@ function majorMatch(students, companies) {
 
     const studentsByMajor = {};
     for (const student of students) {
-        const major = normalizeMajor(student.major) || "Unknown";
-        if (!studentsByMajor[major]) studentsByMajor[major] = [];
-        studentsByMajor[major].push(student.fullName);
+        for (const major of majorBuckets(student.major)) {
+            if (!studentsByMajor[major]) studentsByMajor[major] = [];
+            studentsByMajor[major].push(student.fullName);
+        }
     }
 
     for (const company of companies) {
-        const companyMajors = (company.majorsHired || "").split(",").map(m => m.trim());
+        const companyMajors = splitMajors(company.majorsHired);
         for (const major of companyMajors) {
             if (studentsByMajor[major]) infoDict[company.name].push(...studentsByMajor[major]);
         }
@@ -217,20 +224,20 @@ function intlMatch(students, companies, infoDict) {
 }
 
 function roleMatch(students, companies, infoDict, manuallyAdded) {
-    const studentMap = Object.fromEntries(students.map(s => [s.fullName, s]));
 
     for (const company of companies) {
         if (company.name === "The Boeing Company") continue;
         const companyRole = (company.rolesHired || "")
             .toLowerCase()
-            .replace("summer internship", "internship")
-            .replace("spring/ongoing interns", "internship");
+            .replaceAll("summer internship", "internship")
+            .replaceAll("spring/ongoing interns", "internship");
 
         for (const student of students) {
             const name = student.fullName;
             if (manuallyAdded.has(name)) continue;
 
-            const studentRole = (student.role || "").toLowerCase().replace("full time", "full-time");
+            const lowerRole = (student.role || "").toLowerCase();
+            const studentRole = lowerRole === "full time" ? "full-time" : lowerRole;
             const similar = findSimilarStrings(companyRole, studentRole);
 
             if (!similar.includes(studentRole) && infoDict[company.name].includes(name)) {
@@ -242,11 +249,10 @@ function roleMatch(students, companies, infoDict, manuallyAdded) {
                 if (!companyRole.includes("full-time") && infoDict[company.name].includes(name)) {
                     infoDict[company.name] = infoDict[company.name].filter(n => n !== name);
                 } else if (studentRole === "internship" && !infoDict[company.name].includes(name)) {
-                    const normalizedMajor = normalizeMajor(student.major) || "";
-                    const companyMajors = (company.majorsHired || "").split(",").map(m => m.trim());
-                    const isIntl = student.isInternational === true || student.isInternational === "Yes";
+                    const intl = String(student.isInternational || "").toLowerCase();
                     const sponsorsIntl = (company.requiresCitizenship || "").toLowerCase().includes("not require citizenship or a green card");
-                    if (companyMajors.includes(normalizedMajor) && (!isIntl || sponsorsIntl)) {
+                    const takesMajor = !!student.major && (company.majorsHired || "").includes(student.major);
+                    if (takesMajor && (intl === "no" || (intl === "yes" && sponsorsIntl))) {
                         infoDict[company.name].push(name);
                     }
                 }
@@ -256,7 +262,38 @@ function roleMatch(students, companies, infoDict, manuallyAdded) {
     return infoDict;
 }
 
-function fcfs(students, companies, infoDict, priorityLists, manuallyAdded) {
+const DEFAULT_SETTINGS = {
+    seatsPerTable: 8,
+    maxPerMajor: 4,
+    largeTables: {},
+    protectedPercent: 40,
+    canBumpPercent: 60,
+};
+
+function tableLimits(settings, companyName) {
+    return settings.largeTables[companyName] || { seats: settings.seatsPerTable, maxPerMajor: settings.maxPerMajor };
+}
+
+function isWholeNumber(n, min, max) {
+    return Number.isInteger(n) && n >= min && n <= max;
+}
+
+// Returns merged settings, or null if anything is out of range
+function parseSettings(input) {
+    const s = { ...DEFAULT_SETTINGS, ...(input || {}) };
+    if (!isWholeNumber(s.seatsPerTable, 1, 100)) return null;
+    if (!isWholeNumber(s.maxPerMajor, 1, s.seatsPerTable)) return null;
+    if (!isWholeNumber(s.protectedPercent, 0, 100) || !isWholeNumber(s.canBumpPercent, 0, 100)) return null;
+    if (!s.largeTables || typeof s.largeTables !== "object" || Array.isArray(s.largeTables)) return null;
+    const largeTables = {};
+    for (const [name, t] of Object.entries(s.largeTables)) {
+        if (!t || !isWholeNumber(t.seats, 1, 100) || !isWholeNumber(t.maxPerMajor, 1, t.seats)) return null;
+        largeTables[normalizeCompanyName(name)] = { seats: t.seats, maxPerMajor: t.maxPerMajor };
+    }
+    return { ...s, largeTables };
+}
+
+function fcfs(students, companies, infoDict, priorityLists, manuallyAdded, settings) {
     const matches = {};
     const matchedStudents = new Set();
     const noPreferences = [];
@@ -264,40 +301,40 @@ function fcfs(students, companies, infoDict, priorityLists, manuallyAdded) {
 
     for (const company of companies) {
         matches[company.name] = [];
-        const companyMajors = (company.majorsHired || "").split(",").map(m => m.trim());
-        majorCounts[company.name] = Object.fromEntries(companyMajors.map(m => [m, 0]));
+        majorCounts[company.name] = Object.fromEntries(splitMajors(company.majorsHired).map(m => [m, 0]));
     }
 
+    const manuallyAddedSet = new Set();
     for (const [companyName, studentList] of Object.entries(manuallyAdded)) {
         for (const name of studentList) {
             matches[companyName] = matches[companyName] || [];
             matches[companyName].push(name);
             matchedStudents.add(name);
+            manuallyAddedSet.add(name);
         }
     }
 
     for (const student of students) {
-        if (!manuallyAdded[student.fullName]) noPreferences.push(student.fullName);
+        if (!manuallyAddedSet.has(student.fullName)) noPreferences.push(student.fullName);
     }
 
     for (const student of students) {
         const name = student.fullName;
-        if (!priorityLists[name] || manuallyAdded[name]) continue;
+        if (!priorityLists[name] || manuallyAddedSet.has(name)) continue;
 
         for (const companyName of priorityLists[name]) {
             const company = companies.find(c => c.name === companyName);
             if (!company || !infoDict[companyName] || !infoDict[companyName].includes(name)) continue;
 
-            const normalizedMajor = normalizeMajor(student.major) || student.major;
-            const currentMajorCount = (majorCounts[companyName] || {})[normalizedMajor] || 0;
-            const isPPG = companyName === "PPG Industries";
-            const totalCap = isPPG ? 15 : 7;
-            const majorCap = isPPG ? 8 : 4;
+            const major = student.major;
+            const currentMajorCount = (majorCounts[companyName] || {})[major] || 0;
+            const limits = tableLimits(settings, companyName);
 
-            if (matches[companyName].length <= totalCap && (currentMajorCount + 1) <= majorCap) {
+            // Original used `<= 7` for an 8-seat table, so "fewer than seats" keeps the same behavior
+            if (matches[companyName].length < limits.seats && currentMajorCount < limits.maxPerMajor) {
                 matches[companyName].push(name);
                 matchedStudents.add(name);
-                if (majorCounts[companyName]) majorCounts[companyName][normalizedMajor] = currentMajorCount + 1;
+                if (majorCounts[companyName]) majorCounts[companyName][major] = currentMajorCount + 1;
                 const idx = noPreferences.indexOf(name);
                 if (idx !== -1) noPreferences.splice(idx, 1);
                 break;
@@ -308,13 +345,14 @@ function fcfs(students, companies, infoDict, priorityLists, manuallyAdded) {
     return { matches, matchedStudents, noPreferences, majorCounts };
 }
 
-function moreMatching(students, matches, infoDict, priorityLists, noPreferences, manuallyAdded) {
+function moreMatching(students, matches, infoDict, priorityLists, noPreferences, manuallyAddedMatches, settings) {
+    const manuallyAdded = new Set(Object.values(manuallyAddedMatches).flat());
     const SKIP_COMPANIES = new Set(["Lightship RV", "Takeda Pharmaceutical Company Ltd."]);
     const rematchCount = {};
     const matchedStudents = new Set(Object.values(matches).flat());
     const studentIndexMap = Object.fromEntries(students.map((s, i) => [s.fullName, i]));
-    const earlyThreshold = Math.floor(students.length * 0.6);
-    const protectedThreshold = Math.floor(students.length * 0.4);
+    const earlyThreshold = Math.floor(students.length * (settings.canBumpPercent / 100));
+    const protectedThreshold = Math.floor(students.length * (settings.protectedPercent / 100));
 
     let i = 0;
     while (i < noPreferences.length) {
@@ -332,14 +370,14 @@ function moreMatching(students, matches, infoDict, priorityLists, noPreferences,
             const currentMatches = [...matches[companyName] || []].reverse();
 
             for (const otherStudent of currentMatches) {
-                if (manuallyAdded[otherStudent]) continue;
+                if (manuallyAdded.has(otherStudent)) continue;
                 const otherIdx = studentIndexMap[otherStudent] ?? Infinity;
                 if (otherIdx <= protectedThreshold) continue;
                 if ((rematchCount[otherStudent] || 0) >= 3) continue;
 
                 const otherPriority = priorityLists[otherStudent] || [];
                 const otherRank = otherPriority.indexOf(companyName);
-                if (otherRank !== 1 && otherRank !== 2) continue; // 2nd or 3rd choice (0-indexed)
+                if (otherRank !== 2 && otherRank !== 3) continue; // 3rd or 4th choice (0-indexed)
 
                 matches[companyName] = matches[companyName].filter(n => n !== otherStudent);
                 matchedStudents.delete(otherStudent);
@@ -365,7 +403,7 @@ function moreMatching(students, matches, infoDict, priorityLists, noPreferences,
     return { matches, noPreferences };
 }
 
-function matchToFirstAvail(students, companies, matches, infoDict, noPreferences) {
+function matchToFirstAvail(students, companies, matches, infoDict, noPreferences, settings) {
     const matchedStudents = new Set(Object.values(matches).flat());
 
     for (const studentName of noPreferences) {
@@ -373,7 +411,7 @@ function matchToFirstAvail(students, companies, matches, infoDict, noPreferences
         const major = student ? student.major : "";
 
         if (major === "Mechanical Engineering" || major === "Civil Engineering") {
-            if ((matches["ACCO Engineered Systems"] || []).length <= 7) {
+            if ((matches["ACCO Engineered Systems"] || []).length < tableLimits(settings, "ACCO Engineered Systems").seats) {
                 matches["ACCO Engineered Systems"] = matches["ACCO Engineered Systems"] || [];
                 matches["ACCO Engineered Systems"].push(studentName);
                 matchedStudents.add(studentName);
@@ -382,9 +420,7 @@ function matchToFirstAvail(students, companies, matches, infoDict, noPreferences
         }
 
         for (const company of companies) {
-            const isPPG = company.name === "PPG Industries";
-            const cap = isPPG ? 15 : 7;
-            if ((matches[company.name] || []).length <= cap) {
+            if ((matches[company.name] || []).length < tableLimits(settings, company.name).seats) {
                 matches[company.name] = matches[company.name] || [];
                 matches[company.name].push(studentName);
                 matchedStudents.add(studentName);
@@ -421,6 +457,11 @@ exports.runMatchingAlgorithm = functions.https.onRequest(async (req, res) => {
             return res.status(400).json({ error: "Missing required fields: students, companies" });
         }
 
+        const settings = parseSettings(req.body.settings);
+        if (!settings) {
+            return res.status(400).json({ error: "invalid_settings", message: "Matching settings must be whole numbers in range, and max per major can't exceed seats." });
+        }
+
         // Normalize company names in input data
         companies = companies.map(c => ({ ...c, name: normalizeCompanyName(c.name) }));
         reps = (reps || []).map(r => ({ ...r, companyName: normalizeCompanyName(r.companyName) }));
@@ -445,9 +486,9 @@ exports.runMatchingAlgorithm = functions.https.onRequest(async (req, res) => {
         infoDict = intlMatch(students, companies, infoDict);
         infoDict = roleMatch(students, companies, infoDict, manuallyAddedSet);
 
-        let { matches, noPreferences } = fcfs(students, companies, infoDict, priorityLists, normalizedManualMatches);
-        ({ matches, noPreferences } = moreMatching(students, matches, infoDict, priorityLists, noPreferences, normalizedManualMatches));
-        matches = matchToFirstAvail(students, companies, matches, infoDict, noPreferences);
+        let { matches, noPreferences } = fcfs(students, companies, infoDict, priorityLists, normalizedManualMatches, settings);
+        ({ matches, noPreferences } = moreMatching(students, matches, infoDict, priorityLists, noPreferences, normalizedManualMatches, settings));
+        matches = matchToFirstAvail(students, companies, matches, infoDict, noPreferences, settings);
 
         // Build output with rep info merged in
         const repMap = {};
