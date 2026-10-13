@@ -9,6 +9,8 @@ import companiesData from "../data/companies.json";
 
 const provider = new GoogleAuthProvider();
 const COMPANIES = companiesData.companies;
+// .env.local can point this at the local emulator
+const FUNCTIONS_URL = process.env.REACT_APP_FIREBASE_FUNCTIONS_URL || "https://us-central1-swe-ewi.cloudfunctions.net";
 const DEFAULT_MATCHING_SETTINGS = {
   seatsPerTable: 8,
   maxPerMajor: 4,
@@ -182,7 +184,7 @@ const Admin = () => {
       }));
 
       const idToken = await user.getIdToken();
-      const res = await fetch(`${process.env.REACT_APP_FIREBASE_FUNCTIONS_URL}/runMatchingAlgorithm`, {
+      const res = await fetch(`${FUNCTIONS_URL}/runMatchingAlgorithm`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
         body: JSON.stringify({
