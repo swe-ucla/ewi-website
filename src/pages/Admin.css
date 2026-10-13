@@ -36,7 +36,8 @@
 .filter-btn,
 .remove-btn,
 .modal-cancel,
-.modal-delete {
+.modal-delete,
+.add-company-btn {
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -152,6 +153,38 @@
 .admin-search-input { flex: 1; min-width: 160px; }
 .admin-export-select { margin-left: auto; }
 
+/* ADD COMPANY */
+.admin-add-company-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.admin-add-company-row .admin-search-input { flex: 1; min-width: 160px; }
+.capacity-input { width: 140px; flex: none; }
+
+.add-company-btn {
+  background: black;
+  color: white;
+  border: none;
+  padding: 0.45rem 1rem;
+  white-space: nowrap;
+}
+.add-company-btn:hover { opacity: 0.8; }
+
+/* CAPACITY CELL */
+.capacity-display { cursor: pointer; }
+.capacity-display:hover { opacity: 0.7; }
+td[data-label="capacity"] input.capacity-input {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.85rem;
+  outline: none;
+}
+
 /* MODAL */
 .modal-overlay {
   position: fixed;
@@ -185,4 +218,106 @@
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
   font-size: 0.875rem;
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .admin-page { padding: 1rem; }
+
+  .admin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .admin-header h1 { font-size: 1.4rem; }
+  .admin-header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* STATS: 2x2 grid */
+  .admin-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .stat-card {
+    align-items: flex-start;
+    padding: 0.9rem 1.1rem;
+  }
+  .stat-label { text-align: left; }
+
+  /* TABS: horizontally scrollable, sticky under header */
+  .admin-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--color-bg);
+    padding: 0.5rem 0;
+  }
+  .filter-btn { flex-shrink: 0; }
+
+  /* COMPANIES LIST: card layout instead of table */
+  .companies-table-wrapper {
+    background: transparent;
+    border: none;
+    overflow: visible;
+  }
+  .companies-table { white-space: normal; }
+  .companies-table thead { display: none; }
+  .companies-table tbody { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .companies-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    grid-template-areas:
+      "title title remove"
+      "capacity choices choices";
+    row-gap: 0.75rem;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .companies-table tbody tr:nth-child(even) { background: white; }
+
+  .companies-table td {
+    padding: 0;
+    border-bottom: none;
+  }
+
+  .companies-table td.company-name-cell {
+    grid-area: title;
+    align-self: start;
+  }
+  .companies-table td[data-label="capacity"] { grid-area: capacity; }
+  .companies-table td[data-label="# of first choices"] { grid-area: choices; }
+  .companies-table td.remove-cell {
+    grid-area: remove;
+    align-self: start;
+    justify-self: end;
+  }
+
+  .companies-table td[data-label="capacity"],
+  .companies-table td[data-label="# of first choices"] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .companies-table td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  .remove-btn { text-transform: capitalize; }
+
+  .admin-search-row { margin-top: 1.25rem; }
+  .admin-export-select { margin-left: 0; }
 }

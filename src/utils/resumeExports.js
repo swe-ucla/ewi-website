@@ -13,7 +13,12 @@ const getAllRegistrationsWithResumes = async () => {
 
 
 const sanitizeFilename = (name) => {
-  return (name || "unknown").replace(/[^a-zA-Z0-9._-]/g, "_"); 
+  return (name || "unknown").replace(/[^a-zA-Z0-9._-]/g, "_");
+};
+
+const timestamp = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}_${String(d.getHours()).padStart(2,"0")}${String(d.getMinutes()).padStart(2,"0")}`;
 };
 
 // get original filename for export, if field is empty then just use fullName
@@ -59,7 +64,7 @@ export const exportAllResumesZip = async () => {
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
-  triggerDownload(zipBlob, "all_resumes.zip");
+  triggerDownload(zipBlob, `ewi_resumes_${timestamp()}.zip`);
 };
 
 // export all resumes separated by majors
@@ -91,7 +96,7 @@ export const exportResumesByMajorZip = async () => {
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
-  triggerDownload(zipBlob, "resumes_by_major.zip");
+  triggerDownload(zipBlob, `ewi_resumes_by_major_${timestamp()}.zip`);
 };
 
 // download from browser
