@@ -230,6 +230,18 @@
 .large-table-remove:hover { color: #c0392b; }
 
 .matching-settings-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem; }
+.settings-save-btn {
+  margin-left: auto;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.settings-save-btn:disabled { background: #e6e6e6; color: #888; cursor: default; }
+.settings-unsaved { font-size: 0.75rem; color: #8a5a00; }
 
 /* INFO TOOLTIP */
 .info-tip { position: relative; display: inline-flex; }

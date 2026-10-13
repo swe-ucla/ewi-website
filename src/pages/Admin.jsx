@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Admin.css";
 import { db, auth } from "../firebase";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import PieChartView from "../components/admin/PieChartView";
 import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV } from "../components/admin/adminExports";
@@ -50,6 +50,28 @@ const Admin = () => {
   const [matchingError, setMatchingError] = useState(null);
   const [showMatchingConfirm, setShowMatchingConfirm] = useState(false);
   const [matchingSettings, setMatchingSettings] = useState(DEFAULT_MATCHING_SETTINGS);
+  const [savedSettings, setSavedSettings] = useState(DEFAULT_MATCHING_SETTINGS);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [settingsError, setSettingsError] = useState(null);
+  const settingsChanged = JSON.stringify(matchingSettings) !== JSON.stringify(savedSettings);
+
+  const saveSettings = async () => {
+    setSettingsSaving(true);
+    setSettingsError(null);
+    try {
+      await setDoc(doc(db, "settings", "matching"), {
+        values: matchingSettings,
+        updatedBy: user.email,
+        updatedAt: serverTimestamp(),
+      });
+      setSavedSettings(matchingSettings);
+    } catch (err) {
+      console.error("Saving settings failed:", err);
+      setSettingsError("Couldn't save settings. Check that the Firestore rule for settings is published.");
+    } finally {
+      setSettingsSaving(false);
+    }
+  };
 
   // Mirrors the cutoffs in functions/index.js; the locked cutoff includes one extra student, as in the original script
   const lineCount = (percent, locked = false) => {
@@ -109,7 +131,20 @@ const Admin = () => {
         setDataLoading(false);
       }
     };
+    const fetchSettings = async () => {
+      try {
+        const snap = await getDoc(doc(db, "settings", "matching"));
+        if (snap.exists()) {
+          const loaded = { ...DEFAULT_MATCHING_SETTINGS, ...snap.data().values };
+          setMatchingSettings(loaded);
+          setSavedSettings(loaded);
+        }
+      } catch (err) {
+        console.error("Loading saved settings failed:", err);
+      }
+    };
     fetchData();
+    fetchSettings();
   }, [isAuthorized]);
 
   const handleSignIn = async () => {
@@ -413,7 +448,15 @@ const Admin = () => {
                 <div className="matching-settings-actions">
                   <button type="button" className="remove-btn" onClick={addLargeTable}>+ add larger table</button>
                   <button type="button" className="remove-btn" onClick={() => setMatchingSettings(DEFAULT_MATCHING_SETTINGS)}>reset to defaults</button>
+                  <button type="button" className="settings-save-btn" onClick={saveSettings}
+                    disabled={!settingsChanged || settingsSaving}>
+                    {settingsSaving ? "Saving..." : settingsChanged ? "Save settings" : "Saved"}
+                  </button>
                 </div>
+                {settingsChanged && !settingsSaving && (
+                  <p className="settings-unsaved">Unsaved changes. Runs use these values, but they reset on reload until you save.</p>
+                )}
+                {settingsError && <p className="admin-error">{settingsError}</p>}
               </fieldset>
               <button
                 className="admin-signin-btn"
