@@ -225,12 +225,7 @@ const StudentRegistrationForm = () => {
                 : null;
             const firstChoiceChanged = oldFirstChoiceName !== newFirstChoiceName;
 
-            const oldCompanyRef = firstChoiceChanged && oldFirstChoiceName
-                ? doc(db, "Companies", oldFirstChoiceName)
-                : null;
-
             const newCompanySnap = firstChoiceChanged && newCompanyRef ? await tx.get(newCompanyRef) : null;
-            const oldCompanySnap = oldCompanyRef ? await tx.get(oldCompanyRef) : null;
 
             if (newCompanySnap && newCompanySnap.exists()) {
                 const { capacity, firstChoiceCount } = newCompanySnap.data();
@@ -239,15 +234,8 @@ const StudentRegistrationForm = () => {
                 }
             }
 
+            // firstChoiceCount is kept in sync by the onRegistrationWritten Cloud Function
             tx.set(registrationRef, dataToSave);
-
-            if (newCompanySnap && newCompanySnap.exists()) {
-                tx.update(newCompanyRef, { firstChoiceCount: newCompanySnap.data().firstChoiceCount + 1 });
-            }
-            if (oldCompanySnap && oldCompanySnap.exists()) {
-                const current = oldCompanySnap.data().firstChoiceCount || 0;
-                tx.update(oldCompanyRef, { firstChoiceCount: Math.max(0, current - 1) });
-            }
         });
 
         console.log("Registration submitted successfully");
