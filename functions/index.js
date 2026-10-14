@@ -1,136 +1,51 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+const {setGlobalOptions} = require("firebase-functions");
+const {onDocumentWritten, onDocumentCreated} = require("firebase-functions/firestore");
+const {onRequest} = require("firebase-functions/https");
+const logger = require("firebase-functions/logger");
+const {initializeApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
+const {getAuth} = require("firebase-admin/auth");
 
-admin.initializeApp();
-const db = admin.firestore();
-const bucket = admin.storage().bucket();
+initializeApp();
+const db = getFirestore();
 
-const ALLOWED_MIME_TYPES = {
-    "25504446": "application/pdf",  // %PDF
-    "ffd8ffe0": "image/jpeg",
-    "ffd8ffe1": "image/jpeg",
-    "ffd8ffdb": "image/jpeg",
-    "89504e47": "image/png",
-};
+// cap how many copies/containers of the function that will run at once
+setGlobalOptions({maxInstances: 10});
 
-// Uploads file to Storage and returns only the storage path — no URL stored
-async function uploadFileBase64(base64, filename) {
-    const buffer = Buffer.from(base64, "base64");
+// recount every company's firstChoiceCount from the actual Registrations rows
+async function recomputeFirstChoiceCounts() {
+  await db.runTransaction(async (tx) => {
+    
+    const registrationsSnap = await tx.get(db.collection("Registrations"));
+    const companiesSnap = await tx.get(db.collection("Companies"));
 
-    // Validate file type by checking magic bytes
-    const magic = buffer.subarray(0, 4).toString("hex").toLowerCase();
-    if (!ALLOWED_MIME_TYPES[magic]) {
-        throw new Error("Invalid file type. Only PDF and images are allowed.");
-    }
-    const contentType = ALLOWED_MIME_TYPES[magic];
+    const tally = {};
+    registrationsSnap.forEach((doc) => {
+      const firstChoice = doc.data().companyPreferences?.[0];
+      if (firstChoice) tally[firstChoice] = (tally[firstChoice] || 0) + 1;
+    });
 
-    const dest = `student-uploads/${Date.now()}_${filename.replace(/[^a-zA-Z0-9.\-_]/g, "_")}`;
-    const file = bucket.file(dest);
-    await file.save(buffer, { resumable: false, contentType });
-    return { storagePath: dest };
+    companiesSnap.forEach((doc) => {
+      const correctCount = tally[doc.data().name] || 0;
+      if (doc.data().firstChoiceCount !== correctCount) {
+        tx.update(doc.ref, {firstChoiceCount: correctCount});
+      }
+    });
+  });
+  logger.info("Recomputed first-choice counts");
 }
 
-exports.registerStudent = functions.https.onRequest(async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    if (req.method === "OPTIONS") {
-        return res.status(204).send("");
-    }
-
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: "Method not allowed" });
-    }
-
-    try {
-        const {
-            fullName,
-            email,
-            major,
-            year,
-            role,
-            isInternational,
-            preferences,
-            overwrite = false,
-            waitlist = false,
-            fileBase64,
-            fileName,
-        } = req.body || {};
-
-        if (!email) return res.status(400).json({ error: "Missing required field: email" });
-
-        const studentsRef = db.collection("Registrations");
-        const existingQuery = await studentsRef.where("email", "==", email).limit(1).get();
-        if (!existingQuery.empty && !overwrite) {
-            return res.status(409).json({
-                error: "duplicate",
-                message: "A registration with this email already exists.",
-            });
-        }
-
-        let uploadMeta = null;
-        if (fileBase64 && fileName) {
-            uploadMeta = await uploadFileBase64(fileBase64, fileName);
-        }
-
-        const payload = {
-            fullName: fullName || null,
-            email,
-            major: major || null,
-            year: year || null,
-            role: role || null,
-            isInternational: isInternational || null,
-            preferences: preferences || [],
-            waitlist: !!waitlist,
-            storagePath: uploadMeta ? uploadMeta.storagePath : null,
-            timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        };
-
-        let docRef;
-        if (!existingQuery.empty && overwrite) {
-            const doc = existingQuery.docs[0];
-            await studentsRef.doc(doc.id).set(payload, { merge: true });
-            docRef = studentsRef.doc(doc.id);
-        } else {
-            docRef = await studentsRef.add(payload);
-        }
-
-        return res.status(200).json({ id: docRef.id });
-    } catch (err) {
-        console.error("registerStudent error:", err);
-        return res.status(500).json({ error: "internal", message: err.message });
-    }
+// runs on every registration create, overwrite, and delete
+exports.onRegistrationWritten = onDocumentWritten("Registrations/{email}", async (event) => {
+  const before = event.data.before.data()?.companyPreferences?.[0];
+  const after = event.data.after.data()?.companyPreferences?.[0];
+  if (before === after) return; // first choice unchanged, counts unaffected
+  await recomputeFirstChoiceCounts();
 });
 
-// Generates a fresh 1-hour signed URL for a resume — admin only
-exports.getResumeUrl = functions.https.onRequest(async (req, res) => {
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    if (req.method === "OPTIONS") return res.status(204).send("");
-    if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
-
-    const token = (req.headers.authorization || "").split("Bearer ")[1];
-    if (!token) return res.status(401).json({ error: "Unauthorized" });
-    try {
-        const decoded = await admin.auth().verifyIdToken(token);
-        const adminDoc = await db.collection("admins").doc(decoded.email).get();
-        if (!adminDoc.exists) return res.status(403).json({ error: "Forbidden" });
-    } catch {
-        return res.status(403).json({ error: "Forbidden" });
-    }
-
-    const { storagePath } = req.body || {};
-    if (!storagePath) return res.status(400).json({ error: "Missing storagePath" });
-
-    try {
-        const file = bucket.file(storagePath);
-        const [url] = await file.getSignedUrl({ action: "read", expires: Date.now() + 60 * 60 * 1000 });
-        return res.status(200).json({ url });
-    } catch (err) {
-        console.error("getResumeUrl error:", err);
-        return res.status(500).json({ error: "internal", message: err.message });
-    }
+// a newly added company should pick up any registrations that already list it first
+exports.onCompanyCreated = onDocumentCreated("Companies/{name}", async () => {
+  await recomputeFirstChoiceCounts();
 });
 
 // ─── Table Matching Algorithm ────────────────────────────────────────────────
@@ -432,7 +347,7 @@ function matchToFirstAvail(students, companies, matches, infoDict, noPreferences
     return matches;
 }
 
-exports.runMatchingAlgorithm = functions.https.onRequest(async (req, res) => {
+exports.runMatchingAlgorithm = onRequest(async (req, res) => {
     res.set("Access-Control-Allow-Origin", "*");
     res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     res.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -443,7 +358,7 @@ exports.runMatchingAlgorithm = functions.https.onRequest(async (req, res) => {
     const token = (req.headers.authorization || "").split("Bearer ")[1];
     if (!token) return res.status(401).json({ error: "Unauthorized" });
     try {
-        const decoded = await admin.auth().verifyIdToken(token);
+        const decoded = await getAuth().verifyIdToken(token);
         const adminDoc = await db.collection("admins").doc(decoded.email).get();
         if (!adminDoc.exists) return res.status(403).json({ error: "Forbidden" });
     } catch {
