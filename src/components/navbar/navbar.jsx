@@ -66,9 +66,9 @@ const Navbar = () => {
         <Link className="navbar__tab" to="/meet-the-team" onClick={handleLinkClick}>
           Meet the Team
         </Link>
-        <Link className="navbar__tab" to="/contact-us" onClick={handleLinkClick}>
+        {/* <Link className="navbar__tab" to="/contact-us" onClick={handleLinkClick}>
           Contact Us
-        </Link>
+        </Link> */}
       </div>
     </nav>
   );
