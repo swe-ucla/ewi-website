@@ -2,8 +2,14 @@
 .companies-page {
   width: 100%;
   font-family: "Inter", "Poppins", sans-serif;
-  color: #000;
-  background: #fff;
+  background-image: url("../assets/falling_leaves.png"),
+    url("../assets/bottom_leaves.png"),
+    linear-gradient(180deg, #e3c4fb 0%, rgba(244, 220, 208, 0.6) 70%);
+  background-size: 100% auto, 100% auto, 100% 100%;
+  background-position: top -44px center, center bottom -7vw, top left;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding-bottom: 10vw;
 }
 
 /* Override footer gradient. */

@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Abhaya Libre Extra";
+    src: url("../../assets/AbhayaLibre-ExtraBold.ttf");
+}
+
 .pricing-tiers {
   width: 100%;
   padding: 0;
@@ -9,65 +14,154 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 5rem;
-    padding: 0 4rem 4rem 2rem;
+    gap: 3rem;
+    padding: 0 2rem 4rem;
 }
 
 .pricing-box {
-    background-color: #EAEAEA;
-    width: 22rem;
-    min-height: 22rem;
+    background: linear-gradient(180deg, #F4DCD0 0%, #F9F6F0 100%);
+    border: 2px solid #A35C45;
+    border-radius: 15px;
+    width: 20rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 3rem 2rem 2rem;
+    padding: 2rem;
+    font-family: "Abhaya Libre Extra";
 }
 
-.pricing-title {
-    min-height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.pricing-box h3,
+.pricing-box p {
+    font-family: inherit;
 }
 
-.pricing-title h3 {
+.pricing-name {
     margin: 0;
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 1.2;
+    font-size: 2.1rem;
+    line-height: 1.1;
     text-align: center;
+    color: #A35C45;
+}
+
+.pricing-price {
+    margin: 0.25rem 0 0;
+    font-size: 3rem;
+    line-height: 1;
+    text-align: center;
+    color: #5F4077;
+}
+
+.pricing-unit {
+    margin: 0.25rem 0 0;
+    font-size: 1.1rem;
+    color: #A35C45;
 }
 
 .pricing-perks {
-    margin: 0.5rem 0 0;
-    font-size: 1rem;
-    line-height: 1.6;
+    list-style: none;
+    margin: 1rem 0 1.5rem;
+    padding: 0;
+    align-self: stretch;
+    font-family: "Dongle", sans-serif;
+    font-size: 1.85rem;
+    line-height: 1;
+    text-align: left;
+    color: #2B2133;
+}
+
+.pricing-perks li {
+    position: relative;
+    padding-left: 0.7em;
+    margin-bottom: 0.3em;
+}
+
+.pricing-perks li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0.2em;
+    font-family: "Dongle";
+    font-size: 0.8em;
+    color: #5F4077;
+}
+
+.pricing-button {
+    margin-top: auto;
+    width: 100%;
+    border-radius: 10px;
+    background: #D48C70;
+    color: #F9F6F0;
+    font-family: "Dongle";
+    font-size: 2rem;
     text-align: center;
-    max-width: 32ch;
+    line-height: 1;
+    padding: 0.3em 0 0.15em;
 }
 
-/* Mobile Responsive */
-@media screen and (max-width: 1024px) {
+.pricing-button:hover {
+    background: #5F4077;
+    color: #F9F6F0;
+}
+
+/* wrap 2x2 boxes */
+@media screen and (max-width: 1500px) {
+    /* Grid with equal-height rows so all four boxes match the tallest. */
     .pricing-container {
-        gap: 2rem;
+        display: grid;
+        grid-template-columns: repeat(2, 20rem);
+        grid-auto-rows: 1fr;
+        justify-content: center;
     }
 
-    .pricing-box {
-        width: 20rem;
-        min-height: 20rem;
+
+    .pricing-perks {
+        margin: 0.75rem 0 1rem;
+    }
+
+    .pricing-perks li {
+        margin-bottom: 0.1em;
     }
 }
 
+/* Too narrow for two 20rem columns: one column, heights fit content. */
+@media screen and (max-width: 760px) {
+    .pricing-container {
+        grid-template-columns: 20rem;
+        grid-auto-rows: auto;
+    }
+}
+
+/* Phones: one column. */
 @media screen and (max-width: 600px) {
+    /* Back to a single flex column; boxes size to their own content. */
     .pricing-container {
+        display: flex;
         flex-direction: column;
         align-items: center;
         gap: 1.5rem;
+        padding: 0 1rem 3rem;
     }
 
     .pricing-box {
         width: 100%;
-        max-width: 25rem;
-        min-height: 18rem;
+        max-width: 17rem;
+        padding: 1.25rem 1.25rem 1.25rem;
+    }
+
+    .pricing-name {
+        font-size: 1.6rem;
+    }
+
+    .pricing-price {
+        font-size: 2.25rem;
+    }
+
+    .pricing-perks {
+        font-size: 1.5rem;
+        margin: 0.75rem 0 1rem;
+    }
+
+    .pricing-button {
+        font-size: 1.6rem;
     }
 }
