@@ -7,7 +7,7 @@ const CompanySurvivalGuide = () => {
     return (
         <div className="company-survival-section">
             <div className="company-survival-guide">
-                <h1 className="company-survival-title">Company Survival Guide</h1>
+                <h1 className="company-survival-title">company survival guide</h1>
                 <div className="company-registration-document">
                     <IssuuStyleFlipbook pdfFile={company_guide} scale={1.0} />
                 </div>
