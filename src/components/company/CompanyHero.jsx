@@ -1,16 +1,20 @@
 import React from 'react';
 import './CompanyHero.css';
+import pinecone from '../../assets/pinecone_suit.png';
 
-const heading = "For Companies";
-const subheading = "subhead";
+const headingTop = "company";
+const headingBottom = "registration";
 
 const CompanyHero = () => {
   return (
     <div className="company-hero">
       <div className="company-hero-content">
-        <h1 className="company-hero-title">{heading}</h1>
-        <p className="company-hero-description">{subheading}</p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd0HSR3w96uyGjYzzJEKVf-VeGeaTtDT-yg6DKei4dNx9cI-Q/viewform" target="_blank" rel="noopener noreferrer" className="apply-button">Register</a>
+        <h1 className="company-hero-title">
+          {headingTop}
+          <br />
+          {headingBottom}
+          <img src={pinecone} alt="" className="company-hero-pinecone" />
+        </h1>
       </div>
     </div>
   );
