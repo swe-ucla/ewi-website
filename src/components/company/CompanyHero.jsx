@@ -4,7 +4,6 @@ import pinecone from '../../assets/pinecone_suit.png';
 
 const headingTop = "company";
 const headingBottom = "registration";
-const subheading = "subhead";
 
 const CompanyHero = () => {
   return (
@@ -16,7 +15,6 @@ const CompanyHero = () => {
           {headingBottom}
           <img src={pinecone} alt="" className="company-hero-pinecone" />
         </h1>
-        <p className="company-hero-description">{subheading}</p> 
       </div>
     </div>
   );
