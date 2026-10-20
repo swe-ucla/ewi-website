@@ -64,3 +64,57 @@
     .students-template-answer { padding: 0 24px 28px; font-size: 38px; }
     .students-template-guide-preview { height: auto; }
 }
+
+/* Temporary survival guide coming-soon */
+.students-survival-soon {
+    width: 100%;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 25px;
+    background: rgba(249, 246, 240, 0.72);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 28px rgba(43, 33, 51, 0.1);
+}
+
+.students-survival-soon__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 14rem;
+    padding: 2.5rem 2rem;
+    border-radius: 25px;
+    background: #fff;
+    text-align: center;
+}
+
+.students-survival-soon__title {
+    margin: 0;
+    color: #a35c45;
+    font-family: "Abhaya Libre", Georgia, serif;
+    font-size: clamp(2.75rem, 6vw, 4.25rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    text-transform: lowercase;
+}
+
+.students-survival-soon__tagline {
+    margin: 0.4rem 0 0;
+    color: #d48c70;
+    font-family: "Dongle", sans-serif;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 0.9;
+}
+
+@media (max-width: 600px) {
+    .students-survival-soon {
+        padding: 1.15rem;
+    }
+
+    .students-survival-soon__card {
+        min-height: 11rem;
+        padding: 2rem 1.25rem;
+    }
+}

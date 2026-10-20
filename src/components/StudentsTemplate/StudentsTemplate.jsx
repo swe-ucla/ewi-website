@@ -8,6 +8,8 @@ import registrationWordmark from "../../assets/students/registration.svg";
 import studentWordmark from "../../assets/students/student.svg";
 import "./StudentsTemplate.css";
 
+const SHOW_GUIDE_COMING_SOON = true;
+
 const QUESTIONS = Array.from({ length: 4 }, (_, index) => ({
     id: index + 1,
     question: "Question",
@@ -52,7 +54,20 @@ const StudentsTemplate = () => {
 
                 <section className="students-template-section students-template-guide-section" aria-labelledby="survival-guide-title">
                     <h2 id="survival-guide-title">student survival guide</h2>
-                    <img className="students-template-guide-preview" src={guidePreview} alt="Student Survival Guide preview" />
+                    {SHOW_GUIDE_COMING_SOON ? (
+                        <div className="students-survival-soon" role="status">
+                            <div className="students-survival-soon__card">
+                                <h3 className="students-survival-soon__title">coming soon</h3>
+                                <p className="students-survival-soon__tagline">harvest your potential</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <img
+                            className="students-template-guide-preview"
+                            src={guidePreview}
+                            alt="Student Survival Guide preview"
+                        />
+                    )}
                 </section>
             </div>
         </main>
