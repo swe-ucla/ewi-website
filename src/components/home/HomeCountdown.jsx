@@ -77,9 +77,6 @@ const HomeCountdown = () => {
               </React.Fragment>
             ))}
           </div>
-          <p className="home-countdown__meta">
-            {date} · {time} · {location}
-          </p>
         </div>
       )}
     </section>
