@@ -1,151 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@800&family=Dongle:wght@400;700&display=swap");
+
 .students-template-page {
-    padding: 4rem 1rem;
-    background: #fafafa;
-    min-height: calc(100vh - 80px);
-}
-
-.students-template-content {
-    width: 100%;
-    max-width: 1400px;
-    padding: 0 1rem;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.students-template-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-}
-
-.students-template-header h1 {
-    font-size: clamp(3.5rem, 6vw, 6rem);
-    margin-bottom: 0.75rem;
-    font-weight: 900;
-}
-
-.students-template-subhead {
-    color: #000000;
-    margin-bottom: 1.5rem;
-    font-size: 1rem;
-}
-
-.students-template-button {
-    display: inline-block;
-    padding: 0.95rem 2rem;
-    background: #e8e8e8;
-    color: #111111;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.2s ease;
-}
-
-.students-template-button:hover {
-    background: #d6d6d6;
-}
-
-.students-template-section {
-    margin-top: 2rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 1400px;
-    box-sizing: border-box;
-    min-width: 0;
-
-}
-
-.students-template-section h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: #000000;
-    text-transform: none;
-    width: 100%;
-    max-width: 1400px;
-    box-sizing: border-box;
-    min-width: 0;
-}
-
-.students-template-accordion {
-    display: grid;
-    gap: 1rem;
-    width: 100%;
-    max-width: 1400px;
-}
-
-.students-template-accordion-item {
-    width: 100%;
-    max-width: 1400px;
-    border-radius: 16px;
+    --students-ink: #2b2133;
+    --students-plum: #5f4077;
+    --students-paper: #f9f6f0;
+    position: relative;
+    isolation: isolate;
     overflow: hidden;
-    background: #f0f0f0;
+    min-height: calc(100vh - 67px);
+    padding: 0 24px 96px;
+    color: var(--students-ink);
+    background: linear-gradient(181.4deg, #e3c4fb 0.8%, rgba(244, 220, 208, 0.6) 75.8%), var(--students-paper);
 }
 
-.students-template-question {
-    width: 100%;
-    text-align: left;
-    border: none;
-    background: #f0f0f0;
-    padding: 1rem 1.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1rem;
-    color: #000000;
-    text-transform: lowercase;
-    cursor: pointer;
+.students-template-foliage { position: absolute; z-index: 0; top: 0; left: 50%; width: 100vw; max-width: none; height: 1109px; object-fit: cover; object-position: top center; transform: translateX(-50%); mix-blend-mode: multiply; pointer-events: none; }
+.students-template-content { position: relative; z-index: 1; width: 100%; max-width: 1280px; margin: 0 auto; padding-top: 116px; }
+.students-template-header { position: relative; display: flex; min-height: 440px; flex-direction: column; align-items: center; justify-content: center; padding: 45px 0 38px; text-align: center; }
+.students-template-wordmark { display: flex; width: 639px; max-width: 100%; flex-direction: column; align-items: center; gap: 4px; margin: 0; }
+.students-template-wordmark img { display: block; max-width: 100%; height: auto; }
+.students-template-mascot { position: absolute; top: 70px; left: calc(50% - 450px); width: 132px; height: auto; object-fit: contain; }
+.students-template-button { display: inline-flex; min-width: 185px; min-height: 57px; align-items: center; justify-content: center; margin-top: 24px; padding: 4px 28px 0; border-radius: 15px; background: #d48c70; color: var(--students-paper); font-family: "Dongle", sans-serif; font-size: 48px; line-height: 1; text-decoration: none; transition: background-color 180ms ease, transform 180ms ease; }
+.students-template-button:hover, .students-template-button:focus-visible { background: #bd745c; color: var(--students-paper); transform: translateY(-2px); }
+.students-template-section { display: flex; width: 100%; flex-direction: column; align-items: center; margin-top: 28px; }
+.students-template-section h2 { width: 100%; margin: 0 0 20px; color: var(--students-ink); font-family: "Abhaya Libre", Georgia, serif; font-size: 98px; font-weight: 800; line-height: 1; text-align: center; text-shadow: 2px 2px 3px rgba(95, 64, 119, 0.35); text-transform: lowercase; }
+.students-template-accordion { display: grid; width: 100%; max-width: 1165px; gap: 28px; }
+.students-template-accordion-item { overflow: hidden; border: 1px solid rgba(95, 64, 119, 0.8); border-radius: 25px; background: linear-gradient(90deg, var(--students-paper) 0%, rgba(227, 196, 251, 0.8) 100%); box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.25); }
+.students-template-question { display: flex; width: 100%; min-height: 108px; align-items: center; justify-content: space-between; padding: 18px 48px 10px 62px; border: 0; background: transparent; color: var(--students-ink); cursor: pointer; font-family: "Dongle", sans-serif; font-size: 56px; font-weight: 700; line-height: 0.9; text-align: left; }
+.students-template-icon { display: inline-flex; width: 48px; height: 48px; flex: 0 0 48px; align-items: center; justify-content: center; color: var(--students-ink); }
+.students-template-icon svg { width: 100%; height: 100%; stroke-width: 1.5; }
+.students-template-answer { margin: 0; padding: 0 62px 38px; color: var(--students-plum); font-family: "Dongle", sans-serif; font-size: 56px; line-height: 0.9; text-shadow: 2px 2px 3px rgba(227, 196, 251, 0.5); }
+.students-template-guide-section { margin-top: 46px; }
+.students-template-guide-preview { display: block; width: min(100%, 715px); height: 783px; object-fit: cover; }
+
+@media (min-width: 901px) {
+    .students-template-header { min-height: 500px; }
+    .students-template-wordmark { position: relative; width: 860px; height: 275px; max-width: none; display: block; transform: translateX(90px); }
+    .students-template-wordmark img { position: absolute; left: 50%; width: auto; max-width: none; transform: translateX(-50%) scale(1.34); transform-origin: top center; }
+    .students-template-wordmark img:first-child { top: -10px; left: calc(50% - 120px); z-index: 1; filter: drop-shadow(0 11px 8px rgba(246, 230, 250, 0.9)); }
+    .students-template-wordmark img:last-child { top: 96px; }
+    .students-template-mascot { top: 58px; left: calc(50% - 540px); width: 200px; }
 }
 
-.students-template-icon {
-    transition: transform 0.2s ease;
+@media (max-width: 900px) {
+    .students-template-header { min-height: 390px; }
+    .students-template-mascot { top: 58px; left: 2%; width: 100px; }
+    .students-template-section h2 { font-size: 72px; }
 }
 
-.students-template-icon.open {
-    transform: rotate(180deg);
-}
-
-.students-template-answer {
-    padding: 1rem 1.25rem;
-    background: #ffffff;
-    color: #000000;
-    font-size: 1rem;
-    text-transform: lowercase;
-}
-
-.students-template-guide {
-    display: flex;
-    justify-content: center;
-}
-
-.students-template-guide-placeholder {
-    width: 100%;
-    max-width: 1300px;
-    min-height: 760px;
-    border-radius: 18px;
-    border: 1px solid #e3e3e3;
-    background: #f5f5f5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #999999;
-    font-size: 1.1rem;
-    letter-spacing: 0.02em;
-}
-
-@media (max-width: 720px) {
-    .students-template-content {
-        padding: 0 0.75rem;
-    }
-
-    .students-template-header h1 {
-        font-size: 3rem;
-    }
-
-    .students-template-guide-iframe {
-        min-height: 520px;
-    }
+@media (max-width: 600px) {
+    .students-template-page { padding: 0 16px 64px; }
+    .students-template-foliage { top: 30px; width: 160%; max-width: none; height: 720px; }
+    .students-template-content { padding-top: 78px; }
+    .students-template-header { min-height: 370px; padding-top: 68px; }
+    .students-template-wordmark { width: 330px; max-width: calc(100% - 84px); gap: 2px; }
+    .students-template-mascot { top: 14px; left: 4px; width: 66px; }
+    .students-template-button { min-width: 150px; min-height: 50px; margin-top: 20px; font-size: 40px; }
+    .students-template-section { margin-top: 24px; }
+    .students-template-section h2 { margin-bottom: 16px; font-size: 52px; }
+    .students-template-accordion { gap: 18px; }
+    .students-template-accordion-item { border-radius: 18px; }
+    .students-template-question { min-height: 82px; padding: 16px 20px 8px 24px; font-size: 38px; }
+    .students-template-icon { width: 36px; height: 36px; flex-basis: 36px; }
+    .students-template-answer { padding: 0 24px 28px; font-size: 38px; }
+    .students-template-guide-preview { height: auto; }
 }
