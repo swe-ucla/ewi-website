@@ -6,6 +6,35 @@ import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from
 import PieChartView from "../components/admin/PieChartView";
 import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV } from "../components/admin/adminExports";
 import { exportResumesByMajorZip, exportAllResumesZip } from "../utils/resumeExports";
+import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
+import avatarPlaceholder from "../assets/admin/avatar-placeholder.png";
+
+const TrashIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6M14 11v6"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const SORT_OPTIONS = [
+  { value: "name", label: "Name" },
+  { value: "status", label: "Status" },
+  { value: "year", label: "Year" },
+  { value: "major", label: "Major" },
+];
+
+const EXPORT_OPTIONS = [
+  { value: "meals", label: "Export Meals" },
+  { value: "companies", label: "Export Company Prefs" },
+  { value: "all", label: "Export All" },
+  { value: "resumes", label: "Export Resumes" },
+  { value: "resumes-by-major", label: "Export Resumes by Major" },
+];
 
 const provider = new GoogleAuthProvider();
 // .env.local can point this at the local emulator
@@ -22,6 +51,52 @@ const YEAR_LABELS = {
   "grad-student-phd": "Grad Student - PhD",
 };
 
+const TABLE_PAGE_SIZE = 6;
+
+const pageItems = (items, page, size = TABLE_PAGE_SIZE) => {
+  const start = page * size;
+  return items.slice(start, start + size);
+};
+
+const pageCount = (total, size = TABLE_PAGE_SIZE) =>
+  Math.max(1, Math.ceil(total / size));
+
+const AdminPager = ({ page, totalItems, onChange, label }) => {
+  const pages = pageCount(totalItems);
+  if (totalItems <= TABLE_PAGE_SIZE) return null;
+
+  return (
+    <nav className="admin-pager" aria-label={label}>
+      <button
+        type="button"
+        className="admin-pager__btn"
+        disabled={page <= 0}
+        onClick={() => onChange(page - 1)}
+      >
+        Prev
+      </button>
+      {Array.from({ length: pages }, (_, i) => (
+        <button
+          key={i}
+          type="button"
+          className={`admin-pager__btn${i === page ? " is-active" : ""}`}
+          aria-current={i === page ? "page" : undefined}
+          onClick={() => onChange(i)}
+        >
+          {i + 1}
+        </button>
+      ))}
+      <button
+        type="button"
+        className="admin-pager__btn"
+        disabled={page >= pages - 1}
+        onClick={() => onChange(page + 1)}
+      >
+        Next
+      </button>
+    </nav>
+  );
+};
 
 const InfoTip = ({ children }) => {
   const [open, setOpen] = useState(false);
@@ -43,12 +118,14 @@ const Admin = () => {
   const [companies, setCompanies] = useState([]);
   const [dataLoading, setDataLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("companies");
+  const [showMatching, setShowMatching] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [error, setError] = useState(null);
   const [editingCapacityId, setEditingCapacityId] = useState(null);
   const [capacityDraft, setCapacityDraft] = useState("");
+  const [showAddCompany, setShowAddCompany] = useState(false);
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyCapacity, setNewCompanyCapacity] = useState("");
   const [matchingResults, setMatchingResults] = useState(null);
@@ -59,6 +136,8 @@ const Admin = () => {
   const [savedSettings, setSavedSettings] = useState(DEFAULT_MATCHING_SETTINGS);
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [settingsError, setSettingsError] = useState(null);
+  const [companyPage, setCompanyPage] = useState(0);
+  const [regsPage, setRegsPage] = useState(0);
   const settingsChanged = JSON.stringify(matchingSettings) !== JSON.stringify(savedSettings);
 
   const saveSettings = async () => {
@@ -235,14 +314,13 @@ const Admin = () => {
     }
   };
 
-  const handleExport = (e) => {
-    const val = e.target.value;
+  const handleExport = (val) => {
+    if (!val) return;
     if (val === "meals") exportMealCSV(registrations);
     else if (val === "companies") exportCompanyPrefsCSV(registrations);
     else if (val === "all") exportAllCSV(registrations);
     else if (val === "resumes") exportAllResumesZip();
     else if (val === "resumes-by-major") exportResumesByMajorZip();
-    e.target.value = "";
   };
 
   const startEditingCapacity = (company) => {
@@ -318,6 +396,7 @@ const Admin = () => {
       setCompanies((prev) => [...prev, { id: trimmedName, name: trimmedName, capacity, firstChoiceCount: 0 }]);
       setNewCompanyName("");
       setNewCompanyCapacity("");
+      setShowAddCompany(false);
       setError(null);
     } catch (err) {
       console.error(err);
@@ -346,13 +425,52 @@ const Admin = () => {
       return 0;
     });
 
+  const companiesWithStats = companies
+    .map((company) => ({
+      ...company,
+      firstChoiceCount: registrations.filter(
+        (r) => r.companyPreferences?.[0] === company.name
+      ).length,
+    }))
+    .sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+
+  const safeCompanyPage = Math.min(
+    companyPage,
+    pageCount(companiesWithStats.length) - 1
+  );
+  const safeRegsPage = Math.min(regsPage, pageCount(sortedFiltered.length) - 1);
+  const pagedCompanies = pageItems(companiesWithStats, safeCompanyPage);
+  const pagedRegistrations = pageItems(sortedFiltered, safeRegsPage);
+
+  useEffect(() => {
+    setCompanyPage(0);
+  }, [companies.length]);
+
+  useEffect(() => {
+    setRegsPage(0);
+  }, [searchQuery, sortBy, registrations.length]);
+
+  useEffect(() => {
+    if (!showMatching) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setShowMatching(false);
+    };
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [showMatching]);
+
   if (authLoading) {
-    return <div className="admin-center"><p className="admin-loading-text">Loading...</p></div>;
+    return <div className="admin-shell admin-center"><p className="admin-loading-text">Loading...</p></div>;
   }
 
   if (!user) {
     return (
-      <div className="admin-center">
+      <div className="admin-shell admin-center">
         <div className="admin-login-card">
           <h1>EWI Admin</h1>
           <p>Sign in with your authorized Google account to view registration data.</p>
@@ -366,7 +484,7 @@ const Admin = () => {
 
   if (!isAuthorized) {
     return (
-      <div className="admin-center">
+      <div className="admin-shell admin-center">
         <div className="admin-login-card">
           <h1>Access Denied</h1>
           <p><strong>{user.email}</strong> is not authorized to access this page.</p>
@@ -377,12 +495,24 @@ const Admin = () => {
   }
 
   return (
-    <div className="admin-page">
+    <div className="admin-shell admin-page">
+      <div className="admin-panel">
       <div className="admin-header">
         <h1>Admin Dashboard</h1>
         <div className="admin-header-right">
-          <span className="admin-user">{user.email}</span>
-          <button className="admin-signout-btn" onClick={handleSignOut}>Sign out</button>
+          <div className="admin-user-block">
+            <span className="admin-user">{user.email}</span>
+            <button type="button" className="admin-signout-link" onClick={handleSignOut}>
+              Sign out
+            </button>
+          </div>
+          <img
+            className="admin-avatar"
+            src={user.photoURL || avatarPlaceholder}
+            alt=""
+            width={78}
+            height={78}
+          />
         </div>
       </div>
 
@@ -407,219 +537,228 @@ const Admin = () => {
 
       {error && <p className="admin-error">{error}</p>}
 
-      <div className="admin-tabs">
-        {["companies", "majors", "years", "matching"].map((tab) => (
-          <button
-            key={tab}
-            className={`filter-btn ${activeTab === tab ? "active" : ""}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab === "companies" ? "Companies" : tab === "majors" ? "Majors" : tab === "years" ? "Years" : "Run Matching"}
-          </button>
-        ))}
+      <div className="admin-tabs-row">
+        <div className="admin-tabs">
+          {["companies", "majors", "years"].map((tab) => (
+            <button
+              key={tab}
+              className={`filter-btn ${activeTab === tab ? "active" : ""}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab === "companies" ? "Companies" : tab === "majors" ? "Majors" : "Years"}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          className={`admin-matching-toggle${showMatching ? " is-open" : ""}`}
+          onClick={() => setShowMatching(true)}
+          aria-expanded={showMatching}
+          aria-controls="admin-matching-panel"
+        >
+          Run Matching
+        </button>
       </div>
 
-      {dataLoading ? (
-        <p className="admin-loading-text">Loading registrations...</p>
-      ) : (
-        <>
-          {activeTab === "companies" && (
-            <>
-              <form className="admin-add-company-row" onSubmit={handleAddCompany}>
-                <input
-                  className="admin-search-input"
-                  type="text"
-                  placeholder="Company name"
-                  value={newCompanyName}
-                  onChange={(e) => setNewCompanyName(e.target.value)}
-                />
-                <input
-                  className="admin-search-input capacity-input"
-                  type="number"
-                  min="0"
-                  placeholder="Capacity (optional)"
-                  value={newCompanyCapacity}
-                  onChange={(e) => setNewCompanyCapacity(e.target.value)}
-                />
-                <button type="submit" className="add-company-btn">+ Add Company</button>
-              </form>
-
-              <div className="admin-table-wrapper companies-table-wrapper">
-                <table className="admin-table companies-table">
-                  <thead>
-                    <tr>
-                      <th>company</th>
-                      <th>capacity</th>
-                      <th># of first choices</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {companies.map((company) => (
-                      <tr key={company.id}>
-                        <td className="company-name-cell">{company.name}</td>
-                        <td data-label="capacity">
-                          {editingCapacityId === company.id ? (
-                            <input
-                              type="number"
-                              min="0"
-                              className="capacity-input"
-                              autoFocus
-                              value={capacityDraft}
-                              onChange={(e) => setCapacityDraft(e.target.value)}
-                              onBlur={() => commitCapacity(company)}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") e.target.blur();
-                                if (e.key === "Escape") cancelEditingCapacity();
-                              }}
-                            />
-                          ) : (
-                            <span
-                              className="capacity-display"
-                              onClick={() => startEditingCapacity(company)}
-                            >
-                              {company.capacity ?? "—"}
-                            </span>
-                          )}
-                        </td>
-                        <td data-label="# of first choices">
-                          {registrations.filter((r) => r.companyPreferences?.[0] === company.name).length}
-                        </td>
-                        <td className="remove-cell">
-                          <button className="remove-btn" onClick={() => setConfirmRemove(company)}>remove</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+      {showMatching && (
+        <div
+          className="admin-matching-overlay"
+          onClick={() => setShowMatching(false)}
+          role="presentation"
+        >
+          <aside
+            id="admin-matching-panel"
+            className="admin-matching-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-matching-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <header className="admin-matching-panel__header">
+              <div className="admin-matching-intro">
+                <h2 id="admin-matching-title" className="admin-matching-title">
+                  Table matching
+                </h2>
+                <p className="admin-matching-desc">
+                  Runs the sorting algorithm against all current student registrations.
+                </p>
               </div>
-            </>
-          )}
+              <button
+                type="button"
+                className="admin-matching-panel__close"
+                aria-label="Close matching panel"
+                onClick={() => setShowMatching(false)}
+              >
+                ×
+              </button>
+            </header>
 
-          {activeTab === "majors" && (
-            <PieChartView
-              data={Object.entries(
-                registrations.reduce((acc, r) => {
-                  const m = r.major === "Other" ? (r.otherMajor || "Other") : (r.major || "Unknown");
-                  acc[m] = (acc[m] || 0) + 1;
-                  return acc;
-                }, {})
-              ).map(([name, value]) => ({ name, value }))}
-            />
-          )}
-
-          {activeTab === "years" && (
-            <PieChartView
-              data={Object.entries(
-                registrations.reduce((acc, r) => {
-                  const y = r.year || "Unknown";
-                  acc[y] = (acc[y] || 0) + 1;
-                  return acc;
-                }, {})
-              ).map(([name, value]) => ({ name, value }))}
-            />
-          )}
-
-          {activeTab === "matching" && (
-            <div className="admin-matching">
-              <p className="admin-matching-desc">Runs the table sorting algorithm against all current student registrations.</p>
-              <fieldset className="matching-settings">
-                <legend>Settings</legend>
-
-                <div className="setting-row">
-                  <label htmlFor="seatsPerTable">Seats per table</label>
-                  <InfoTip>How many students sit at each company's table.</InfoTip>
-                  <input id="seatsPerTable" type="number" min="1" value={matchingSettings.seatsPerTable}
-                    onChange={(e) => updateSetting("seatsPerTable", e.target.value)} />
-                </div>
-                <div className="setting-row">
-                  <label htmlFor="maxPerMajor">Max of one major per table</label>
-                  <InfoTip>
-                    No more than this many students with the same major at one table, so each company meets
-                    a mix of majors. With 4, a table can't have 5 Computer Science students.
-                  </InfoTip>
-                  <input id="maxPerMajor" type="number" min="1" value={matchingSettings.maxPerMajor}
-                    onChange={(e) => updateSetting("maxPerMajor", e.target.value)} />
-                </div>
-                <div className="setting-row">
-                  <label htmlFor="protectedPercent">Can't lose their seat</label>
-                  <InfoTip>
-                    Students are lined up by when they signed up (#1 signed up first). The first {matchingSettings.protectedPercent}% of the line
-                    keep whatever seat they get. Right now that's {lineSpots(lockedCount).toLowerCase()} of {registrations.length}.
-                  </InfoTip>
-                  <span className="setting-input">
-                    <input id="protectedPercent" type="number" min="0" max="100" value={matchingSettings.protectedPercent}
-                      onChange={(e) => updateSetting("protectedPercent", e.target.value)} />
-                    <span>%</span>
-                  </span>
-                </div>
-                <div className="setting-row">
-                  <label htmlFor="canBumpPercent">Can take someone's seat</label>
-                  <InfoTip>
-                    If someone in the first {matchingSettings.canBumpPercent}% of the line gets none of their picks, they can take a seat from a
-                    student later in line who ranked that company only 3rd or 4th. Right now
-                    that's {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length}.
-                  </InfoTip>
-                  <span className="setting-input">
-                    <input id="canBumpPercent" type="number" min="0" max="100" value={matchingSettings.canBumpPercent}
-                      onChange={(e) => updateSetting("canBumpPercent", e.target.value)} />
-                    <span>%</span>
-                  </span>
-                </div>
-
-                <div className="setting-subhead">
-                  <span>Larger tables</span>
-                  <InfoTip>Companies hosting a bigger table get their own limits instead of the ones above.</InfoTip>
-                </div>
-                {matchingSettings.largeTables.length > 0 && (
-                  <div className="large-table-head" aria-hidden="true">
-                    <span>Company</span><span>Seats</span><span>Max of one major</span><span></span>
+            <div className="admin-matching-panel__body">
+              <div className="matching-settings">
+                <div className="matching-settings-grid">
+                  <div className="setting-row">
+                    <div className="setting-label">
+                      <label htmlFor="seatsPerTable">Seats per table</label>
+                      <InfoTip>How many students sit at each company's table.</InfoTip>
+                    </div>
+                    <input
+                      id="seatsPerTable"
+                      type="number"
+                      min="1"
+                      value={matchingSettings.seatsPerTable}
+                      onChange={(e) => updateSetting("seatsPerTable", e.target.value)}
+                    />
                   </div>
-                )}
-                {matchingSettings.largeTables.map((t, i) => (
-                  <div className="large-table-row" key={i}>
-                    <select id={`largeCompany${i}`} aria-label="Company" value={t.company}
-                      onChange={(e) => updateLargeTable(i, "company", e.target.value)}>
-                      <option value="">Select company</option>
-                      {companies.map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
-                    </select>
-                    <input id={`largeSeats${i}`} aria-label="Seats" type="number" min="1" value={t.seats}
-                      onChange={(e) => updateLargeTable(i, "seats", e.target.value)} />
-                    <input id={`largeMajor${i}`} aria-label="Max of one major" type="number" min="1" value={t.maxPerMajor}
-                      onChange={(e) => updateLargeTable(i, "maxPerMajor", e.target.value)} />
-                    <button type="button" className="large-table-remove" aria-label="Remove larger table"
-                      onClick={() => removeLargeTable(i)}>×</button>
+                  <div className="setting-row">
+                    <div className="setting-label">
+                      <label htmlFor="maxPerMajor">Max of one major</label>
+                      <InfoTip>
+                        No more than this many students with the same major at one table, so each company meets
+                        a mix of majors. With 4, a table can't have 5 Computer Science students.
+                      </InfoTip>
+                    </div>
+                    <input
+                      id="maxPerMajor"
+                      type="number"
+                      min="1"
+                      value={matchingSettings.maxPerMajor}
+                      onChange={(e) => updateSetting("maxPerMajor", e.target.value)}
+                    />
                   </div>
-                ))}
+                  <div className="setting-row">
+                    <div className="setting-label">
+                      <label htmlFor="protectedPercent">Can't lose their seat</label>
+                      <InfoTip>
+                        Students are lined up by when they signed up (#1 signed up first). The first {matchingSettings.protectedPercent}% of the line
+                        keep whatever seat they get. Right now that's {lineSpots(lockedCount).toLowerCase()} of {registrations.length}.
+                      </InfoTip>
+                    </div>
+                    <span className="setting-input">
+                      <input
+                        id="protectedPercent"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={matchingSettings.protectedPercent}
+                        onChange={(e) => updateSetting("protectedPercent", e.target.value)}
+                      />
+                      <span>%</span>
+                    </span>
+                  </div>
+                  <div className="setting-row">
+                    <div className="setting-label">
+                      <label htmlFor="canBumpPercent">Can take someone's seat</label>
+                      <InfoTip>
+                        If someone in the first {matchingSettings.canBumpPercent}% of the line gets none of their picks, they can take a seat from a
+                        student later in line who ranked that company only 3rd or 4th. Right now
+                        that's {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length}.
+                      </InfoTip>
+                    </div>
+                    <span className="setting-input">
+                      <input
+                        id="canBumpPercent"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={matchingSettings.canBumpPercent}
+                        onChange={(e) => updateSetting("canBumpPercent", e.target.value)}
+                      />
+                      <span>%</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="matching-large-tables">
+                  <div className="setting-subhead">
+                    <span>Larger tables</span>
+                    <InfoTip>Companies hosting a bigger table get their own limits instead of the ones above.</InfoTip>
+                  </div>
+                  {matchingSettings.largeTables.length > 0 && (
+                    <div className="large-table-head" aria-hidden="true">
+                      <span>Company</span>
+                      <span>Seats</span>
+                      <span>Max major</span>
+                      <span />
+                    </div>
+                  )}
+                  {matchingSettings.largeTables.map((t, i) => (
+                    <div className="large-table-row" key={i}>
+                      <OverlaySelect
+                        id={`largeCompany${i}`}
+                        name={`largeCompany${i}`}
+                        ariaLabel="Company"
+                        size="compact"
+                        className="admin-company-select"
+                        value={t.company}
+                        placeholder="Select company"
+                        options={companies.map((c) => ({ value: c.name, label: c.name }))}
+                        onChange={(e) => updateLargeTable(i, "company", e.target.value)}
+                      />
+                      <input
+                        id={`largeSeats${i}`}
+                        aria-label="Seats"
+                        type="number"
+                        min="1"
+                        value={t.seats}
+                        onChange={(e) => updateLargeTable(i, "seats", e.target.value)}
+                      />
+                      <input
+                        id={`largeMajor${i}`}
+                        aria-label="Max of one major"
+                        type="number"
+                        min="1"
+                        value={t.maxPerMajor}
+                        onChange={(e) => updateLargeTable(i, "maxPerMajor", e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="large-table-remove"
+                        aria-label="Remove larger table"
+                        onClick={() => removeLargeTable(i)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                  <button type="button" className="matching-link-btn" onClick={addLargeTable}>
+                    + Add larger table
+                  </button>
+                </div>
+
                 <div className="matching-settings-actions">
-                  <button type="button" className="remove-btn" onClick={addLargeTable}>+ add larger table</button>
-                  <button type="button" className="remove-btn" onClick={() => setMatchingSettings(DEFAULT_MATCHING_SETTINGS)}>reset to defaults</button>
-                  <button type="button" className="settings-save-btn" onClick={saveSettings}
-                    disabled={!settingsChanged || settingsSaving}>
+                  <button
+                    type="button"
+                    className="matching-link-btn"
+                    onClick={() => setMatchingSettings(DEFAULT_MATCHING_SETTINGS)}
+                  >
+                    Reset to defaults
+                  </button>
+                  <button
+                    type="button"
+                    className={`settings-save-btn${settingsChanged ? "" : " is-saved"}`}
+                    onClick={saveSettings}
+                    disabled={!settingsChanged || settingsSaving}
+                  >
                     {settingsSaving ? "Saving..." : settingsChanged ? "Save settings" : "Saved"}
                   </button>
                 </div>
                 {settingsChanged && !settingsSaving && (
-                  <p className="settings-unsaved">Unsaved changes. Runs use these values, but they reset on reload until you save.</p>
+                  <p className="settings-unsaved">
+                    Unsaved changes. Runs use these values, but they reset on reload until you save.
+                  </p>
                 )}
                 {settingsError && <p className="admin-error">{settingsError}</p>}
-              </fieldset>
-              <button
-                className="admin-signin-btn"
-                onClick={() => setShowMatchingConfirm(true)}
-                disabled={matchingLoading}
-              >
-                {matchingLoading ? "Running..." : "Run Matching Algorithm"}
-              </button>
-              {matchingError && <p className="admin-error" style={{ marginTop: "1rem" }}>{matchingError}</p>}
+              </div>
+
+              {matchingError && <p className="admin-error">{matchingError}</p>}
               {matchingResults && (
-                <div className="admin-table-wrapper" style={{ marginTop: "1.5rem" }}>
+                <div className="admin-table-wrapper admin-matching-results">
                   <table className="admin-table">
                     <thead>
                       <tr>
-                        <th>Company</th>
-                        <th># Students</th>
-                        <th>Students</th>
+                        <th>company</th>
+                        <th># students</th>
+                        <th>students</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -635,6 +774,165 @@ const Admin = () => {
                 </div>
               )}
             </div>
+
+            <footer className="admin-matching-panel__footer">
+              <button
+                className="admin-matching-run"
+                onClick={() => setShowMatchingConfirm(true)}
+                disabled={matchingLoading}
+              >
+                {matchingLoading ? "Running..." : "Run Matching Algorithm"}
+              </button>
+            </footer>
+          </aside>
+        </div>
+      )}
+
+      {dataLoading ? (
+        <p className="admin-loading-text">Loading registrations...</p>
+      ) : (
+        <>
+          {activeTab === "companies" && (
+            <>
+              <div className="admin-table-wrapper companies-table-wrapper">
+                <table className="admin-table companies-table">
+                  <thead>
+                    <tr>
+                      <th>company</th>
+                      <th>capacity</th>
+                      <th># of first choices</th>
+                      <th aria-label="actions" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pagedCompanies.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="admin-empty">No companies yet.</td>
+                      </tr>
+                    ) : (
+                      pagedCompanies.map((company) => (
+                        <tr key={company.id}>
+                          <td className="company-name-cell">{company.name}</td>
+                          <td data-label="capacity">
+                            {editingCapacityId === company.id ? (
+                              <input
+                                type="number"
+                                min="0"
+                                className="capacity-input"
+                                autoFocus
+                                value={capacityDraft}
+                                onChange={(e) => setCapacityDraft(e.target.value)}
+                                onBlur={() => commitCapacity(company)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") e.target.blur();
+                                  if (e.key === "Escape") cancelEditingCapacity();
+                                }}
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                className="capacity-display"
+                                onClick={() => startEditingCapacity(company)}
+                              >
+                                {company.capacity ?? "—"}
+                              </button>
+                            )}
+                          </td>
+                          <td data-label="# of first choices">
+                            <span className="first-choice-count">{company.firstChoiceCount}</span>
+                          </td>
+                          <td className="remove-cell">
+                            <button
+                              type="button"
+                              className="admin-trash-btn"
+                              aria-label={`Delete ${company.name}`}
+                              onClick={() => setConfirmRemove(company)}
+                            >
+                              <TrashIcon />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <div className="admin-add-company">
+                {showAddCompany ? (
+                  <form className="admin-add-company-form" onSubmit={handleAddCompany}>
+                    <input
+                      className="admin-search-input"
+                      type="text"
+                      placeholder="Company name"
+                      value={newCompanyName}
+                      onChange={(e) => setNewCompanyName(e.target.value)}
+                      autoFocus
+                      required
+                    />
+                    <input
+                      className="admin-search-input admin-add-company-capacity"
+                      type="number"
+                      min="0"
+                      placeholder="Capacity (optional)"
+                      value={newCompanyCapacity}
+                      onChange={(e) => setNewCompanyCapacity(e.target.value)}
+                    />
+                    <button type="submit" className="add-company-btn">Add</button>
+                    <button
+                      type="button"
+                      className="admin-add-company-cancel"
+                      onClick={() => {
+                        setShowAddCompany(false);
+                        setNewCompanyName("");
+                        setNewCompanyCapacity("");
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <button
+                    type="button"
+                    className="admin-add-company-toggle"
+                    onClick={() => setShowAddCompany(true)}
+                  >
+                    + Add company
+                  </button>
+                )}
+              </div>
+              <AdminPager
+                page={safeCompanyPage}
+                totalItems={companiesWithStats.length}
+                onChange={setCompanyPage}
+                label="Companies pages"
+              />
+            </>
+          )}
+
+          {activeTab === "majors" && (
+            <PieChartView
+              title="Majors"
+              data={Object.entries(
+                registrations.reduce((acc, r) => {
+                  const m = r.major === "Other" ? (r.otherMajor || "Other") : (r.major || "Unknown");
+                  acc[m] = (acc[m] || 0) + 1;
+                  return acc;
+                }, {})
+              ).map(([name, value]) => ({ name, value }))}
+            />
+          )}
+
+          {activeTab === "years" && (
+            <PieChartView
+              title="Years"
+              data={Object.entries(
+                registrations.reduce((acc, r) => {
+                  const y = r.year || "Unknown";
+                  acc[y] = (acc[y] || 0) + 1;
+                  return acc;
+                }, {})
+              ).map(([name, value]) => ({ name, value }))}
+            />
           )}
 
           <div className="admin-search-row">
@@ -645,31 +943,35 @@ const Admin = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <select
+            <OverlaySelect
+              id="admin-sort"
+              name="sortBy"
+              ariaLabel="Sort registrations"
+              size="compact"
               className="admin-sort-select"
               value={sortBy}
+              placeholder="Sort by..."
+              options={SORT_OPTIONS}
               onChange={(e) => setSortBy(e.target.value)}
-            >
-              <option value="name">Sort by: Name</option>
-              <option value="status">Sort by: Status</option>
-              <option value="year">Sort by: Year</option>
-              <option value="major">Sort by: Major</option>
-            </select>
-            <select className="admin-export-select" onChange={handleExport} defaultValue="">
-              <option value="" disabled>Export...</option>
-              <option value="meals">Export Meals</option>
-              <option value="companies">Export Company Prefs</option>
-              <option value="all">Export All</option>
-              <option value="resumes">Export Resumes</option>
-              <option value="resumes-by-major">Export Resumes by Major</option>
-            </select>
+            />
+            <OverlaySelect
+              id="admin-export"
+              name="export"
+              ariaLabel="Export data"
+              size="compact"
+              className="admin-export-select"
+              value=""
+              placeholder="Export..."
+              options={EXPORT_OPTIONS}
+              onChange={(e) => handleExport(e.target.value)}
+            />
           </div>
           <div className="admin-table-wrapper">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>major/Yr</th>
+                  <th>name</th>
+                  <th>major/yr</th>
                   <th>status</th>
                   <th>top choice</th>
                 </tr>
@@ -680,7 +982,7 @@ const Admin = () => {
                     <td colSpan={4} className="admin-empty">No registrations found.</td>
                   </tr>
                 ) : (
-                  sortedFiltered.map((r, i) => (
+                  pagedRegistrations.map((r, i) => (
                     <tr key={r.email || i}>
                       <td>{r.fullName}</td>
                       <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
@@ -696,8 +998,15 @@ const Admin = () => {
               </tbody>
             </table>
           </div>
+          <AdminPager
+            page={safeRegsPage}
+            totalItems={sortedFiltered.length}
+            onChange={setRegsPage}
+            label="Registrations pages"
+          />
         </>
       )}
+      </div>
       {showMatchingConfirm && (
         <div className="modal-overlay" onClick={() => setShowMatchingConfirm(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>

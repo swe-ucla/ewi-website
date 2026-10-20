@@ -622,3 +622,91 @@ textarea.input-box {
         width: 100%;
     }
 }
+
+/* Temporary coming-soon state */
+.student-reg-page--coming-soon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3.5rem;
+    padding-bottom: 12vw;
+}
+
+.student-reg-coming-soon {
+    position: relative;
+    width: 100%;
+    max-width: 40rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: 25px;
+    background: rgba(249, 246, 240, 0.72);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 28px rgba(43, 33, 51, 0.1);
+}
+
+.student-reg-coming-soon__mascot {
+    width: min(14rem, 42vw);
+    height: auto;
+    filter: drop-shadow(0 10px 16px rgba(43, 33, 51, 0.18));
+}
+
+.student-reg-coming-soon__card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 16rem;
+    padding: 2.5rem 2rem 2.75rem;
+    border-radius: 25px;
+    background: #fff;
+    text-align: center;
+}
+
+.student-reg-coming-soon__title {
+    margin: 0;
+    color: #a35c45;
+    font-family: "Abhaya Libre Extra", serif;
+    font-size: clamp(3rem, 7vw, 4.75rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    text-transform: lowercase;
+}
+
+.student-reg-coming-soon__tagline {
+    margin: 0.35rem 0 0;
+    color: #d48c70;
+    font-family: "Dongle", sans-serif;
+    font-size: clamp(2.1rem, 4vw, 3rem);
+    line-height: 0.9;
+}
+
+.student-reg-coming-soon__copy {
+    margin: 1.1rem 0 0;
+    max-width: 26rem;
+    color: #2b2133;
+    font-family: "Dongle", sans-serif;
+    font-size: 1.65rem;
+    line-height: 1.15;
+}
+
+@media (max-width: 480px) {
+    .student-reg-coming-soon {
+        padding: 1.5rem 1.25rem;
+        gap: 1.25rem;
+    }
+
+    .student-reg-coming-soon__mascot {
+        width: min(11rem, 46vw);
+    }
+
+    .student-reg-coming-soon__card {
+        min-height: 14rem;
+        padding: 2rem 1.25rem 2.25rem;
+    }
+}

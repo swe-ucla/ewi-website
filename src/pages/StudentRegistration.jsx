@@ -7,9 +7,14 @@ import registrationTimelineDates from "../data/registrationDates";
 import { homeEventConfig } from "../components/home/homeEventConfig";
 import { sanitizeCloudinaryId, uploadToCloudinary } from "../utils/cloudinary";
 import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
+import mascot from "../assets/home-2026/mascot.png";
 import "./StudentRegistration.css";
 
 const WAITLIST_STEP = STEPS.indexOf("waitlist");
+
+// Temporary: show coming-soon graphic instead of the live form.
+// Set to false to restore the registration form.
+const SHOW_COMING_SOON = true;
 
 // Temporary override: show the open "normal" registration state (no capacity
 // banner, timeline marker on normal). Set to false to restore the date-based
@@ -94,7 +99,7 @@ const YEAR_OPTIONS = [
     { value: "first-year", label: "First" },
     { value: "second-year", label: "Second" },
     { value: "third-year", label: "Third" },
-    { value: "fouth-year", label: "Fourth" },
+    { value: "fourth-year", label: "Fourth" },
     { value: "fifth-year-or-greater", label: "Fifth+" },
     { value: "grad-student-masters", label: "Grad Student - Master's" },
     { value: "grad-student-phd", label: "Grad Student - PhD" },
@@ -398,6 +403,33 @@ const StudentRegistrationForm = () => {
         }
 
     };
+
+    if (SHOW_COMING_SOON) {
+        return (
+            <div className="student-reg-page student-reg-page--coming-soon">
+                <div className="student-reg-coming-soon" role="status">
+                    <img
+                        className="student-reg-coming-soon__mascot"
+                        src={mascot}
+                        alt=""
+                        width={420}
+                        height={475}
+                    />
+                    <div className="student-reg-coming-soon__card">
+                        <h1 className="student-reg-coming-soon__title">coming soon</h1>
+                        <p className="student-reg-coming-soon__tagline">
+                            harvest your potential
+                        </p>
+                        <p className="student-reg-coming-soon__copy">
+                            Student registration will open soon!
+                            <br />
+                            Check back the second week of November.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="student-reg-page">
