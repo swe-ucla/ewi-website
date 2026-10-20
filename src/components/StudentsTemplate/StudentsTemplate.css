@@ -13,64 +13,314 @@
     background: linear-gradient(181.4deg, #e3c4fb 0.8%, rgba(244, 220, 208, 0.6) 75.8%), var(--students-paper);
 }
 
-.students-template-foliage { position: absolute; z-index: 0; top: 0; left: 50%; width: 100vw; max-width: none; height: 1109px; object-fit: cover; object-position: top center; transform: translateX(-50%); mix-blend-mode: multiply; pointer-events: none; }
-.students-template-content { position: relative; z-index: 1; width: 100%; max-width: 1280px; margin: 0 auto; padding-top: 116px; }
-.students-template-header { position: relative; display: flex; min-height: 440px; flex-direction: column; align-items: center; justify-content: center; padding: 45px 0 38px; text-align: center; }
-.students-template-wordmark { display: flex; width: 639px; max-width: 100%; flex-direction: column; align-items: center; gap: 4px; margin: 0; }
-.students-template-wordmark img { display: block; max-width: 100%; height: auto; }
-.students-template-mascot { position: absolute; top: 70px; left: calc(50% - 450px); width: 132px; height: auto; object-fit: contain; }
-.students-template-button { display: inline-flex; min-width: 185px; min-height: 57px; align-items: center; justify-content: center; margin-top: 24px; padding: 4px 28px 0; border-radius: 15px; background: #d48c70; color: var(--students-paper); font-family: "Dongle", sans-serif; font-size: 48px; line-height: 1; text-decoration: none; transition: background-color 180ms ease, transform 180ms ease; }
-.students-template-button:hover, .students-template-button:focus-visible { background: #bd745c; color: var(--students-paper); transform: translateY(-2px); }
-.students-template-section { display: flex; width: 100%; flex-direction: column; align-items: center; margin-top: 28px; }
-.students-template-section h2 { width: 100%; margin: 0 0 20px; color: var(--students-ink); font-family: "Abhaya Libre", Georgia, serif; font-size: 98px; font-weight: 800; line-height: 1; text-align: center; text-shadow: 2px 2px 3px rgba(95, 64, 119, 0.35); text-transform: lowercase; }
-.students-template-accordion { display: grid; width: 100%; max-width: 1165px; gap: 28px; }
-.students-template-accordion-item { overflow: hidden; border: 1px solid rgba(95, 64, 119, 0.8); border-radius: 25px; background: linear-gradient(90deg, var(--students-paper) 0%, rgba(227, 196, 251, 0.8) 100%); box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.25); }
-.students-template-question { display: flex; width: 100%; min-height: 108px; align-items: center; justify-content: space-between; padding: 18px 48px 10px 62px; border: 0; background: transparent; color: var(--students-ink); cursor: pointer; font-family: "Dongle", sans-serif; font-size: 56px; font-weight: 700; line-height: 0.9; text-align: left; }
-.students-template-icon { display: inline-flex; width: 48px; height: 48px; flex: 0 0 48px; align-items: center; justify-content: center; color: var(--students-ink); }
-.students-template-icon svg { width: 100%; height: 100%; stroke-width: 1.5; }
-.students-template-answer { margin: 0; padding: 0 62px 38px; color: var(--students-plum); font-family: "Dongle", sans-serif; font-size: 56px; line-height: 0.9; text-shadow: 2px 2px 3px rgba(227, 196, 251, 0.5); }
-.students-template-guide-section { margin-top: 46px; }
-.students-template-guide-preview { display: block; width: min(100%, 715px); height: 783px; object-fit: cover; }
+.students-template-foliage {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    max-width: none;
+    height: 1109px;
+    object-fit: cover;
+    object-position: top center;
+    transform: translateX(-50%);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+.students-template-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding-top: 96px;
+}
+
+.students-template-header {
+    position: relative;
+    display: flex;
+    min-height: 360px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 0 28px;
+    text-align: center;
+}
+
+.students-template-wordmark {
+    display: flex;
+    width: 520px;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+}
+
+.students-template-wordmark img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.students-template-mascot {
+    position: absolute;
+    top: 56px;
+    left: calc(50% - 360px);
+    width: 108px;
+    height: auto;
+    object-fit: contain;
+}
+
+.students-template-button {
+    display: inline-flex;
+    min-width: 150px;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 2px 24px 0;
+    border-radius: 15px;
+    background: #d48c70;
+    color: var(--students-paper);
+    font-family: "Dongle", sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.students-template-button:hover,
+.students-template-button:focus-visible {
+    background: #bd745c;
+    color: var(--students-paper);
+    transform: translateY(-2px);
+}
+
+.students-template-section {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+}
+
+.students-template-section h2 {
+    width: 100%;
+    margin: 0 0 16px;
+    color: var(--students-ink);
+    font-family: "Abhaya Libre", Georgia, serif;
+    font-size: clamp(2.75rem, 5.5vw, 4rem);
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(95, 64, 119, 0.35);
+    text-transform: lowercase;
+}
+
+.students-template-accordion {
+    display: grid;
+    width: 100%;
+    max-width: 900px;
+    gap: 18px;
+}
+
+.students-template-accordion-item {
+    overflow: hidden;
+    border: 1px solid rgba(95, 64, 119, 0.8);
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--students-paper) 0%, rgba(227, 196, 251, 0.8) 100%);
+    box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.25);
+}
+
+.students-template-question {
+    display: flex;
+    width: 100%;
+    min-height: 72px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 14px 28px 10px 32px;
+    border: 0;
+    background: transparent;
+    color: var(--students-ink);
+    cursor: pointer;
+    font-family: "Dongle", sans-serif;
+    font-size: clamp(1.75rem, 2.8vw, 2.15rem);
+    font-weight: 700;
+    line-height: 1.05;
+    text-align: left;
+}
+
+.students-template-icon {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    align-items: center;
+    justify-content: center;
+    color: var(--students-ink);
+}
+
+.students-template-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 1.5;
+}
+
+.students-template-answer {
+    margin: 0;
+    padding: 0 32px 24px;
+    color: var(--students-plum);
+    font-family: "Dongle", sans-serif;
+    font-size: clamp(1.55rem, 2.4vw, 1.9rem);
+    line-height: 1.15;
+    text-shadow: 1px 1px 2px rgba(227, 196, 251, 0.45);
+}
+
+.students-template-guide-section {
+    margin-top: 36px;
+}
+
+.students-template-guide-preview {
+    display: block;
+    width: min(100%, 560px);
+    height: auto;
+    object-fit: cover;
+}
 
 @media (min-width: 901px) {
-    .students-template-header { min-height: 500px; }
-    .students-template-wordmark { position: relative; width: 860px; height: 275px; max-width: none; display: block; transform: translateX(90px); }
-    .students-template-wordmark img { position: absolute; left: 50%; width: auto; max-width: none; transform: translateX(-50%) scale(1.34); transform-origin: top center; }
-    .students-template-wordmark img:first-child { top: -10px; left: calc(50% - 120px); z-index: 1; filter: drop-shadow(0 11px 8px rgba(246, 230, 250, 0.9)); }
-    .students-template-wordmark img:last-child { top: 96px; }
-    .students-template-mascot { top: 58px; left: calc(50% - 540px); width: 200px; }
+    .students-template-header {
+        min-height: 400px;
+    }
+
+    .students-template-wordmark {
+        position: relative;
+        width: 680px;
+        height: 220px;
+        max-width: none;
+        display: block;
+        transform: translateX(56px);
+    }
+
+    .students-template-wordmark img {
+        position: absolute;
+        left: 50%;
+        width: auto;
+        max-width: none;
+        transform: translateX(-50%) scale(1.05);
+        transform-origin: top center;
+    }
+
+    .students-template-wordmark img:first-child {
+        top: -6px;
+        left: calc(50% - 90px);
+        z-index: 1;
+        filter: drop-shadow(0 11px 8px rgba(246, 230, 250, 0.9));
+    }
+
+    .students-template-wordmark img:last-child {
+        top: 78px;
+    }
+
+    .students-template-mascot {
+        top: 48px;
+        left: calc(50% - 430px);
+        width: 150px;
+    }
 }
 
 @media (max-width: 900px) {
-    .students-template-header { min-height: 390px; }
-    .students-template-mascot { top: 58px; left: 2%; width: 100px; }
-    .students-template-section h2 { font-size: 72px; }
+    .students-template-header {
+        min-height: 320px;
+    }
+
+    .students-template-mascot {
+        top: 48px;
+        left: 2%;
+        width: 84px;
+    }
 }
 
 @media (max-width: 600px) {
-    .students-template-page { padding: 0 16px 64px; }
-    .students-template-foliage { top: 30px; width: 160%; max-width: none; height: 720px; }
-    .students-template-content { padding-top: 78px; }
-    .students-template-header { min-height: 370px; padding-top: 68px; }
-    .students-template-wordmark { width: 330px; max-width: calc(100% - 84px); gap: 2px; }
-    .students-template-mascot { top: 14px; left: 4px; width: 66px; }
-    .students-template-button { min-width: 150px; min-height: 50px; margin-top: 20px; font-size: 40px; }
-    .students-template-section { margin-top: 24px; }
-    .students-template-section h2 { margin-bottom: 16px; font-size: 52px; }
-    .students-template-accordion { gap: 18px; }
-    .students-template-accordion-item { border-radius: 18px; }
-    .students-template-question { min-height: 82px; padding: 16px 20px 8px 24px; font-size: 38px; }
-    .students-template-icon { width: 36px; height: 36px; flex-basis: 36px; }
-    .students-template-answer { padding: 0 24px 28px; font-size: 38px; }
-    .students-template-guide-preview { height: auto; }
+    .students-template-page {
+        padding: 0 16px 64px;
+    }
+
+    .students-template-foliage {
+        top: 30px;
+        width: 160%;
+        max-width: none;
+        height: 720px;
+    }
+
+    .students-template-content {
+        padding-top: 64px;
+    }
+
+    .students-template-header {
+        min-height: 300px;
+        padding-top: 56px;
+    }
+
+    .students-template-wordmark {
+        width: 280px;
+        max-width: calc(100% - 72px);
+        gap: 2px;
+    }
+
+    .students-template-mascot {
+        top: 12px;
+        left: 4px;
+        width: 56px;
+    }
+
+    .students-template-button {
+        min-width: 132px;
+        min-height: 44px;
+        margin-top: 16px;
+        font-size: 30px;
+    }
+
+    .students-template-section {
+        margin-top: 20px;
+    }
+
+    .students-template-section h2 {
+        margin-bottom: 12px;
+    }
+
+    .students-template-accordion {
+        gap: 14px;
+    }
+
+    .students-template-accordion-item {
+        border-radius: 16px;
+    }
+
+    .students-template-question {
+        min-height: 64px;
+        padding: 12px 16px 8px 18px;
+    }
+
+    .students-template-icon {
+        width: 28px;
+        height: 28px;
+        flex-basis: 28px;
+    }
+
+    .students-template-answer {
+        padding: 0 18px 20px;
+    }
 }
 
 /* Temporary survival guide coming-soon */
 .students-survival-soon {
     width: 100%;
-    max-width: 40rem;
+    max-width: 36rem;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-radius: 25px;
     background: rgba(249, 246, 240, 0.72);
     backdrop-filter: blur(12px);
@@ -82,8 +332,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 14rem;
-    padding: 2.5rem 2rem;
+    min-height: 11rem;
+    padding: 2rem 1.75rem;
     border-radius: 25px;
     background: #fff;
     text-align: center;
@@ -93,7 +343,7 @@
     margin: 0;
     color: #a35c45;
     font-family: "Abhaya Libre", Georgia, serif;
-    font-size: clamp(2.75rem, 6vw, 4.25rem);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 0.95;
@@ -101,20 +351,20 @@
 }
 
 .students-survival-soon__tagline {
-    margin: 0.4rem 0 0;
+    margin: 0.35rem 0 0;
     color: #d48c70;
     font-family: "Dongle", sans-serif;
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    line-height: 0.9;
+    font-size: clamp(1.65rem, 3.5vw, 2.15rem);
+    line-height: 0.95;
 }
 
 @media (max-width: 600px) {
     .students-survival-soon {
-        padding: 1.15rem;
+        padding: 1rem;
     }
 
     .students-survival-soon__card {
-        min-height: 11rem;
-        padding: 2rem 1.25rem;
+        min-height: 9rem;
+        padding: 1.5rem 1.15rem;
     }
 }

@@ -10,11 +10,26 @@ import "./StudentsTemplate.css";
 
 const SHOW_GUIDE_COMING_SOON = true;
 
-const QUESTIONS = Array.from({ length: 4 }, (_, index) => ({
-    id: index + 1,
-    question: "Question",
-    answer: "Question answer",
-}));
+const QUESTIONS = [
+    {
+        id: 1,
+        question: "What should I bring to EWI?",
+        answer:
+            "Prepare multiple copies of your resume to hand out during the career fair, a prepared elevator pitch and a positive attitude! If you are interested in multiple types of roles (ex: software engineer and product management), bring multiple versions of your resume to hand out!",
+    },
+    {
+        id: 2,
+        question: "How do I prepare for networking conversations?",
+        answer:
+            "Research the companies you're interested in beforehand. Prepare thoughtful questions about their work culture, projects, and opportunities. A good question can bring you a long way. Practice your elevator pitch and be ready to discuss your experiences and career goals.",
+    },
+    {
+        id: 3,
+        question: "How do company assignments work?",
+        answer:
+            'Table assignments are first come, first serve based on registration. Register as early as possible to ensure you get to sit with your top choice company during the dinner portion of the event. Priority company registration is also offered to participants who attend 4/5 of our "Prep for EWI" workshops. If you qualify, you will be guaranteed one of your top 5 company choices. Workshops are held the weeks prior to EWI and are advertised on our Instagram and website.',
+    },
+];
 
 const StudentsTemplate = () => {
     const [openIndexes, setOpenIndexes] = useState([0]);
