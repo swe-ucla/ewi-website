@@ -6,7 +6,7 @@ import "./IssuuStyleFlipbook.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const FLIP_MS = 900;
+const FLIP_MS = 1100;
 
 const IssuuStyleFlipbook = ({ pdfFile, scale = 1.0 }) => {
   const [numPages, setNumPages] = useState(null);
