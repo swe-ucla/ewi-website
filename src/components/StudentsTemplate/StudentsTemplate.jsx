@@ -1,75 +1,61 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiPlus, FiX } from "react-icons/fi";
+import guidePreview from "../../assets/students/guide-preview.png";
+import foliage from "../../assets/students/hero-foliage.png";
+import mascot from "../../assets/students/mascot.png";
+import registrationWordmark from "../../assets/students/registration.svg";
+import studentWordmark from "../../assets/students/student.svg";
 import "./StudentsTemplate.css";
 
-const PAGE_TITLE = "For Students";
-const PAGE_SUBHEADING = "subheading";
-const REGISTER_LABEL = "Register";
-const SURVIVAL_TIPS_TITLE = "Survival Tips";
-const SURVIVAL_GUIDE_TITLE = "Student Survival Guide";
-const PDF_PLACEHOLDER_TEXT = "PDF preview placeholder";
+const QUESTIONS = Array.from({ length: 4 }, (_, index) => ({
+    id: index + 1,
+    question: "Question",
+    answer: "Question answer",
+}));
 
 const StudentsTemplate = () => {
-    const [openIndex, setOpenIndex] = useState(null);
-    const questions = [
-        { id: 1, question: "question 1", answer: "answer 1" },
-        { id: 2, question: "question 2", answer: "answer 2" },
-        { id: 3, question: "question 3", answer: "answer 3" },
-    ];
-
-    const toggleQuestion = (index) => {
-        setOpenIndex(openIndex === index ? null : index);
-    };
+    const [openIndexes, setOpenIndexes] = useState([0]);
 
     return (
-        <div className="students-template-page">
+        <main className="students-template-page">
+            <img className="students-template-foliage" src={foliage} alt="" aria-hidden="true" />
             <div className="students-template-content">
                 <header className="students-template-header">
-                    <h1>{PAGE_TITLE}</h1>
-                    <p className="students-template-subhead">{PAGE_SUBHEADING}</p>
-                    <Link className="students-template-button" to="/student-registration">
-                        {REGISTER_LABEL}
-                    </Link>
+                    <img className="students-template-mascot" src={mascot} alt="" aria-hidden="true" />
+                    <h1 className="students-template-wordmark" aria-label="Student registration">
+                        <img src={studentWordmark} alt="" aria-hidden="true" />
+                        <img src={registrationWordmark} alt="" aria-hidden="true" />
+                    </h1>
+                    <Link className="students-template-button" to="/student-registration">Register</Link>
                 </header>
 
-                <section className="students-template-section">
-                    <h2>{SURVIVAL_TIPS_TITLE}</h2>
+                <section className="students-template-section" aria-labelledby="survival-tips-title">
+                    <h2 id="survival-tips-title">survival tips</h2>
                     <div className="students-template-accordion">
-                        {questions.map((item, index) => (
-                            <div key={item.id} className="students-template-accordion-item">
-                                <button
-                                    type="button"
-                                    className="students-template-question"
-                                    onClick={() => toggleQuestion(index)}
-                                >
-                                    {item.question}
-                                    <span className={`students-template-icon ${openIndex === index ? "open" : ""}`}>
-                                        ▾
-                                    </span>
-                                </button>
-                                {openIndex === index && (
-                                    <div className="students-template-answer">
-                                        {item.answer}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                        {QUESTIONS.map((item, index) => {
+                            const isOpen = openIndexes.includes(index);
+                            const answerId = `students-template-answer-${item.id}`;
+
+                            return (
+                                <article key={item.id} className="students-template-accordion-item">
+                                    <button type="button" className="students-template-question" onClick={() => setOpenIndexes((current) => isOpen ? current.filter((itemIndex) => itemIndex !== index) : [...current, index])} aria-expanded={isOpen} aria-controls={answerId}>
+                                        {item.question}
+                                        <span className="students-template-icon" aria-hidden="true">{isOpen ? <FiX /> : <FiPlus />}</span>
+                                    </button>
+                                    {isOpen && <p className="students-template-answer" id={answerId}>{item.answer}</p>}
+                                </article>
+                            );
+                        })}
                     </div>
                 </section>
 
-                <section className="students-template-section">
-                    <h2>{SURVIVAL_GUIDE_TITLE}</h2>
-                    <div className="students-template-guide">
-                        <div className="students-template-guide-placeholder">
-                            {PDF_PLACEHOLDER_TEXT}
-                        </div>
-                    </div>
-                </section>
-                <section className="students-template-section">
-                    <h2>hellohellohello</h2>
+                <section className="students-template-section students-template-guide-section" aria-labelledby="survival-guide-title">
+                    <h2 id="survival-guide-title">student survival guide</h2>
+                    <img className="students-template-guide-preview" src={guidePreview} alt="Student Survival Guide preview" />
                 </section>
             </div>
-        </div>
+        </main>
     );
 };
 
