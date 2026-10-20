@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import pineconeIdea from "../../assets/home-2026/pinecone-idea.png";
 import "./StudentsTemplate.css";
 
 const PAGE_TITLE = "For Students";
@@ -7,7 +8,6 @@ const PAGE_SUBHEADING = "subheading";
 const REGISTER_LABEL = "Register";
 const SURVIVAL_TIPS_TITLE = "Survival Tips";
 const SURVIVAL_GUIDE_TITLE = "Student Survival Guide";
-const PDF_PLACEHOLDER_TEXT = "PDF preview placeholder";
 
 const StudentsTemplate = () => {
     const [openIndex, setOpenIndex] = useState(null);
@@ -59,10 +59,12 @@ const StudentsTemplate = () => {
 
                 <section className="students-template-section">
                     <h2>{SURVIVAL_GUIDE_TITLE}</h2>
-                    <div className="students-template-guide">
-                        <div className="students-template-guide-placeholder">
-                            {PDF_PLACEHOLDER_TEXT}
+                    <div className="students-survival-soon">
+                        <div className="students-survival-soon__card">
+                            <h3 className="students-survival-soon__title">coming soon</h3>
+                            <p className="students-survival-soon__tagline">harvest your potential</p>
                         </div>
+                        <img className="students-survival-soon__pinecone" src={pineconeIdea} alt="" />
                     </div>
                 </section>
                 <section className="students-template-section">
