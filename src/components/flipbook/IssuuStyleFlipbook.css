@@ -168,7 +168,7 @@
 
 /* When clicking right arrow (next), flip the RIGHT page */
 .issuu-pages-spread.flipping.flipping-next .issuu-pages-prev .issuu-page-right:not(.issuu-page-cover) {
-  animation: pageTurnLeft 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  animation: pageTurnLeft 0.9s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
   z-index: 3;
 }
 
@@ -255,7 +255,7 @@
 
 /* When clicking left arrow (prev), flip the LEFT page */
 .issuu-pages-spread.flipping.flipping-prev .issuu-pages-prev .issuu-page-left {
-  animation: pageTurnRight 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  animation: pageTurnRight 0.9s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
   z-index: 3;
 }
 
@@ -419,6 +419,19 @@
   transform-origin: left center; /* Rotate from right edge (very end, outer edge) */
   margin-left: 0;
 }
+
+.issuu-page-spacer {
+  visibility: hidden !important;
+  pointer-events: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.issuu-page-spacer::before {
+  display: none !important;
+}
+
+
 
 /* Override transform-origin for cover page to ensure it pivots from absolute left edge */
 .issuu-pages-prev .issuu-page-right.issuu-page-cover {
@@ -594,7 +607,7 @@
 /* Special handling for single page flips - cover page on right flips from binding (left edge) */
 .issuu-pages-spread.flipping.flipping-next .issuu-pages-prev .issuu-page-right.issuu-page-cover {
   transform-origin: 0% 50% !important; /* Cover page flips from absolute left edge (binding) - force with !important */
-  animation: pageTurnLeftFromBinding 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  animation: pageTurnLeftFromBinding 0.9s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
   z-index: 3;
   position: relative; /* Ensure positioning context */
   margin-left: 0 !important; /* Ensure no left margin that could cause shift */
@@ -604,7 +617,7 @@
 /* Special handling for single page flips - last page on left flips from binding (right edge) */
 .issuu-pages-spread.flipping.flipping-prev .issuu-pages-prev .issuu-page-left.issuu-page-cover {
   transform-origin: right center; /* Last page flips from right edge (binding) */
-  animation: pageTurnRightSingle 1.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  animation: pageTurnRightSingle 0.9s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
 }
 
 .issuu-page .react-pdf__Page {
