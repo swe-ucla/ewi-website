@@ -1,50 +1,86 @@
-.home-companies__intro {
-  font-size: 0.75rem;
-  line-height: 1.45;
-  color: #333;
-  max-width: 32rem;
-  margin: 0 auto 1rem;
+.home-companies__panel {
+  position: relative;
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1.35rem;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
 }
 
 .home-companies__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.65rem;
-  width: 100%;
-  list-style: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.15rem 1.35rem;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
-.home-companies__grid li {
-  display: contents;
+.home-companies__more {
+  grid-column: span 2;
 }
 
-@media (min-width: 480px) {
+.home-companies__more-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 8.5rem;
+  padding: 1.25rem 1.25rem 1.1rem;
+  border-radius: 25px;
+  background: linear-gradient(160deg, #e3c4fb 0%, #d48c70 55%, #a35c45 100%);
+  box-shadow: inset 0 1px 0 rgba(249, 246, 240, 0.22);
+  text-align: center;
+}
+
+.home-companies__more-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0;
+  color: #f9f6f0;
+  font-family: "Abhaya Libre Extra", serif;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+  font-weight: 400;
+  line-height: 0.95;
+  text-shadow: 0 2px 6px rgba(43, 33, 51, 0.18);
+  text-transform: lowercase;
+}
+
+.home-companies__more-pinecone {
+  width: 2.15rem;
+  height: auto;
+  margin-left: 0.1rem;
+  transform: rotate(18deg);
+  filter: drop-shadow(0 2px 3px rgba(43, 33, 51, 0.22));
+}
+
+.home-companies__more-tagline {
+  margin: 0;
+  color: rgba(249, 246, 240, 0.92);
+  font-family: "Dongle", sans-serif;
+  font-size: clamp(1.35rem, 2vw, 1.7rem);
+  line-height: 1;
+}
+
+@media screen and (max-width: 700px) {
   .home-companies__grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
-}
 
-@media (min-width: 640px) {
-  .home-companies__grid {
-    grid-template-columns: repeat(4, 1fr);
+  .home-companies__more {
+    grid-column: span 1;
   }
-}
 
-.home-companies__link {
-  display: inline-block;
-  margin-top: 1rem;
-  font-size: 0.75rem;
-  color: inherit;
-  text-decoration: underline;
-}
+  .home-companies__more-card {
+    min-height: 5.5rem;
+    padding: 0.85rem 0.7rem;
+  }
 
-.home-companies__link:hover {
-  opacity: 0.85;
-}
-
-.home-companies__link:focus-visible {
-  outline: 2px solid #000;
-  outline-offset: 2px;
+  .home-companies__more-pinecone {
+    width: 1.7rem;
+  }
 }

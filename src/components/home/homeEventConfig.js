@@ -4,7 +4,7 @@
  */
 export const homeEventConfig = {
   date: "November 20, 2026",
-  time: "[time]",
+  time: "5:30–10:00 PM",
   location: "Carnesale Commons",
   countdownTarget: "2026-11-20T17:30:00-08:00",
 };
