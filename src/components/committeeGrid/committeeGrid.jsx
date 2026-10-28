@@ -4,10 +4,10 @@ import PeopleCard from "../peopleCard/PeopleCard";
 import JEIA from "../../assets/JeiaSoHeadshot.jpg";
 import LILLIAN from "../../assets/LillianGonickHeadshot.JPG";
 import GEORGIA from "../../assets/GeorgiaCraneHeadshot.jpg";
-import CAROL from "../../assets/placeholder.png";
+import CAROL from "../../assets/CarolHiwatigHeadshot.jpg";
 import PRIYANKA from "../../assets/placeholder.png";
-import FIA from "../../assets/placeholder.png";
-import FIONA from "../../assets/placeholder.png";
+import FIA from "../../assets/FiaNicolaescuHeadshot.png";
+import FIONA from "../../assets/FionaSzetoHeadshot.jpeg";
 
 const teamData = [
   {
@@ -100,6 +100,7 @@ const CommitteeGrid = () => {
       <div className="container committee-grid__content">
         <div className="committee-grid__section">
           <h2 className="committee-grid__subtitle">Directors</h2>
+
           <div className="committee-grid__cards committee-grid__cards--directors">
             {directors.map(
               ({ id, image, name, position, description, year, major, linkedInURL }) => (
@@ -120,6 +121,7 @@ const CommitteeGrid = () => {
 
         <div className="committee-grid__section">
           <h2 className="committee-grid__subtitle">Chairs</h2>
+          
           <div className="committee-grid__cards committee-grid__cards--chairs">
             {chairs.map(
               ({ id, image, name, position, description, year, major, linkedInURL }) => (
