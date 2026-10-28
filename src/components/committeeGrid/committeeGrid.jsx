@@ -97,12 +97,6 @@ const CommitteeGrid = () => {
 
   return (
     <section id="meet-the-team" className="committee-grid">
-      <header className="committee-grid__header">
-        <div className="committee-grid__header-content">
-          <h1 className="committee-grid__title">Meet the Team</h1>
-        </div>
-      </header>
-
       <div className="container committee-grid__content">
         <div className="committee-grid__section">
           <h2 className="committee-grid__subtitle">Directors</h2>
