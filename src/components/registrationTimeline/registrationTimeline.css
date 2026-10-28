@@ -9,10 +9,10 @@
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  max-width: 640px;
-  min-width: 480px; /* keeps labels from overlapping; wrapper scrolls if the viewport is narrower */
+  max-width: 42rem;
+  min-width: 480px;
   margin: 0 auto;
-  padding: 28px 48px 52px; /* side padding must clear the widest label's overhang so it never clips against the scrollable wrapper */
+  padding: 8px 36px 2.5rem;
   box-sizing: border-box;
 }
 
@@ -69,12 +69,23 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: 8px;
+  margin-top: 6px;
   width: max-content;
-  font-size: 14px;
-  color: #333333;
+  font-family: "Dongle", sans-serif;
+  font-size: 1.85rem;
+  line-height: 1;
+  color: #2b2133;
   text-align: center;
   white-space: nowrap;
+}
+
+.reg-timeline-caption {
+  margin: 0.15rem 0 0;
+  text-align: center;
+  font-family: "Dongle", sans-serif;
+  font-size: 1.55rem;
+  line-height: 1;
+  color: #757575;
 }
 
 .reg-timeline-line {
@@ -104,7 +115,7 @@
 @media (max-width: 640px) {
   .reg-timeline {
     min-width: 300px;
-    padding: 28px 40px 60px;
+    padding: 8px 28px 2.8rem;
   }
 
   .reg-timeline-step {
@@ -126,9 +137,14 @@
   }
 
   .reg-timeline-label {
-    width: 72px;
-    font-size: 11px;
+    width: 4.5rem;
+    font-size: 1.35rem;
     white-space: normal;
+  }
+
+  .reg-timeline-caption {
+    margin-top: 0.15rem;
+    font-size: 1.3rem;
   }
 
   .reg-timeline-line {

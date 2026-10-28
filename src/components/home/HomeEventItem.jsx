@@ -1,34 +1,40 @@
 import React from "react";
+import { HiOutlineLocationMarker, HiOutlineClock } from "react-icons/hi";
 import "./HomeEventItem.css";
 
 const HomeEventItem = ({
-  number,
   title,
-  dateTime,
   description,
+  location,
+  time,
   rsvpLink,
 }) => {
   return (
-    <article className="home-event-item home-wire-box">
-      <div className="home-event-item__header">
-        <span className="home-event-item__number">
-          {String(number).padStart(2, "0")}
-        </span>
-        <a
-          href={rsvpLink}
-          className="home-event-item__rsvp"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`RSVP for ${title} (opens in new tab)`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          RSVP ↗
-        </a>
+    <a
+      className="home-event-item"
+      href={rsvpLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${title}. ${description} ${location}. ${time}. RSVP, opens in a new tab.`}
+    >
+      <div className="home-event-item__badge" aria-hidden="true">
+        #
       </div>
-      <h3 className="home-event-item__title">{title}</h3>
-      <p className="home-event-item__datetime">{dateTime}</p>
-      <p className="home-event-item__description">{description}</p>
-    </article>
+      <div className="home-event-item__body">
+        <h3 className="home-event-item__title">{title}</h3>
+        <p className="home-event-item__description">{description}</p>
+        <div className="home-event-item__meta">
+          <span>
+            <HiOutlineLocationMarker aria-hidden="true" />
+            {location}
+          </span>
+          <span>
+            <HiOutlineClock aria-hidden="true" />
+            {time}
+          </span>
+        </div>
+      </div>
+    </a>
   );
 };
 

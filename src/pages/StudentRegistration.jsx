@@ -1,11 +1,46 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc, collection, getDocs, runTransaction } from "firebase/firestore";
 import RegistrationTimeline, { getCurrentStep, STEPS } from "../components/registrationTimeline/registrationTimeline";
 import registrationTimelineDates from "../data/registrationDates";
+import { homeEventConfig } from "../components/home/homeEventConfig";
 import { sanitizeCloudinaryId, uploadToCloudinary } from "../utils/cloudinary";
+import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
+import mascot from "../assets/home-2026/mascot.png";
 import "./StudentRegistration.css";
+
+const WAITLIST_STEP = STEPS.indexOf("waitlist");
+
+// Temporary: show coming-soon graphic instead of the live form.
+// Set to false to restore the registration form.
+const SHOW_COMING_SOON = true;
+
+// Temporary override: show the open "normal" registration state (no capacity
+// banner, timeline marker on normal). Set to false to restore the date-based
+// step from registrationDates.js.
+const FORCE_NORMAL_REGISTRATION = true;
+
+const registrationDatesForDisplay = FORCE_NORMAL_REGISTRATION
+    ? {
+        ...registrationTimelineDates,
+        // Keep today inside the normal window so getCurrentStep returns "normal".
+        waitlistStart: new Date("2099-01-01T00:00:00"),
+    }
+    : registrationTimelineDates;
+
+const formatEventSubtitle = (eventDate) => {
+    const dateLabel = eventDate.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+    });
+    const startLabel = eventDate.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+    });
+    return `${dateLabel} - ${startLabel} to 10:00 PM - ${homeEventConfig.location} - Free`;
+};
 
 // maps the timeline's current step to one of the 3 registration statuses
 // empty str if registration hasn't opened yet or the event date has passed
@@ -53,6 +88,49 @@ const checkInTimes = [
 
 ]
 
+const PRONOUN_OPTIONS = [
+    { value: "she/her/hers", label: "she/her/hers" },
+    { value: "he/him/hims", label: "he/him/hims" },
+    { value: "they/them/theirs", label: "they/them/theirs" },
+    { value: "other", label: "Other" },
+];
+
+const YEAR_OPTIONS = [
+    { value: "first-year", label: "First" },
+    { value: "second-year", label: "Second" },
+    { value: "third-year", label: "Third" },
+    { value: "fourth-year", label: "Fourth" },
+    { value: "fifth-year-or-greater", label: "Fifth+" },
+    { value: "grad-student-masters", label: "Grad Student - Master's" },
+    { value: "grad-student-phd", label: "Grad Student - PhD" },
+    { value: "Other", label: "Other" },
+];
+
+const YES_NO_OPTIONS = [
+    { value: "yes", label: "Yes" },
+    { value: "no", label: "No" },
+];
+
+const POSITION_OPTIONS = [
+    { value: "full-time", label: "Full-time" },
+    { value: "coop", label: "Co-op" },
+    { value: "internship", label: "Internship" },
+];
+
+const MAJOR_OPTIONS = studentMajors.map((major) => ({ value: major.name, label: major.name }));
+const CHECK_IN_OPTIONS = checkInTimes.map((timeSlot) => ({ value: timeSlot.time, label: timeSlot.time }));
+const MEAL_OPTIONS = mealPreferences.map((meal) => ({ value: meal.name, label: meal.name }));
+const DESSERT_OPTIONS = dessertPreferences.map((dessert) => ({ value: dessert.name, label: dessert.name }));
+
+const WILL_CALL_OPTIONS = [
+    { value: "yes", label: "Yes" },
+    { value: "no", label: "No, but I'd like to stay on the waitlist" },
+];
+
+const RegistrationSelect = (props) => (
+    <OverlaySelect {...props} labelClassName="student-reg-labels" />
+);
+
 const StudentRegistrationForm = () => {
     const [formData, setFormData] = useState({
         email: "",
@@ -86,6 +164,8 @@ const StudentRegistrationForm = () => {
 
     const resumeInputRef = useRef(null);
     const membershipProofInputRef = useRef(null);
+    const isWaitlist = getCurrentStep(registrationDatesForDisplay) === WAITLIST_STEP;
+    const eventSubtitle = formatEventSubtitle(registrationTimelineDates.eventDate);
 
     const fetchCompanies = async () => {
         const snapshot = await getDocs(collection(db, "Companies"));
@@ -96,16 +176,15 @@ const StudentRegistrationForm = () => {
         fetchCompanies().catch((err) => console.error("Failed to load companies:", err));
     }, []);
 
-    const renderCompanyOptions = (rankIndex) => {
+    const companyOptionsForRank = (rankIndex) => {
         const currentValue = formData.companyPreferences[rankIndex];
         return companies.map((company) => {
             const isFull = company.capacity != null && company.firstChoiceCount >= company.capacity;
-            const disabled = isFull && company.name !== currentValue;
-            return (
-                <option key={company.id} value={company.name} disabled={disabled}>
-                    {company.name}{isFull ? " (full)" : ""}
-                </option>
-            );
+            return {
+                value: company.name,
+                label: `${company.name}${isFull ? " (full)" : ""}`,
+                disabled: isFull && company.name !== currentValue,
+            };
         });
     };
 
@@ -208,7 +287,7 @@ const StudentRegistrationForm = () => {
 
         const dataToSave = {
             ...formData,
-            registrationStatus: getRegistrationStatus(registrationTimelineDates), // computed at submit time
+            registrationStatus: getRegistrationStatus(registrationDatesForDisplay), // computed at submit time
             resume: resumeUrl,
             resumeFilename: formData.resume ? formData.resume.name : null,
             membershipProof: membershipProofUrl,
@@ -325,6 +404,33 @@ const StudentRegistrationForm = () => {
 
     };
 
+    if (SHOW_COMING_SOON) {
+        return (
+            <div className="student-reg-page student-reg-page--coming-soon">
+                <div className="student-reg-coming-soon" role="status">
+                    <img
+                        className="student-reg-coming-soon__mascot"
+                        src={mascot}
+                        alt=""
+                        width={420}
+                        height={475}
+                    />
+                    <div className="student-reg-coming-soon__card">
+                        <h1 className="student-reg-coming-soon__title">coming soon</h1>
+                        <p className="student-reg-coming-soon__tagline">
+                            harvest your potential
+                        </p>
+                        <p className="student-reg-coming-soon__copy">
+                            Student registration will open soon!
+                            <br />
+                            Check back the second week of November.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="student-reg-page">
 
@@ -357,22 +463,31 @@ const StudentRegistrationForm = () => {
                 </div>
             )}
 
+            <div className="student-reg-card">
+            {isWaitlist && (
+                <div className="capacity-banner" role="status">
+                    <svg className="capacity-banner-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor" d="M12 3.2 1.8 21h20.4L12 3.2zm0 4.3 6.7 11.6H5.3L12 7.5zm-1 3.2v4.6h2v-4.6h-2zm0 6.1v2h2v-2h-2z" />
+                    </svg>
+                    <div className="capacity-banner-copy">
+                        <p className="capacity-banner-title">Registration is at capacity</p>
+                        <p className="capacity-banner-text">
+                            This form is waitlist only. You'll be notified as soon as possible if you're lifted off the waitlist.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             <div className="student-reg-header">
                 <h1 className="student-reg-title">Student Registration</h1>
-                <p>November, 20, 2026 - X:XX PM to X:XX PM - Carnesale Commons - Cost</p>
-                <RegistrationTimeline dates={registrationTimelineDates} />
-                <div className="ewi-info">
-                    <p className="ewi-info-bold">What is EWI?</p>
-                    <p className="ewi-desc">
-                        EWI consists of a 3 part networking event: Casual networking over appetizers, a 3 course dinner with a company of your preference, and a traditional career fair.
-                        EWI will take place in-person on Thursday, January 22nd, 2026 in Carnesale Commons from 5:30 PM -10:00 PM. A student survival guide and information on workshops
-                         will be sent out shortly after registration.
-                        <br /><br />
-                        Registration is first come, first serve. The earlier you sign up, the more likely you will be to be seated with your top companies during dinner. Additionally, 
-                        students who attend 4/5 Prep for EWI workshops will receive priority company pairings. This event is open to everyone regardless of gender. We will begin a 
-                        waitlist as we hit capacity.
-                    </p>
-                </div>
+                <p className="student-reg-meta">{eventSubtitle}</p>
+                <RegistrationTimeline dates={registrationDatesForDisplay} />
+                <Link className="ewi-info" to="/students">
+                    <span className="ewi-info-bold">What is EWI?</span>
+                    <span className="ewi-desc">
+                        A three-part networking night: appetizers, dinner with a company, and a career fair.
+                    </span>
+                </Link>
             </div>
 
             <form className="student-reg-form" onSubmit={handleSubmit}>
@@ -386,15 +501,15 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-pronouns">
-                        <label className="student-reg-labels">Pronouns*</label>
-                        <select className="select-box" value={formData.pronouns} name="pronouns" onChange={handleChange}>
-                            <option value="" disabled hidden>Select one</option>
-                            <option value="she/her/hers">she/her/hers</option>
-                            <option value="he/him/hims">he/him/hims</option>
-                            <option value="they/them/theirs">they/them/theirs</option>
-                            <option value="other">Other</option>
-                        </select>
-                        {errors.pronouns && <span className="error">{errors.pronouns}</span>}
+                        <RegistrationSelect
+                            id="pronouns"
+                            name="pronouns"
+                            label="Pronouns*"
+                            value={formData.pronouns}
+                            options={PRONOUN_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.pronouns}
+                        />
 
                         {formData.pronouns === "other" && (
                             <>
@@ -425,42 +540,41 @@ const StudentRegistrationForm = () => {
                 </fieldset>
 
                 <fieldset className="student-details">
-                    <h3 className="student-reg-subtitle">Student Details</h3>
+                    <h3 className="student-reg-subtitle">Student details</h3>
                     <div className="student-year">
-                        <label className="student-reg-labels">Year*</label>
-                        <select className="select-box" value={formData.year} name="year" onChange={handleChange}>
-                            <option value="" disabled hidden>Select one</option>
-                            <option value="first-year">First</option>
-                            <option value="second-year">Second</option>
-                            <option value="third-year">Third</option>
-                            <option value="fouth-year">Fourth</option>
-                            <option value="fifth-year-or-greater">Fifth+</option>
-                            <option value="grad-student-masters">Grad Student - Master's</option>
-                            <option value="grad-student-phd">Grad Student - PhD</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        {errors.year && <span className="error">{errors.year}</span>}
+                        <RegistrationSelect
+                            id="year"
+                            name="year"
+                            label="Year*"
+                            value={formData.year}
+                            options={YEAR_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.year}
+                        />
                     </div>
 
                     <div className="transfer-status">
-                        <label className="student-reg-labels">Transfer?*</label>
-                        <select className="select-box" value={formData.transfer} name="transfer" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                        {errors.transfer && <span className="error">{errors.transfer}</span>}
+                        <RegistrationSelect
+                            id="transfer"
+                            name="transfer"
+                            label="Transfer?*"
+                            value={formData.transfer}
+                            options={YES_NO_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.transfer}
+                        />
                     </div>
 
                     <div className="student-major">
-                        <label className="student-reg-labels">Major*</label>
-                        <select className="select-box" value={formData.major} name="major" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            {studentMajors.map((major) => (
-                                <option key={major.id} value={major.name}>{major.name}</option>
-                            ))}
-                        </select>
-                        {errors.major && <span className="error">{errors.major}</span>}
+                        <RegistrationSelect
+                            id="major"
+                            name="major"
+                            label="Major*"
+                            value={formData.major}
+                            options={MAJOR_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.major}
+                        />
 
                         {formData.major === "Other" && (
                             <>
@@ -478,49 +592,58 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="student-position-type">
-                        <label className="student-reg-labels">What type of position are you looking for?*</label>
-                        <select className="select-box" value={formData.positionType} name="positionType" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            <option value="full-time">Full-time</option>
-                            <option value="coop">Co-op</option>
-                            <option value="internship">Internship</option>
-                        </select>
-                        {errors.positionType && <span className="error">{errors.positionType}</span>}
+                        <RegistrationSelect
+                            id="position-type"
+                            name="positionType"
+                            label="What type of position are you looking for?*"
+                            value={formData.positionType}
+                            options={POSITION_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.positionType}
+                        />
                     </div>
 
                     <div className="student-sponsorship">
-                        <label className="student-reg-labels">Need Sponsorship?*</label>
-                        <select className="select-box" value={formData.needSponsorship} name="needSponsorship" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
-                        {errors.needSponsorship && <span className="error">{errors.needSponsorship}</span>}
+                        <RegistrationSelect
+                            id="sponsorship"
+                            name="needSponsorship"
+                            label="Need Sponsorship?*"
+                            value={formData.needSponsorship}
+                            options={YES_NO_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.needSponsorship}
+                        />
                     </div>
 
                     <div className="student-checkin">
-                        <label className="student-reg-labels">When do you plan to come for check-in?*</label>
-                        <select className="select-box" value={formData.checkInTime} name="checkInTime" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            {checkInTimes.map((timeSlot) => (
-                                <option key={timeSlot.id} value={timeSlot.time}>{timeSlot.time}</option>
-                            ))}
-                        </select>
-                        {errors.checkInTime && <span className="error">{errors.checkInTime}</span>}
+                        <RegistrationSelect
+                            id="check-in"
+                            name="checkInTime"
+                            label="When do you plan to come for check-in?*"
+                            value={formData.checkInTime}
+                            options={CHECK_IN_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.checkInTime}
+                        />
                     </div>
                 </fieldset>
 
                 <fieldset className="student-resume">
                     <h3 className="student-reg-subtitle">Resume</h3>
                     <div className="resume-upload">
-                        <label className="student-reg-labels">Upload Resume*</label>
-                        <input
-                            ref={resumeInputRef}
-                            className="input-box"
-                            type="file"
-                            accept=".pdf"
-                            onChange={handleResumeChange}
-                        />
+                        <label className="upload-zone">
+                            <span className="visually-hidden">Upload resume</span>
+                            <input
+                                ref={resumeInputRef}
+                                className="upload-input"
+                                type="file"
+                                accept=".pdf"
+                                onChange={handleResumeChange}
+                            />
+                            <span className="upload-zone-text">
+                                {formData.resume ? formData.resume.name : "Upload"}
+                            </span>
+                        </label>
                         {errors.resume && <span className="error">{errors.resume}</span>}
                         {formData.resume && (
                             <div className="file-selected">
@@ -542,14 +665,19 @@ const StudentRegistrationForm = () => {
                     </div>
 
                     <div className="swe-membership-proof">
-                        <label className="student-reg-labels">Upload proof of membership</label>
-                        <input
-                            ref={membershipProofInputRef}
-                            className="input-box"
-                            type="file"
-                            accept=".pdf,.jpg,.png"
-                            onChange={handleMembershipProofChange}
-                        />
+                        <label className="upload-zone">
+                            <span className="visually-hidden">Upload proof of membership</span>
+                            <input
+                                ref={membershipProofInputRef}
+                                className="upload-input"
+                                type="file"
+                                accept=".pdf,.jpg,.png"
+                                onChange={handleMembershipProofChange}
+                            />
+                            <span className="upload-zone-text">
+                                {formData.membershipProof ? formData.membershipProof.name : "Upload proof of membership"}
+                            </span>
+                        </label>
                         {errors.membershipProof && <span className="error">{errors.membershipProof}</span>}
                         {formData.membershipProof && (
                             <div className="file-selected">
@@ -562,49 +690,49 @@ const StudentRegistrationForm = () => {
 
                 <fieldset className="student-company-preferences">
                     <h3 className="student-reg-subtitle">Company Preferences</h3>
-                    <p>Please rank your top 10 companies in the order you would like to be seated with at dinner. (Again, seating will be assigned on a first-come, first-serve basis, 
-                        and please read through the company sheet thoroughly before making your selections).</p>
+                    <p className="company-preferences-description">Please rank your top 10 companies in the order you would like to be seated with at dinner. Seating is first come, first serve.</p>
                     {errors.companyPreferences && <span className="error">{errors.companyPreferences}</span>}
 
                     <div className="company-preferences-grid">
                         {companyRankLabels.map((label, rankIndex) => (
                             <div className="company-choice" key={rankIndex}>
-                                <label className="student-reg-labels">{label} choice*</label>
-                                <select
-                                    className="select-box"
+                                <RegistrationSelect
+                                    id={`company-choice-${rankIndex}`}
+                                    name={`companyPreferences-${rankIndex}`}
+                                    label={`${label} choice*`}
                                     value={formData.companyPreferences[rankIndex]}
+                                    options={companyOptionsForRank(rankIndex)}
                                     onChange={(e) => handleCompanyRankChange(rankIndex, e.target.value)}
-                                >
-                                    <option value="" disabled hidden>Select one</option>
-                                    {renderCompanyOptions(rankIndex)}
-                                </select>
+                                />
                             </div>
                         ))}
                     </div>
                 </fieldset>
 
                 <fieldset className="student-meal-preferences">
-                    <h3 className="student-reg-subtitle">Meal Preferences</h3>
+                    <h3 className="student-reg-subtitle">Meal preferences</h3>
                     <div className="meal-choice">
-                        <label className="student-reg-labels">Meal*</label>
-                        <select className="select-box" value={formData.meal} name="meal" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            {mealPreferences.map((meal) => (
-                                <option key={meal.id} value={meal.name}>{meal.name}</option>
-                            ))}
-                        </select>
-                        {errors.meal && <span className="error">{errors.meal}</span>}
+                        <RegistrationSelect
+                            id="meal"
+                            name="meal"
+                            label="Meal*"
+                            value={formData.meal}
+                            options={MEAL_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.meal}
+                        />
                     </div>
 
                     <div className="dessert-choice">
-                        <label className="student-reg-labels">Dessert*</label>
-                        <select className="select-box" value={formData.dessert} name="dessert" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            {dessertPreferences.map((dessert) => (
-                                <option key={dessert.id} value={dessert.name}>{dessert.name}</option>
-                            ))}
-                        </select>
-                        {errors.dessert && <span className="error">{errors.dessert}</span>}
+                        <RegistrationSelect
+                            id="dessert"
+                            name="dessert"
+                            label="Dessert*"
+                            value={formData.dessert}
+                            options={DESSERT_OPTIONS}
+                            onChange={handleChange}
+                            error={errors.dessert}
+                        />
                     </div>
 
                     <div className="dietary-restrictions">
@@ -623,17 +751,16 @@ const StudentRegistrationForm = () => {
                         </label>
                     </div>
 
-                    <div className="will-call">
-                        <label className="student-reg-labels">Would you like to be considered for the will call?*</label>
-                        <p className="hint">Indicating "No" does NOT mean you are removed from the waitlist. We will only resort to the will call for no-shows on the day of the event.</p>
-                        <select className="select-box" value={formData.willCall} name="willCall" onChange={handleChange}>
-                            <option value="" disabled  hidden>Select one</option>
-                            <option value="yes">Yes</option>
-                            <option value="no">No, but I'd like to stay on the waitlist</option>
-                        </select>
-                        {errors.willCall && <span className="error">{errors.willCall}</span>}
-
-                    </div>
+                    <RegistrationSelect
+                        id="will-call"
+                        name="willCall"
+                        label="Would you like to be considered for the will call?*"
+                        hint="Indicating “No” does not remove you from the waitlist. We only use will call for no-shows on the day of the event."
+                        value={formData.willCall}
+                        options={WILL_CALL_OPTIONS}
+                        onChange={handleChange}
+                        error={errors.willCall}
+                    />
 
                     <div className="additional-comments">
                         <label className="student-reg-labels">Additional questions/comments</label>
@@ -649,6 +776,7 @@ const StudentRegistrationForm = () => {
                 )}
 
             </form>
+            </div>
         </div>
     );
 };

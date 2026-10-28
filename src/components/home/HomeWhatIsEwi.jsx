@@ -1,39 +1,41 @@
 import React from "react";
 import HomeSection from "./HomeSection";
 import HomeFeatureBlurb from "./HomeFeatureBlurb";
-import ewiEvent from "../../assets/ewi_2024.png";
+import networkingPhoto from "../../assets/home-2026/what-is-networking.jpg";
+import dinnerPhoto from "../../assets/home-2026/what-is-dinner.jpg";
+import careerFairPhoto from "../../assets/home-2026/what-is-career-fair.jpg";
 import "./HomeWhatIsEwi.css";
 
 const blurbs = [
   {
     id: 1,
-    title: "Networking",
-    image: ewiEvent,
-    imageAlt: "EWI networking",
+    title: "networking",
+    image: networkingPhoto,
+    imageAlt: "Students networking together at EWI",
     blurb:
       "Connect with companies through informal networking and a traditional career fair portion of the evening.",
   },
   {
     id: 2,
-    title: "Dinner conversations",
-    image: ewiEvent,
-    imageAlt: "EWI dinner",
+    title: "dinner conversations",
+    image: dinnerPhoto,
+    imageAlt: "Students seated with recruiters at the EWI dinner",
     blurb:
-      "Six to eight students sit with company representatives for unscripted dinner conversations, not a typical resume drop.",
+      "Six to eight students sit with company representatives for unscripted dinner conversations, not just a typical resume drop",
   },
   {
     id: 3,
-    title: "Evening with Industry",
-    image: ewiEvent,
-    imageAlt: "EWI event",
+    title: "career fair",
+    image: careerFairPhoto,
+    imageAlt: "Students with company representatives at the EWI career fair",
     blurb:
-      "SWE's flagship UCLA networking event: appetizers, a multi-course dinner, and time to meet recruiters in one night.",
+      "Attending companies table in a formal career fair to allow students to talk to all representatives and explore different opportunities.",
   },
 ];
 
 const HomeWhatIsEwi = () => {
   return (
-    <HomeSection title="What is EWI?">
+    <HomeSection title="what is ewi?" className="home-what">
       <div className="home-what-is-ewi__grid">
         {blurbs.map((item) => (
           <HomeFeatureBlurb
