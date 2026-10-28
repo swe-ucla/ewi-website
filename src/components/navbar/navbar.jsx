@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./navbar.css";
-import LOGO from "../../assets/ewilogo.svg";
+import LOGO from "../../assets/ewi50_logo.svg";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -65,6 +65,9 @@ const Navbar = () => {
         </Link>
         <Link className="navbar__tab" to="/meet-the-team" onClick={handleLinkClick}>
           Meet the Team
+        </Link>
+        <Link className="navbar__tab" to="/student-registration" onClick={handleLinkClick}>
+          RSVP
         </Link>
         {/* <Link className="navbar__tab" to="/contact-us" onClick={handleLinkClick}>
           Contact Us
