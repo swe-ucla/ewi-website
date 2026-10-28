@@ -157,6 +157,42 @@
 }
 
 @media screen and (max-width: 768px) {
+  .footer {
+    margin-top: -100px;
+    padding-top: 100px;
+  }
+
+  /* Make leaves cover the full mobile footer height */
+  .footer__leaves {
+    top: 0;
+    bottom: 0;
+    height: auto;
+    align-items: flex-end;
+  }
+
+  /* Scale leaves vertically to fill the footer */
+  .footer__leaves img {
+    flex: 0 0 auto;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    margin-left: -80px;
+  }
+
+  .footer__leaves img:first-child {
+    margin-left: -30px;
+  }
+
+  .footer__leaves::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(145, 96, 68, 0) 30%,
+      rgba(145, 96, 68, 0.9) 60%,
+      #916044 100%
+    );
+  }
+
   .footer__content {
     flex-direction: column;
     align-items: center;
