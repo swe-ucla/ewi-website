@@ -1,5 +1,5 @@
 .navbar {
-  --navbar-bg: #F4DCD0;
+  --navbar-bg: #E3C4FB;
   --navbar-text: #2B2133;
   --navbar-text-muted: #A35C45;
   /* --navbar-border: #e0e0e0; */
@@ -7,7 +7,6 @@
   --navbar-padding-x: 2rem;
   --navbar-tab-gap: 1.25rem;
   --navbar-logo-width: 120px;
-
 
   display: flex;
   justify-content: space-between;
@@ -21,6 +20,16 @@
   height: var(--navbar-height);
   width: 100%;
   transition: filter 0.3s ease;
+}
+
+.navbar.bg {
+  --navbar-bg: #E3C4FB;
+  --navbar-text-muted: #5F4077;
+}
+
+.navbar.bg-alt {
+  --navbar-bg: #F4DCD0;
+  --navbar-text-muted: #A35C45;
 }
 
 body.popup-open .navbar {
