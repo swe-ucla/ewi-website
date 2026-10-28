@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./navbar.css";
-import LOGO from "../../assets/ewilogo.svg";
-import { Link } from "react-router-dom";
+import LOGO from "../../assets/ewi50_logo.svg";
+import { useLocation, Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -12,6 +13,14 @@ const Navbar = () => {
 
   const handleLinkClick = () => {
     setIsMenuOpen(false);
+  };
+
+  const getNavbarBgClass = () => {
+    const beigePages = ["/meet-the-team", "/student-registration", "/admin"];
+    if (beigePages.includes(location.pathname)) {
+      return "bg-alt";
+    }
+    return "bg"; // default
   };
 
   useEffect(() => {
@@ -31,7 +40,7 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${getNavbarBgClass()}`}>
       <div className="navbar__logo">
         <Link to="/">
           <img src={LOGO} alt="EWI logo" />
@@ -65,6 +74,9 @@ const Navbar = () => {
         </Link>
         <Link className="navbar__tab" to="/meet-the-team" onClick={handleLinkClick}>
           Meet the Team
+        </Link>
+        <Link className="navbar__tab" to="/student-registration" onClick={handleLinkClick}>
+          RSVP
         </Link>
         {/* <Link className="navbar__tab" to="/contact-us" onClick={handleLinkClick}>
           Contact Us

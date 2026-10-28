@@ -1,13 +1,74 @@
 .footer {
   --footer-bg: #f0f0f0;
-  --footer-text: #000000;
-  --footer-text-muted: #666666;
+  --footer-text: #f0f0f0;
+  --footer-text-muted: #F4DCD0;
   --footer-border: #e0e0e0;
   --footer-logo-width: 100px;
 
-  background: var(--footer-bg);
-  border-top: 1px solid var(--footer-border);
+  position: relative;
+  isolation: isolate;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow: visible;
+  border: none;
+
+  background: none;
+
+  margin-top: -120px;
+  padding-top: 80px;
+  z-index: 2;
+}
+
+.footer__leaves {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   width: 100%;
+  height: 600px;
+
+  display: flex;
+  align-items: flex-end;
+
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer__leaves img {
+  flex: 0 0 600px;
+  width: 600px;
+  max-width: none;
+  height: auto;
+  object-fit: contain;
+  margin-left: -110px;
+}
+
+.footer__leaves img:first-child {
+  margin-left: -60px; /* No gap on the first leaves */
+}
+
+/* Keep content readable */
+.footer__content,
+.footer__credit {
+  position: relative;
+  z-index: 2;
+}
+
+.footer__leaves::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 240, 232, 0) 78%,
+    rgba(145, 96, 68, 0.95) 88%
+  );
+
+  pointer-events: none;
+  z-index: 1;
 }
 
 .footer__content {
@@ -32,6 +93,8 @@
   height: auto;
   object-fit: contain;
   display: block;
+
+  filter: brightness(0) invert(1);
 }
 
 .footer__contact {
@@ -94,6 +157,42 @@
 }
 
 @media screen and (max-width: 768px) {
+  .footer {
+    margin-top: -100px;
+    padding-top: 100px;
+  }
+
+  /* Make leaves cover the full mobile footer height */
+  .footer__leaves {
+    top: 0;
+    bottom: 0;
+    height: auto;
+    align-items: flex-end;
+  }
+
+  /* Scale leaves vertically to fill the footer */
+  .footer__leaves img {
+    flex: 0 0 auto;
+    width: auto;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+    margin-left: -80px;
+  }
+
+  .footer__leaves img:first-child {
+    margin-left: -30px;
+  }
+
+  .footer__leaves::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(145, 96, 68, 0) 30%,
+      rgba(145, 96, 68, 0.9) 60%,
+      #916044 100%
+    );
+  }
+
   .footer__content {
     flex-direction: column;
     align-items: center;

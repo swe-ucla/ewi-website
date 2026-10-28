@@ -1,26 +1,35 @@
 .navbar {
-  --navbar-bg: #f0f0f0;
-  --navbar-text: #000000;
-  --navbar-text-muted: #666666;
-  --navbar-border: #e0e0e0;
+  --navbar-bg: #E3C4FB;
+  --navbar-text: #2B2133;
+  --navbar-text-muted: #A35C45;
+  /* --navbar-border: #e0e0e0; */
   --navbar-height: 67px;
   --navbar-padding-x: 2rem;
   --navbar-tab-gap: 1.25rem;
   --navbar-logo-width: 120px;
-
 
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--navbar-padding-x);
   background-color: var(--navbar-bg);
-  border-bottom: 1px solid var(--navbar-border);
+  /* border-bottom: 1px solid var(--navbar-border); */
   position: sticky;
   top: 0;
   z-index: 9999;
   height: var(--navbar-height);
   width: 100%;
   transition: filter 0.3s ease;
+}
+
+.navbar.bg {
+  --navbar-bg: #E3C4FB;
+  --navbar-text-muted: #5F4077;
+}
+
+.navbar.bg-alt {
+  --navbar-bg: #F4DCD0;
+  --navbar-text-muted: #A35C45;
 }
 
 body.popup-open .navbar {
@@ -35,7 +44,7 @@ body.popup-open .navbar {
 }
 
 .navbar__logo img {
-  width: 100%;
+  width: 65%;
   height: auto;
   object-fit: contain;
   display: block;
@@ -57,7 +66,7 @@ body.popup-open .navbar {
   transition: color 0.2s ease;
   text-decoration: none;
   cursor: pointer;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
   font-family: "Inter", sans-serif;
   font-size: 0.85rem;
   font-weight: 500;

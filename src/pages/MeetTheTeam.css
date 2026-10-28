@@ -1,0 +1,11 @@
+.meet-team-page {
+  width: 100%;
+  font-family: "Inter", "Poppins", sans-serif;
+  background-image: url("../assets/falling_leaves.png"),
+    linear-gradient(180deg, #f4dcd0bb 0%, #e3c4fb79 40%,#ffffff00 80%);
+  background-size: 100% auto, 100% 100%;
+  background-position: top -44px center, top left;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  padding-bottom: 10vw;
+}
