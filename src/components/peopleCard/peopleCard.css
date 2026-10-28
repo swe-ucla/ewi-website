@@ -2,11 +2,13 @@
   --people-card-bg: #ffffff;
   --people-card-text: #000000;
   --people-card-text-muted: #666666;
-  --people-card-border: #e0e0e0;
+  --people-card-border: none;
   --people-card-accent: #333333;
-  --people-card-aspect-ratio: 3 / 4;
+  --people-card-aspect-ratio: 4 / 5;
   --people-card-transition: transform 0.2s ease;
   --people-card-overlay-bg: rgba(0, 0, 0, 0.45);
+
+  --people-card-border-radius: 1rem;
 
   width: 100%;
 }
@@ -19,6 +21,7 @@
   border: 1px solid var(--people-card-border);
   overflow: hidden;
   background: var(--people-card-border);
+  border-radius: var(--people-card-border-radius);
 }
 
 .people-card__media {
@@ -46,6 +49,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: center;
   padding: 0.75rem;
   background: linear-gradient(
     to top,
@@ -85,7 +89,7 @@
 
 .people-card__popup {
   position: relative;
-  background: var(--people-card-bg);
+  /* background: var(--people-card-bg); */
   border: 1px solid var(--people-card-border);
   border-radius: 0.5rem;
   max-width: 520px;
@@ -95,6 +99,12 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
+
+  background: gradient(
+    to right,
+    #E3C4FB99 60%,
+    #F9F6F0 100%
+  );
 }
 
 .people-card__popup-header {
@@ -132,6 +142,7 @@
   overflow-y: auto;
   flex: 1;
   background: var(--people-card-bg);
+  
   color: var(--people-card-text);
 }
 

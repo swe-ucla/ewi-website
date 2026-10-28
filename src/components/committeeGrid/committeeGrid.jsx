@@ -52,7 +52,7 @@ const teamData = [
     major: "Mechanical Engineering",
     description:
       "Carol is a second year studying Mechanical Engineering and she is the Design and Media Chair for EWI 2026! ",
-    linkedInURL: "https://www.linkedin.com/in/jeiaso/",
+    linkedInURL: "https://www.linkedin.com/in/carol-hiwatig",
   },
   {
     id: 5,
