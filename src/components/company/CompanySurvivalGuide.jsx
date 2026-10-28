@@ -1,7 +1,7 @@
 import React from "react";
 import "./CompanySurvivalGuide.css";
 import IssuuStyleFlipbook from "../flipbook/IssuuStyleFlipbook";
-import company_guide from '../../assets/EWI 2025 Company Survival Guide.pdf';
+import company_guide from "../../assets/ewi-50-CSF.pdf";
 
 const CompanySurvivalGuide = () => {
     return (

@@ -1,21 +1,111 @@
+@font-face {
+  font-family: "Magnolia Script";
+  src: url("../assets/Magnolia Script.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Dongle";
+  src: url("../assets/Dongle-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Abhaya Libre Extra";
+  src: url("../assets/AbhayaLibre-ExtraBold.ttf") format("truetype");
+  font-display: swap;
+}
+
 .home {
   width: 100%;
-  padding-bottom: 4rem;
-  font-family: "Inter", "Poppins", sans-serif;
-  color: #000;
-  background: #fff;
+  color: #2b2133;
+  /* Lavender through events; cream band starts above testimonials */
+  background: #e3c4fb;
+  overflow-x: clip;
 }
 
-/* Divider between sections */
-.home > * + * {
-  border-top: 1px solid #ebebeb;
+.home section {
+  margin-top: 0;
 }
 
-.home-wire-box {
-  background: #e3e3e3;
-  border: none;
+.home-top {
+  position: relative;
+  overflow: hidden;
+  background: #e3c4fb;
 }
 
-.home-wire-box--dark {
-  background: #d0d0d0;
+/* Figma: fades into a strong solid lavender at the leaf line */
+.home-top::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22%;
+  background: linear-gradient(
+    180deg,
+    rgba(227, 196, 251, 0) 0%,
+    rgba(227, 196, 251, 0.8) 50%,
+    #e3c4fb 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.home .home-what {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+}
+
+/* Cream fade begins above testimonials and carries through companies */
+.home-cream-band {
+  position: relative;
+  isolation: isolate;
+  margin-top: -0.5rem;
+  padding: 2.5rem 0 5rem;
+  background:
+    radial-gradient(
+      ellipse 82% 48% at 50% 28%,
+      rgba(249, 246, 240, 0.98) 0%,
+      rgba(243, 230, 216, 0.85) 34%,
+      rgba(243, 230, 216, 0) 68%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(227, 196, 251, 0) 0%,
+      rgba(236, 220, 232, 0.45) 4%,
+      #f3e6d8 12%,
+      #f0e0cc 32%,
+      #ebe0cb 100%
+    );
+}
+
+.home-cream-band .home-testimonials,
+.home-cream-band .home-companies {
+  position: relative;
+  z-index: 1;
+}
+
+.home-cream-band .home-companies {
+  padding-bottom: 1rem;
+  margin-top: 2rem;
+}
+
+@media screen and (max-width: 700px) {
+  .home-top::after {
+    height: 26%;
+  }
+
+  .home .home-what {
+    margin-top: 0.85rem;
+    padding-top: 0.5rem;
+  }
+
+  .home-cream-band {
+    padding: 1.5rem 0 3.25rem;
+  }
+
+  .home-cream-band .home-companies {
+    margin-top: 1.25rem;
+  }
 }
