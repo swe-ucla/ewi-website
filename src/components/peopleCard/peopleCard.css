@@ -1,7 +1,12 @@
+@font-face {
+  font-family: "Abhaya Libre";
+  src: url("../../assets/AbhayaLibre-ExtraBold.ttf") format("truetype");
+}
+
 .people-card-component {
   --people-card-bg: #ffffff;
-  --people-card-text: #000000;
-  --people-card-text-muted: #666666;
+  --people-card-text: #2B2133;
+  --people-card-text-muted: #5F4077;
   --people-card-border: none;
   --people-card-accent: #333333;
   --people-card-aspect-ratio: 4 / 5;
@@ -91,8 +96,8 @@
   position: relative;
   /* background: var(--people-card-bg); */
   border: 1px solid var(--people-card-border);
-  border-radius: 0.5rem;
-  max-width: 520px;
+  border-radius: var(--people-card-border-radius);
+  max-width: 880px;
   width: 100%;
   max-height: 85vh;
   overflow: hidden;
@@ -100,9 +105,9 @@
   display: flex;
   flex-direction: column;
 
-  background: gradient(
-    to right,
-    #E3C4FB99 60%,
+  background: linear-gradient(
+    120deg,
+    #f0dcff 0%,
     #F9F6F0 100%
   );
 }
@@ -111,10 +116,20 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 0.5rem 0.75rem;
+
+  /* padding: 0.5rem 0.75rem; */
   border-bottom: 1px solid var(--people-card-border);
-  background: var(--people-card-bg);
+  /* background: var(--people-card-bg); */
   flex-shrink: 0;
+
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 .people-card__popup-close {
@@ -141,17 +156,18 @@
   padding: 1.5rem;
   overflow-y: auto;
   flex: 1;
-  background: var(--people-card-bg);
+  background: transparent;
   
   color: var(--people-card-text);
 }
 
 .people-card__popup-name {
-  font-size: 1.35rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: var(--people-card-text);
   margin: 0 0 1.25rem 0;
   text-align: left;
+  font-family: "Abhaya Libre", Georgia, serif;
 }
 
 .people-card__popup-content {
@@ -179,7 +195,7 @@
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--people-card-text-muted);
-  text-transform: uppercase;
+  text-transform: lowercase;
   letter-spacing: 0.04em;
 }
 
@@ -214,7 +230,7 @@
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--people-card-text-muted);
-  text-transform: uppercase;
+  text-transform: lowercase;
   letter-spacing: 0.04em;
   margin: 0 0 0.5rem 0;
   padding: 0;
@@ -241,16 +257,12 @@
     font-size: 0.75rem;
   }
 
-  .people-card__popup {
-    max-width: 480px;
-  }
-
   .people-card__popup-body {
     padding: 1.25rem;
   }
 
   .people-card__popup-name {
-    font-size: 1.25rem;
+    font-size: 1.8rem;
   }
 }
 
@@ -284,7 +296,7 @@
   }
 
   .people-card__popup-name {
-    font-size: 1.15rem;
+    font-size: 1.5rem;
     margin-bottom: 1rem;
   }
 
@@ -301,5 +313,39 @@
 
   .people-card__popup-details {
     width: 100%;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .people-card__popup {
+    max-width: 100%;
+  }
+
+  .people-card__popup-body {
+    padding: 2.5rem 1.5rem 1.5rem;
+  }
+
+  .people-card__popup-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .people-card__popup-body {
+    padding: 2.5rem 1rem 1.25rem;
+  }
+
+  .people-card__popup-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .people-card__popup-detail {
+    width: 100%;
+    gap: 0.2rem;
   }
 }
