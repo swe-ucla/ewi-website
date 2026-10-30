@@ -470,75 +470,65 @@ textarea.input-box {
 .duplicate-alert-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(43, 33, 51, 0.55);
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
-    z-index: 1000;
+    background:
+        linear-gradient(180deg, rgba(227, 196, 251, 0.82) 0%, rgba(244, 220, 208, 0.88) 100%),
+        rgba(43, 33, 51, 0.22);
+    backdrop-filter: blur(10px);
+}
+
+.duplicate-alert-shell {
+    margin: 0;
+    max-width: 34rem;
 }
 
 .duplicate-alert-box {
-    width: 100%;
-    max-width: 26rem;
-    background: #f9f6f0;
-    border-radius: 25px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(43, 33, 51, 0.25);
-}
-
-.duplicate-alert-title {
-    font-family: "Abhaya Libre Extra", serif;
-    font-size: 1.7rem;
-    font-weight: 400;
-    margin: 0 0 0.75rem;
-    color: #5f4077;
-}
-
-.duplicate-alert-message {
-    margin: 0 0 1.5rem;
-    font-family: "Dongle", sans-serif;
-    font-size: 1.55rem;
-    line-height: 1.1;
-    color: #2b2133;
+    min-height: 0;
 }
 
 .duplicate-alert-actions {
     display: flex;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.85rem;
+    width: 100%;
+    max-width: 22rem;
+    margin: 1.5rem auto 0;
 }
 
 .duplicate-alert-cancel-btn,
 .duplicate-alert-overwrite-btn {
     flex: 1;
-    padding: 0.7rem 1.25rem 0.85rem;
+    min-height: 3.4rem;
+    padding: 0.45rem 1.25rem 0.55rem;
     border-radius: 25px;
     font-family: "Abhaya Libre Extra", serif;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 400;
     cursor: pointer;
 }
 
 .duplicate-alert-cancel-btn {
-    border: 1.5px solid #d48c70;
-    background: #f9f6f0;
+    border: none;
+    background: #e3c4fb;
     color: #2b2133;
 }
 
 .duplicate-alert-cancel-btn:hover {
-    background: #f4dcd0;
+    background: #d7b3f4;
 }
 
 .duplicate-alert-overwrite-btn {
     border: none;
-    background: #a35c45;
+    background: #5f4077;
     color: #f9f6f0;
 }
 
 .duplicate-alert-overwrite-btn:hover {
-    background: #8d4d39;
+    background: #2b2133;
 }
 
 .duplicate-alert-overwrite-btn:disabled {
@@ -547,12 +537,9 @@ textarea.input-box {
 }
 
 @media (max-width: 480px) {
-    .duplicate-alert-box {
-        padding: 1.5rem;
-    }
-
     .duplicate-alert-actions {
         flex-direction: column;
+        max-width: none;
     }
 }
 

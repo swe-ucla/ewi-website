@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc, collection, getDocs, runTransaction } from "firebase/firestore";
@@ -19,7 +20,7 @@ const SHOW_COMING_SOON = true;
 // Temporary override: show the open "normal" registration state (no capacity
 // banner, timeline marker on normal). Set to false to restore the date-based
 // step from registrationDates.js.
-const FORCE_NORMAL_REGISTRATION = true;
+const FORCE_NORMAL_REGISTRATION = false;
 
 const registrationDatesForDisplay = FORCE_NORMAL_REGISTRATION
     ? {
@@ -176,16 +177,30 @@ const StudentRegistrationForm = () => {
         fetchCompanies().catch((err) => console.error("Failed to load companies:", err));
     }, []);
 
+    const isCompanyFull = (company) =>
+        company.capacity != null && company.firstChoiceCount >= company.capacity;
+
     const companyOptionsForRank = (rankIndex) => {
         const currentValue = formData.companyPreferences[rankIndex];
-        return companies.map((company) => {
-            const isFull = company.capacity != null && company.firstChoiceCount >= company.capacity;
-            return {
-                value: company.name,
-                label: `${company.name}${isFull ? " (full)" : ""}`,
-                disabled: isFull && company.name !== currentValue,
-            };
-        });
+        const selectedElsewhere = new Set(
+            formData.companyPreferences.filter((name, i) => i !== rankIndex && name)
+        );
+
+        return companies
+            .filter((company) => company.name === currentValue || !selectedElsewhere.has(company.name))
+            .map((company) => {
+                const isFull = isCompanyFull(company);
+                return {
+                    value: company.name,
+                    label: `${company.name}${isFull ? " (full)" : ""}`,
+                    disabled: isFull && company.name !== currentValue,
+                };
+            });
+    };
+
+    const isCompanyRankLocked = (rankIndex) => {
+        if (formData.companyPreferences[rankIndex]) return false;
+        return !companyOptionsForRank(rankIndex).some((option) => !option.disabled);
     };
 
     // handling form change
@@ -201,11 +216,14 @@ const StudentRegistrationForm = () => {
 
     const handleCompanyRankChange = (rankIndex, selectedCompany) => {
         setFormData((prev) => {
-            const updated = [...prev.companyPreferences];
-            updated[rankIndex] = selectedCompany;
+            const updated = prev.companyPreferences.map((name, i) => {
+                if (i === rankIndex) return selectedCompany;
+                if (selectedCompany && name === selectedCompany) return "";
+                return name;
+            });
             return { ...prev, companyPreferences: updated };
-        }) 
-    }
+        });
+    };
 
     const handleResumeChange = (e) => {
         setFormData((prev) => ({ ...prev, resume: e.target.files[0] || null }));
@@ -241,18 +259,22 @@ const StudentRegistrationForm = () => {
     }
 
     const validateCompanyPreferences = (preferences) => {
-        const filled = preferences.filter((p) => p !== "");
+        const requiredIndexes = preferences
+            .map((value, index) => ({ value, index }))
+            .filter(({ value, index }) => value || !isCompanyRankLocked(index))
+            .map(({ index }) => index);
 
-        if (filled.length < preferences.length) {
-            return "Please rank all 10 company preferences";
+        if (requiredIndexes.some((index) => !preferences[index])) {
+            return "Please fill every available company preference";
         }
 
+        const filled = preferences.filter((p) => p !== "");
         if (new Set(filled).size !== filled.length) {
-            return "Please select 10 different companies — no repeats allowed";
+            return "Please select different companies — no repeats allowed";
         }
 
         return "";
-    }
+    };
 
     const valdiateCheckbox = (label, isChecked) => {
         return isChecked ? "" : `You must agree to ${label}`;
@@ -318,7 +340,9 @@ const StudentRegistrationForm = () => {
         });
 
         console.log("Registration submitted successfully");
-        navigate("/student-registration/success");
+        navigate("/student-registration/success", {
+            state: { waitlist: isWaitlist },
+        });
     };
 
     // shared handling for submitRegistration failures, including a full first-choice company
@@ -434,34 +458,54 @@ const StudentRegistrationForm = () => {
     return (
         <div className="student-reg-page">
 
-            {showDuplicateAlert && (
-                <div className="duplicate-alert-overlay" role="alertdialog" aria-labelledby="duplicate-alert-title" aria-describedby="duplicate-alert-message">
-                    <div className="duplicate-alert-box">
-                        <h3 id="duplicate-alert-title" className="duplicate-alert-title">You've already registered</h3>
-                        <p id="duplicate-alert-message" className="duplicate-alert-message">
-                            We found an existing registration for this email. Submitting again will overwrite
-                            your previous registration. Are you sure you want to continue?
-                        </p>
-                        <div className="duplicate-alert-actions">
-                            <button
-                                type="button"
-                                className="duplicate-alert-cancel-btn"
-                                onClick={handleCancelOverwrite}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="duplicate-alert-overwrite-btn"
-                                onClick={handleOverwrite}
-                                disabled={isSubmitting}
-                            >
-                                {isSubmitting ? "Overwriting..." : "Overwrite"}
-                            </button>
+            {showDuplicateAlert &&
+                createPortal(
+                    <div
+                        className="duplicate-alert-overlay"
+                        role="alertdialog"
+                        aria-modal="true"
+                        aria-labelledby="duplicate-alert-title"
+                        aria-describedby="duplicate-alert-message"
+                    >
+                        <div className="student-reg-coming-soon duplicate-alert-shell">
+                            <img
+                                className="student-reg-coming-soon__mascot"
+                                src={mascot}
+                                alt=""
+                                width={224}
+                                height={254}
+                            />
+                            <div className="student-reg-coming-soon__card duplicate-alert-box">
+                                <h3 id="duplicate-alert-title" className="student-reg-coming-soon__title">
+                                    already registered
+                                </h3>
+                                <p className="student-reg-coming-soon__tagline">harvest your potential</p>
+                                <p id="duplicate-alert-message" className="student-reg-coming-soon__copy">
+                                    We found an existing registration for this email. Submitting again will
+                                    overwrite your previous registration. Are you sure you want to continue?
+                                </p>
+                                <div className="duplicate-alert-actions">
+                                    <button
+                                        type="button"
+                                        className="duplicate-alert-cancel-btn"
+                                        onClick={handleCancelOverwrite}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="duplicate-alert-overwrite-btn"
+                                        onClick={handleOverwrite}
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? "Overwriting..." : "Overwrite"}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </div>,
+                    document.body
+                )}
 
             <div className="student-reg-card">
             {isWaitlist && (
@@ -690,22 +734,30 @@ const StudentRegistrationForm = () => {
 
                 <fieldset className="student-company-preferences">
                     <h3 className="student-reg-subtitle">Company Preferences</h3>
-                    <p className="company-preferences-description">Please rank your top 10 companies in the order you would like to be seated with at dinner. Seating is first come, first serve.</p>
+                    <p className="company-preferences-description">
+                        Please rank your top companies in the order you would like to be seated with at dinner.
+                        Seating is first come, first serve. Already chosen companies are hidden from later choices.
+                    </p>
                     {errors.companyPreferences && <span className="error">{errors.companyPreferences}</span>}
 
                     <div className="company-preferences-grid">
-                        {companyRankLabels.map((label, rankIndex) => (
-                            <div className="company-choice" key={rankIndex}>
-                                <RegistrationSelect
-                                    id={`company-choice-${rankIndex}`}
-                                    name={`companyPreferences-${rankIndex}`}
-                                    label={`${label} choice*`}
-                                    value={formData.companyPreferences[rankIndex]}
-                                    options={companyOptionsForRank(rankIndex)}
-                                    onChange={(e) => handleCompanyRankChange(rankIndex, e.target.value)}
-                                />
-                            </div>
-                        ))}
+                        {companyRankLabels.map((label, rankIndex) => {
+                            const locked = isCompanyRankLocked(rankIndex);
+                            return (
+                                <div className={`company-choice${locked ? " is-locked" : ""}`} key={rankIndex}>
+                                    <RegistrationSelect
+                                        id={`company-choice-${rankIndex}`}
+                                        name={`companyPreferences-${rankIndex}`}
+                                        label={`${label} choice${locked ? "" : "*"}`}
+                                        value={formData.companyPreferences[rankIndex]}
+                                        options={companyOptionsForRank(rankIndex)}
+                                        disabled={locked}
+                                        placeholder={locked ? "No companies left" : "Select one"}
+                                        onChange={(e) => handleCompanyRankChange(rankIndex, e.target.value)}
+                                    />
+                                </div>
+                            );
+                        })}
                     </div>
                 </fieldset>
 

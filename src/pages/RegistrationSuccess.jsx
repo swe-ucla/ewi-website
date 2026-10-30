@@ -1,51 +1,60 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import mascot from "../assets/home-2026/mascot.png";
+import "./StudentRegistration.css";
 import "./RegistrationSuccess.css";
 
 const RegistrationSuccess = () => {
-    return (
-        <div className="reg-success-page">
-            <div className="reg-success-card">
-                <div className="reg-success-icon">✓</div>
-                <h1 className="reg-success-title">Thank You for Registering for EWI 2026</h1>
-                <p className="reg-success-badge">Waitlist Only</p>
-                <p className="reg-success-message">
-                    If you are selected from the waitlist, you will receive an email about how to proceed.
-                </p>
+    const location = useLocation();
+    const isWaitlist = Boolean(location.state?.waitlist);
 
-                <div className="reg-success-details">
-                    <p className="reg-success-details-intro">
-                        As the event approaches, here is some information you should keep in mind:
-                    </p>
-                    <ul className="reg-success-list">
+    return (
+        <div className="student-reg-page reg-success-page">
+            <div className="reg-success">
+                <img
+                    className="reg-success__mascot"
+                    src={mascot}
+                    alt=""
+                    width={420}
+                    height={475}
+                />
+
+                <div className="reg-success__panel">
+                    <h1 className="reg-success__title">you're registered</h1>
+                    <p className="reg-success__tagline">harvest your potential</p>
+
+                    {isWaitlist ? (
+                        <p className="reg-success__lead">
+                            You're on the waitlist for EWI 2026.
+                            <br />
+                            We'll reach out if a spot opens.
+                        </p>
+                    ) : (
+                        <p className="reg-success__lead">
+                            You're registered for EWI 2026.
+                            <br />
+                            We look forward to seeing you there!
+                        </p>
+                    )}
+
+                    <ul className="reg-success__list">
                         <li>
-                            You will receive a registration confirmation email, attached will be the
-                            student survival guide.
+                            As the event approaches, you'll get a confirmation email with the student
+                            survival guide.
                         </li>
                         <li>
-                            If you would like to submit an updated resume, please email{" "}
-                            <a href="mailto:student.liaison.ewi.swe.ucla@gmail.com" className="reg-success-link">
+                            Updated resume? Email{" "}
+                            <a href="mailto:student.liaison.ewi.swe.ucla@gmail.com">
                                 student.liaison.ewi.swe.ucla@gmail.com
                             </a>{" "}
-                            with the attached copy by Jan. 16 @ 11:59 PM.
-                        </li>
-                        <li>
-                            To stay updated, please keep an eye on your email and follow our Instagram:{" "}
-                            <a
-                                href="https://www.instagram.com/uclasweewi"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="reg-success-link"
-                            >
-                                @uclasweewi
-                            </a>
+                            by Jan. 16 @ 11:59 PM.
                         </li>
                     </ul>
+
+                    <Link to="/students" className="student-reg-submit reg-success__btn">
+                        Back to Students
+                    </Link>
                 </div>
-
-                <p className="reg-success-signoff">We look forward to seeing you there!!</p>
-
-                <Link to="/students" className="reg-success-btn">Back to Students Page</Link>
             </div>
         </div>
     );

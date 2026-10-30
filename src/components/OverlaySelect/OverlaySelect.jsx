@@ -19,12 +19,17 @@ const OverlaySelect = ({
   className = "",
   labelClassName = "overlay-select__label",
   size = "default",
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const rootRef = useRef(null);
   const menuRef = useRef(null);
   const optionRefs = useRef([]);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -67,6 +72,7 @@ const OverlaySelect = ({
   };
 
   const openMenu = () => {
+    if (disabled) return;
     const selectedIndex = options.findIndex((option) => option.value === value);
     const start = selectedIndex >= 0 ? selectedIndex : 0;
     setActiveIndex(firstEnabledIndex(start, 1));
@@ -91,6 +97,7 @@ const OverlaySelect = ({
   };
 
   const onTriggerKeyDown = (event) => {
+    if (disabled) return;
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       if (!open) {
@@ -122,6 +129,7 @@ const OverlaySelect = ({
   const rootClass = [
     "overlay-select",
     size === "compact" ? "overlay-select--compact" : "",
+    disabled ? "overlay-select--disabled" : "",
     className,
   ]
     .filter(Boolean)
@@ -150,7 +158,12 @@ const OverlaySelect = ({
           aria-labelledby={labelId}
           aria-label={!label ? ariaLabel || placeholder : undefined}
           aria-describedby={hintId}
-          onClick={() => (open ? setOpen(false) : openMenu())}
+          aria-disabled={disabled || undefined}
+          disabled={disabled}
+          onClick={() => {
+            if (disabled) return;
+            open ? setOpen(false) : openMenu();
+          }}
           onKeyDown={onTriggerKeyDown}
         >
           <span>{selected ? selected.label : placeholder}</span>
