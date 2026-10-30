@@ -98,15 +98,26 @@ const AdminPager = ({ page, totalItems, onChange, label }) => {
   );
 };
 
-const InfoTip = ({ children }) => {
+const InfoTip = ({ id, children }) => {
   const [open, setOpen] = useState(false);
   return (
-    <span className="info-tip" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button type="button" className="info-tip-btn" aria-label="What does this mean?" aria-expanded={open}
-        onClick={() => setOpen(true)} onBlur={() => setOpen(false)}
-        onKeyDown={(e) => e.key === "Escape" && setOpen(false)}>?</button>
-      {open && <span className="info-tip-text" role="tooltip">{children}</span>}
-    </span>
+    <>
+      <button
+        type="button"
+        className={`info-tip-btn${open ? " is-open" : ""}`}
+        aria-label="What does this mean?"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((v) => !v)}
+      >
+        i
+      </button>
+      {open && (
+        <p id={id} className="setting-hint">
+          {children}
+        </p>
+      )}
+    </>
   );
 };
 
@@ -577,7 +588,7 @@ const Admin = () => {
             <header className="admin-matching-panel__header">
               <div className="admin-matching-intro">
                 <h2 id="admin-matching-title" className="admin-matching-title">
-                  Table matching
+                  Table Matching
                 </h2>
                 <p className="admin-matching-desc">
                   Runs the sorting algorithm against all current student registrations.
@@ -597,9 +608,11 @@ const Admin = () => {
               <div className="matching-settings">
                 <div className="matching-settings-grid">
                   <div className="setting-row">
-                    <div className="setting-label">
-                      <label htmlFor="seatsPerTable">Seats per table</label>
-                      <InfoTip>How many students sit at each company's table.</InfoTip>
+                    <div className="setting-copy">
+                      <div className="setting-label">
+                        <label htmlFor="seatsPerTable">Seats per table</label>
+                        <InfoTip id="hint-seats">How many students sit at each company's table.</InfoTip>
+                      </div>
                     </div>
                     <input
                       id="seatsPerTable"
@@ -610,12 +623,13 @@ const Admin = () => {
                     />
                   </div>
                   <div className="setting-row">
-                    <div className="setting-label">
-                      <label htmlFor="maxPerMajor">Max of one major</label>
-                      <InfoTip>
-                        No more than this many students with the same major at one table, so each company meets
-                        a mix of majors. With 4, a table can't have 5 Computer Science students.
-                      </InfoTip>
+                    <div className="setting-copy">
+                      <div className="setting-label">
+                        <label htmlFor="maxPerMajor">Max of one major</label>
+                        <InfoTip id="hint-max-major">
+                          Cap on how many students with the same major can sit at one table, so companies meet a mix.
+                        </InfoTip>
+                      </div>
                     </div>
                     <input
                       id="maxPerMajor"
@@ -626,12 +640,14 @@ const Admin = () => {
                     />
                   </div>
                   <div className="setting-row">
-                    <div className="setting-label">
-                      <label htmlFor="protectedPercent">Can't lose their seat</label>
-                      <InfoTip>
-                        Students are lined up by when they signed up (#1 signed up first). The first {matchingSettings.protectedPercent}% of the line
-                        keep whatever seat they get. Right now that's {lineSpots(lockedCount).toLowerCase()} of {registrations.length}.
-                      </InfoTip>
+                    <div className="setting-copy">
+                      <div className="setting-label">
+                        <label htmlFor="protectedPercent">Can't lose their seat</label>
+                        <InfoTip id="hint-protected">
+                          Students line up by signup order. The first {matchingSettings.protectedPercent}% keep
+                          their seat — {lineSpots(lockedCount).toLowerCase()} of {registrations.length} right now.
+                        </InfoTip>
+                      </div>
                     </div>
                     <span className="setting-input">
                       <input
@@ -646,13 +662,15 @@ const Admin = () => {
                     </span>
                   </div>
                   <div className="setting-row">
-                    <div className="setting-label">
-                      <label htmlFor="canBumpPercent">Can take someone's seat</label>
-                      <InfoTip>
-                        If someone in the first {matchingSettings.canBumpPercent}% of the line gets none of their picks, they can take a seat from a
-                        student later in line who ranked that company only 3rd or 4th. Right now
-                        that's {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length}.
-                      </InfoTip>
+                    <div className="setting-copy">
+                      <div className="setting-label">
+                        <label htmlFor="canBumpPercent">Can take someone's seat</label>
+                        <InfoTip id="hint-bump">
+                          If someone in the first {matchingSettings.canBumpPercent}% gets none of their picks,
+                          they can take a seat from a later student who ranked that company 3rd or 4th —{" "}
+                          {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length} right now.
+                        </InfoTip>
+                      </div>
                     </div>
                     <span className="setting-input">
                       <input
@@ -670,8 +688,12 @@ const Admin = () => {
 
                 <div className="matching-large-tables">
                   <div className="setting-subhead">
-                    <span>Larger tables</span>
-                    <InfoTip>Companies hosting a bigger table get their own limits instead of the ones above.</InfoTip>
+                    <div className="setting-label">
+                      <span>Larger tables</span>
+                      <InfoTip id="hint-large-tables">
+                        Companies with a bigger table use their own seat and major limits.
+                      </InfoTip>
+                    </div>
                   </div>
                   {matchingSettings.largeTables.length > 0 && (
                     <div className="large-table-head" aria-hidden="true">
@@ -683,17 +705,20 @@ const Admin = () => {
                   )}
                   {matchingSettings.largeTables.map((t, i) => (
                     <div className="large-table-row" key={i}>
-                      <OverlaySelect
+                      <select
                         id={`largeCompany${i}`}
-                        name={`largeCompany${i}`}
-                        ariaLabel="Company"
-                        size="compact"
-                        className="admin-company-select"
+                        aria-label="Company"
+                        className="large-table-select"
                         value={t.company}
-                        placeholder="Select company"
-                        options={companies.map((c) => ({ value: c.name, label: c.name }))}
                         onChange={(e) => updateLargeTable(i, "company", e.target.value)}
-                      />
+                      >
+                        <option value="">Select company</option>
+                        {companies.map((c) => (
+                          <option key={c.name} value={c.name}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
                       <input
                         id={`largeSeats${i}`}
                         aria-label="Seats"

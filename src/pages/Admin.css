@@ -270,10 +270,10 @@
 .stat-num {
   color: #000;
   text-align: center;
-  font-size: 14px;
+  font-size: 2rem;
   font-style: normal;
   font-weight: 700;
-  line-height: normal;
+  line-height: 1.1;
 }
 
 .stat-label {
@@ -307,20 +307,21 @@
   height: 44px;
   padding: 0 1.5rem;
   border-radius: 15px;
-  border: 1px solid #000;
+  border: none;
   background: #fff;
   color: #000;
   font-size: 14px;
   font-weight: 400;
   line-height: normal;
   cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .admin-shell .filter-btn.active,
 .admin-shell .filter-btn.active:hover {
   background: #5f4077;
-  border-color: #5f4077;
   color: #fff;
+  box-shadow: 0 4px 4px rgba(95, 64, 119, 0.35);
 }
 
 .admin-shell .filter-btn:hover:not(.active) {
@@ -348,7 +349,10 @@
 
 .admin-matching-overlay {
   position: fixed;
-  inset: 0;
+  top: 67px; /* below sticky site navbar */
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 80;
   background: rgba(43, 33, 51, 0.35);
   display: flex;
@@ -422,6 +426,7 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 1.2;
+  text-transform: none;
 }
 
 .admin-matching-desc {
@@ -472,13 +477,14 @@
   to { transform: translateX(0); }
 }
 
-/* TABLES — Figma #eaeaea shell, #e3c4fb header, black border, 15px */
+/* TABLES — #eaeaea shell, #e3c4fb header, soft shadow */
 .admin-table-wrapper {
   background: #eaeaea;
-  border: 1px solid #000;
+  border: none;
   border-radius: 15px;
   overflow: hidden;
   overflow-x: auto;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .admin-table {
@@ -553,8 +559,8 @@
   background: transparent;
   color: #000;
   font-family: Inter, "Inter", system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 600;
   line-height: normal;
   padding: 0;
   cursor: pointer;
@@ -568,15 +574,16 @@
 }
 
 .first-choice-count {
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 td[data-label="capacity"] input.capacity-input {
   width: 5.5rem;
   min-height: 2.5rem;
   padding: 0.25rem 0.5rem;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 /* SEARCH / SORT / EXPORT — Figma 61px tall, 15px radius */
@@ -592,16 +599,18 @@ td[data-label="capacity"] input.capacity-input {
 }
 
 .admin-search-input {
-  border: 1px solid #9b9b9b;
-  border-radius: 15px;
+  border: none;
+  border-radius: 12px;
   background: #fff;
   color: #000;
-  min-height: 44px;
-  padding: 0.75rem 1.4rem;
-  font-size: 14px;
+  min-height: 2.35rem;
+  height: 2.35rem;
+  padding: 0 0.85rem;
+  font-size: 13px;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.2;
   outline: none;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.18);
 }
 
 .admin-search-input::placeholder {
@@ -624,8 +633,8 @@ td[data-label="capacity"] input.capacity-input {
 .admin-shell .admin-sort-select,
 .admin-shell .admin-export-select {
   width: auto;
-  min-width: 11rem;
-  max-width: 14rem;
+  min-width: 9.5rem;
+  max-width: 12rem;
   flex: 0 0 auto;
 }
 
@@ -633,59 +642,105 @@ td[data-label="capacity"] input.capacity-input {
   margin-left: auto;
 }
 
-.admin-shell .admin-sort-select .overlay-select__trigger,
-.admin-shell .admin-export-select .overlay-select__trigger {
-  min-height: 44px;
-  border: 1px solid #9b9b9b;
-  border-radius: 15px;
-  background: #fff;
-  color: rgba(0, 0, 0, 0.49);
-  font-family: Inter, "Inter", system-ui, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: normal;
-  padding: 0.75rem 1.4rem;
-  box-shadow: none;
-}
-
-.admin-shell .admin-export-select .overlay-select__trigger {
-  background: #e3e3e3;
-}
-
-.admin-shell .overlay-select__option {
-  font-family: Inter, "Inter", system-ui, sans-serif;
-  font-size: 14px;
-}
-
-.admin-company-select {
-  min-width: 0;
-}
-
-/* Matching larger-tables select inherits OverlaySelect’s 1.5rem Dongle size — pull it down */
-.admin-shell .admin-company-select .overlay-select__trigger {
+.admin-shell .admin-sort-select.overlay-select--compact .overlay-select__trigger,
+.admin-shell .admin-export-select.overlay-select--compact .overlay-select__trigger {
   min-height: 2.35rem;
-  padding: 0.35rem 0.7rem;
-  border: 1px solid #cfcfcf;
-  border-radius: 10px;
+  height: 2.35rem;
+  border: none;
+  border-radius: 12px;
   background: #fff;
-  color: rgba(0, 0, 0, 0.55);
+  color: #2b2133;
   font-family: Inter, "Inter", system-ui, sans-serif;
   font-size: 13px;
   font-weight: 400;
   line-height: 1.2;
-  box-shadow: none;
+  padding: 0 0.85rem;
+  gap: 0.5rem;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.18);
 }
 
-.admin-shell .admin-company-select .overlay-select__option {
+.admin-shell .admin-sort-select .overlay-select__trigger.is-placeholder,
+.admin-shell .admin-export-select .overlay-select__trigger.is-placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.admin-shell .admin-sort-select .overlay-select__chevron,
+.admin-shell .admin-export-select .overlay-select__chevron {
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-right: 0;
+  border-right-width: 1.5px;
+  border-bottom-width: 1.5px;
+  border-color: rgba(0, 0, 0, 0.45);
+}
+
+.admin-shell .admin-sort-select .overlay-select__menu,
+.admin-shell .admin-export-select .overlay-select__menu {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(43, 33, 51, 0.14);
+  padding: 0.3rem;
+}
+
+.admin-shell .admin-sort-select.overlay-select--compact .overlay-select__option,
+.admin-shell .admin-export-select.overlay-select--compact .overlay-select__option {
   font-family: Inter, "Inter", system-ui, sans-serif;
   font-size: 13px;
-  padding: 0.45rem 0.7rem;
+  line-height: 1.25;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+}
+
+.admin-shell .overlay-select__option {
+  font-family: Inter, "Inter", system-ui, sans-serif;
+  font-size: 13px;
+}
+
+.admin-shell .large-table-row .large-table-select,
+.admin-shell .large-table-row input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  min-height: 2.35rem;
+  height: 2.35rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  background: #fff;
+  color: #000;
+  font-family: Inter, "Inter", system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.2;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.admin-shell .large-table-row .large-table-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(0, 0, 0, 0.45) 50%),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.45) 50%, transparent 50%);
+  background-position: calc(100% - 0.85rem) 55%, calc(100% - 0.55rem) 55%;
+  background-size: 0.3rem 0.3rem, 0.3rem 0.3rem;
+  background-repeat: no-repeat;
+  padding-right: 1.5rem;
+  cursor: pointer;
+}
+
+.admin-shell .large-table-row .large-table-select:invalid,
+.admin-shell .large-table-row .large-table-select:has(option[value=""]:checked) {
+  color: rgba(0, 0, 0, 0.45);
 }
 
 .admin-shell .large-table-row input[type="number"] {
-  width: 100%;
-  min-height: 2.35rem;
-  font-size: 13px;
+  text-align: right;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.admin-shell .large-table-row .large-table-select:focus,
+.admin-shell .large-table-row input[type="number"]:focus {
+  border-color: #5f4077;
+  outline: 2px solid rgba(95, 64, 119, 0.2);
+  outline-offset: 0;
 }
 
 /* STATUS */
@@ -736,7 +791,8 @@ td[data-label="capacity"] input.capacity-input {
   background: #fff;
   color: #000;
   font-family: Inter, "Inter", system-ui, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   text-align: right;
   outline: none;
 }
@@ -749,36 +805,91 @@ td[data-label="capacity"] input.capacity-input {
 
 .setting-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-  min-height: 2.5rem;
-  padding: 0.35rem 0.55rem;
+  padding: 0.55rem 0.65rem;
   border-radius: 10px;
   background: #f8f5fa;
 }
 
+.setting-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
 .setting-label {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem;
   min-width: 0;
 }
 
-.setting-label label {
+.setting-label label,
+.setting-subhead .setting-label > span {
   color: #2b2133;
   font-size: 13px;
   font-weight: 500;
   line-height: 1.25;
 }
 
+.setting-subhead .setting-label > span {
+  color: #5f4077;
+  font-weight: 700;
+}
+
+.info-tip-btn {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  border: 1px solid #5f4077;
+  background: transparent;
+  color: #5f4077;
+  font-family: Inter, "Inter", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-style: normal;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-tip-btn.is-open,
+.info-tip-btn:hover {
+  background: #5f4077;
+  color: #fff;
+}
+
+.setting-hint {
+  flex: 1 0 100%;
+  margin: 0.15rem 0 0;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
 .setting-input {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
   color: rgba(0, 0, 0, 0.45);
   font-size: 13px;
   font-weight: 500;
+}
+
+.setting-row > input[type="number"] {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
 }
 
 .matching-large-tables {
@@ -790,9 +901,6 @@ td[data-label="capacity"] input.capacity-input {
 }
 
 .setting-subhead {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
   color: #5f4077;
   font-size: 13px;
   font-weight: 700;
@@ -816,15 +924,9 @@ td[data-label="capacity"] input.capacity-input {
 }
 
 .large-table-row {
-  position: relative;
-  z-index: 1;
   padding: 0.35rem;
   border-radius: 10px;
   background: #f8f5fa;
-}
-
-.large-table-row:has(.overlay-select__control.is-open) {
-  z-index: 40;
 }
 
 .large-table-remove {
@@ -889,78 +991,46 @@ td[data-label="capacity"] input.capacity-input {
   }
 }
 
-/* INFO TIP */
-.info-tip {
-  position: relative;
-  display: inline-flex;
-}
-
-.info-tip-btn {
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  border: 1px solid #5f4077;
-  background: transparent;
-  color: #5f4077;
-  font-size: 0.75rem;
-  cursor: help;
-  padding: 0;
-}
-
-.info-tip-text {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 6px);
-  transform: translateX(-50%);
-  width: max-content;
-  max-width: 16rem;
-  background: #2b2133;
-  color: #fff;
-  font-size: 13px;
-  line-height: 1.3;
-  padding: 0.55rem 0.7rem;
-  border-radius: 10px;
-  z-index: 10;
-}
-
 /* CHART */
 .admin-chart {
   background: #fff;
-  border: 1px solid #000;
+  border: none;
   border-radius: 15px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12);
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .admin-shell .admin-chart__title {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
   color: #5f4077;
   text-align: center;
   font-family: Inter, "Inter", system-ui, sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
 }
 
 .admin-chart__empty {
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   text-align: center;
   color: rgba(0, 0, 0, 0.49);
   font-size: 14px;
 }
 
 .admin-chart__body {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(12rem, 0.9fr);
-  gap: 1.25rem 1.75rem;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  gap: 1.5rem 2rem;
 }
 
 .admin-chart__canvas {
   position: relative;
-  width: 100%;
+  width: min(100%, 320px);
   height: 320px;
+  flex: 0 0 auto;
 }
 
 .admin-chart__center {
@@ -975,7 +1045,7 @@ td[data-label="capacity"] input.capacity-input {
 
 .admin-chart__center-value {
   color: #5f4077;
-  font-size: 18px;
+  font-size: 1.75rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -983,7 +1053,7 @@ td[data-label="capacity"] input.capacity-input {
 .admin-chart__center-label {
   margin-top: 0.2rem;
   color: rgba(0, 0, 0, 0.49);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .admin-chart__legend {
@@ -992,36 +1062,54 @@ td[data-label="capacity"] input.capacity-input {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  justify-content: center;
+  gap: 0.2rem;
+  flex: 0 1 14rem;
   max-height: 320px;
   overflow-y: auto;
 }
 
 .admin-chart__legend-item {
   display: grid;
-  grid-template-columns: 0.85rem minmax(0, 1fr) auto;
-  gap: 0.55rem;
+  grid-template-columns: 0.65rem minmax(0, 1fr) auto;
+  gap: 0.4rem;
   align-items: center;
-  padding: 0.55rem 0.7rem;
-  border-radius: 12px;
-  background: #f7f4fb;
+  padding: 0.25rem 0.45rem;
+  border-radius: 8px;
+  background: transparent;
+  cursor: default;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.admin-chart__legend-item.is-active {
+  background: #f0eaf7;
+}
+
+.admin-chart__legend-item.is-dimmed {
+  opacity: 0.4;
 }
 
 .admin-chart__swatch {
-  width: 0.85rem;
-  height: 0.85rem;
-  border-radius: 4px;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .admin-chart__legend-name {
   min-width: 0;
-  font-size: 14px;
+  font-size: 13px;
   color: #000;
   overflow-wrap: anywhere;
 }
 
+.admin-chart__legend-item.is-active .admin-chart__legend-name {
+  font-weight: 600;
+  color: #5f4077;
+}
+
 .admin-chart__legend-value {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #5f4077;
   white-space: nowrap;
@@ -1030,26 +1118,6 @@ td[data-label="capacity"] input.capacity-input {
 .admin-chart__legend-pct {
   font-weight: 400;
   color: rgba(0, 0, 0, 0.45);
-}
-
-.admin-chart__tooltip {
-  background: #fff;
-  border: 1px solid #000;
-  border-radius: 12px;
-  padding: 0.55rem 0.8rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-.admin-chart__tooltip-name {
-  margin: 0;
-  font-size: 14px;
-}
-
-.admin-chart__tooltip-meta {
-  margin: 0.15rem 0 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: #5f4077;
 }
 
 /* PAGER */
@@ -1066,19 +1134,20 @@ td[data-label="capacity"] input.capacity-input {
   min-width: 2.75rem;
   height: 2.75rem;
   padding: 0 0.85rem;
-  border: 1px solid #000;
+  border: none;
   border-radius: 15px;
   background: #fff;
   color: #000;
   font-family: Inter, "Inter", system-ui, sans-serif;
   font-size: 14px;
   cursor: pointer;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .admin-pager__btn.is-active {
   background: #5f4077;
-  border-color: #5f4077;
   color: #fff;
+  box-shadow: 0 4px 4px rgba(95, 64, 119, 0.35);
 }
 
 .admin-pager__btn:disabled {
@@ -1150,8 +1219,7 @@ td[data-label="capacity"] input.capacity-input {
     padding: 2rem 1.35rem 2.25rem;
   }
 
-  .admin-header h1,
-  .admin-shell .admin-chart__title {
+  .admin-header h1 {
     font-size: 20px;
   }
 
@@ -1160,7 +1228,17 @@ td[data-label="capacity"] input.capacity-input {
   }
 
   .admin-chart__body {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .admin-chart__legend {
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  .admin-chart__canvas {
+    height: 280px;
   }
 }
 
@@ -1184,13 +1262,16 @@ td[data-label="capacity"] input.capacity-input {
   }
 
   .admin-user,
-  .stat-num,
   .stat-label,
   .admin-table th,
   .admin-table td,
   .admin-search-input,
   .admin-shell .filter-btn {
     font-size: 14px;
+  }
+
+  .stat-num {
+    font-size: 1.75rem;
   }
 
   .admin-shell .filter-btn {
@@ -1203,11 +1284,15 @@ td[data-label="capacity"] input.capacity-input {
     font-size: 14px;
   }
 
-  .admin-search-input,
-  .admin-shell .admin-sort-select .overlay-select__trigger,
-  .admin-shell .admin-export-select .overlay-select__trigger {
-    min-height: 48px;
-    font-size: 14px;
+  .admin-search-input {
+    min-height: 44px;
+  }
+
+  .admin-shell .admin-sort-select.overlay-select--compact .overlay-select__trigger,
+  .admin-shell .admin-export-select.overlay-select--compact .overlay-select__trigger {
+    min-height: 2.5rem;
+    height: 2.5rem;
+    font-size: 13px;
   }
 
   .admin-search-row {
@@ -1252,9 +1337,10 @@ td[data-label="capacity"] input.capacity-input {
       "capacity choices choices";
     row-gap: 0.75rem;
     background: #fff;
-    border: 1px solid #000;
+    border: none;
     border-radius: 15px;
     padding: 1rem;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   }
 
   .companies-table tbody tr:nth-child(even) td,

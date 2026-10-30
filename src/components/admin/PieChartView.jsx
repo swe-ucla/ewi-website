@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   PieChart,
   Pie,
-  Tooltip,
   ResponsiveContainer,
   Cell,
+  Sector,
 } from "recharts";
 
 const CHART_COLORS = [
@@ -18,26 +18,58 @@ const CHART_COLORS = [
   "#C9A4E8",
 ];
 
-const ChartTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null;
-  const item = payload[0];
-  const total = item.payload.total || 0;
-  const value = item.value || 0;
-  const pct = total ? Math.round((value / total) * 100) : 0;
+const RADIAN = Math.PI / 180;
+
+const ActiveSlice = ({
+  cx,
+  cy,
+  innerRadius,
+  outerRadius,
+  startAngle,
+  endAngle,
+  fill,
+}) => {
+  const midAngle = (startAngle + endAngle) / 2;
+  const tipR = outerRadius + 14;
+  const tipX = cx + tipR * Math.cos(-midAngle * RADIAN);
+  const tipY = cy + tipR * Math.sin(-midAngle * RADIAN);
+  const edgeR = outerRadius + 2;
+  const edgeX = cx + edgeR * Math.cos(-midAngle * RADIAN);
+  const edgeY = cy + edgeR * Math.sin(-midAngle * RADIAN);
 
   return (
-    <div className="admin-chart__tooltip">
-      <p className="admin-chart__tooltip-name">{item.name}</p>
-      <p className="admin-chart__tooltip-meta">
-        {value} · {pct}%
-      </p>
-    </div>
+    <g>
+      <Sector
+        cx={cx}
+        cy={cy}
+        innerRadius={innerRadius}
+        outerRadius={outerRadius + 8}
+        startAngle={startAngle}
+        endAngle={endAngle}
+        fill={fill}
+        stroke="#fff"
+        strokeWidth={3}
+      />
+      <line
+        x1={edgeX}
+        y1={edgeY}
+        x2={tipX}
+        y2={tipY}
+        stroke={fill}
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+      <circle cx={tipX} cy={tipY} r={3.5} fill={fill} />
+    </g>
   );
 };
 
 const PieChartView = ({ data, title }) => {
+  const [activeIndex, setActiveIndex] = useState(null);
   const total = data.reduce((sum, d) => sum + (d.value || 0), 0);
-  const chartData = data.map((d) => ({ ...d, total }));
+  const chartData = data
+    .filter((d) => (d.value || 0) > 0)
+    .map((d) => ({ ...d, total }));
 
   return (
     <div className="admin-chart">
@@ -61,16 +93,20 @@ const PieChartView = ({ data, title }) => {
                   paddingAngle={2}
                   stroke="#fff"
                   strokeWidth={3}
-                  isAnimationActive
+                  isAnimationActive={false}
+                  activeIndex={activeIndex ?? undefined}
+                  activeShape={ActiveSlice}
+                  onMouseEnter={(_, index) => setActiveIndex(index)}
+                  onMouseLeave={() => setActiveIndex(null)}
                 >
                   {chartData.map((entry, i) => (
                     <Cell
                       key={entry.name}
                       fill={CHART_COLORS[i % CHART_COLORS.length]}
+                      opacity={activeIndex === null || activeIndex === i ? 1 : 0.35}
                     />
                   ))}
                 </Pie>
-                <Tooltip content={<ChartTooltip />} />
               </PieChart>
             </ResponsiveContainer>
             <div className="admin-chart__center" aria-hidden="true">
@@ -83,7 +119,14 @@ const PieChartView = ({ data, title }) => {
             {chartData.map((entry, i) => {
               const pct = Math.round((entry.value / total) * 100);
               return (
-                <li key={entry.name} className="admin-chart__legend-item">
+                <li
+                  key={entry.name}
+                  className={`admin-chart__legend-item${activeIndex === i ? " is-active" : ""}${
+                    activeIndex !== null && activeIndex !== i ? " is-dimmed" : ""
+                  }`}
+                  onMouseEnter={() => setActiveIndex(i)}
+                  onMouseLeave={() => setActiveIndex(null)}
+                >
                   <span
                     className="admin-chart__swatch"
                     style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
