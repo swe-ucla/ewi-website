@@ -5,7 +5,7 @@ import JEIA from "../../assets/JeiaSoHeadshot.jpg";
 import LILLIAN from "../../assets/LillianGonickHeadshot.JPG";
 import GEORGIA from "../../assets/GeorgiaCraneHeadshot.jpg";
 import CAROL from "../../assets/CarolHiwatigHeadshot.jpg";
-import PRIYANKA from "../../assets/placeholder.png";
+import PRIYANKA from "../../assets/PriyankaSanthoshHeadshot.jpg";
 import FIA from "../../assets/FiaNicolaescuHeadshot.png";
 import FIONA from "../../assets/FionaSzetoHeadshot.jpeg";
 
@@ -15,10 +15,10 @@ const teamData = [
     image: JEIA,
     name: "Jeia So",
     position: "External Director",
-    year: "4th Year",
+    year: "3rd Year",
     major: "Mechanical Engineering",
     description:
-      "Jeia is a fourth year student at UCLA studying Mechanical Engineering and currently serves as the External Director for SWE@UCLA's Evening with Industry Committee. She has been involved with undergraduate research as part of the Mechanics of Soft Materials Lab, and an instructor for the drones E1 class on campus. She hopes to pursue a career in robotics or bionics. In her free time, she enjoys drawing, dancing, and looking for new food spots.",
+      "Jeia is a third year student at UCLA studying Mechanical Engineering and currently serves as the External Director for SWE@UCLA's Evening with Industry Committee. She has been involved with undergraduate research as part of the Mechanics of Soft Materials Lab, and an instructor for the drones E1 class on campus. She hopes to pursue a career in robotics or bionics. In her free time, she enjoys drawing, dancing, and looking for new food spots.",
     linkedInURL: "https://www.linkedin.com/in/jeiaso/",
   },
   {

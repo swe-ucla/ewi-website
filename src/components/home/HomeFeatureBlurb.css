@@ -14,8 +14,9 @@
   min-height: 100%;
   padding: 1.35rem 1.15rem 1.25rem;
   border-radius: 25px;
-  background: linear-gradient(180deg, #e3c4fb 28%, #f9f6f0 100%);
-  box-shadow: 0 4px 5px 1px #2b2133;
+  /* background: linear-gradient(180deg, #e3c4fb 28%, #f9f6f0 100%); */
+  background: #F4DCD0;
+  box-shadow: 0 4px 5px 1px rgba(0, 0, 0, 0.22);
 }
 
 .home-feature-blurb__image {
@@ -48,13 +49,13 @@
 .home-feature-blurb__title {
   margin: 0;
   color: #2b2133;
-  font-family: "Abhaya Libre Extra", serif;
-  font-size: clamp(1.6rem, 2.15vw, 2rem);
-  font-weight: 400;
+  font-family: "Dongle", sans-serif;
+  font-size: clamp(2.15rem, 2.15vw, 2rem);
+  font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 0.95;
   text-align: center;
-  text-transform: lowercase;
+  /* text-transform: lowercase; */
 }
 
 .home-feature-blurb__text {
@@ -71,6 +72,26 @@
   text-wrap: wrap;
   text-wrap: pretty;
   text-wrap: balance;
+}
+
+.home-feature-blurb__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+  color: #5f4077;
+  font-family: "Dongle", sans-serif;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.home-feature-blurb__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.home-feature-blurb__meta svg {
+  font-size: 1.15rem;
 }
 
 @media screen and (max-width: 860px) {
