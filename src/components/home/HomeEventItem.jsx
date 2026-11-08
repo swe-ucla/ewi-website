@@ -1,5 +1,9 @@
 import React from "react";
-import { HiOutlineLocationMarker, HiOutlineClock } from "react-icons/hi";
+import {
+  HiOutlineLocationMarker,
+  HiOutlineClock,
+  HiOutlinePresentationChartLine,
+} from "react-icons/hi";
 import "./HomeEventItem.css";
 
 const HomeEventItem = ({
@@ -8,6 +12,7 @@ const HomeEventItem = ({
   location,
   time,
   rsvpLink,
+  slidesLink,
 }) => {
   return (
     <a
@@ -32,6 +37,14 @@ const HomeEventItem = ({
             <HiOutlineClock aria-hidden="true" />
             {time}
           </span>
+          {slidesLink && (
+            <span>
+              <HiOutlinePresentationChartLine aria-hidden="true" />
+              <a href={slidesLink} target="_blank" rel="noopener noreferrer">
+                Slides
+              </a>
+            </span>
+          )}
         </div>
       </div>
     </a>

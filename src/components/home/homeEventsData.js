@@ -7,6 +7,7 @@ export const homeFeaturedEvents = [
     location: "Cohen Room, Engineering VI",
     time: "Oct 27, 6–7 PM",
     rsvpLink: "https://forms.gle/8zHsFdFTsbRboGNK8",
+    slidesLink: "https://docs.google.com/presentation/d/1jU8NRkga_n7fOwbEZKimNNDUoDOJaITkiEAA1bkWrfI/edit?usp=sharing",
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const homeFeaturedEvents = [
     location: "Zoom",
     time: "Oct 29, 6–7 PM",
     rsvpLink: "https://forms.gle/FUdV4Xc9BqQAE3gX9",
+    slidesLink: "https://docs.google.com/presentation/d/1PhCnA1iaYgC1Ss-tComrVxqayolsrzidBIH5XVxYi70/edit?usp=sharing",
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ export const homeFeaturedEvents = [
     location: "Maxwell Room, Engineering IV",
     time: "Nov 3, 6–7 PM",
     rsvpLink: "https://forms.gle/shLTJoAsvwefBVT9A",
+    slidesLink: "https://docs.google.com/presentation/d/1aTmQn6ygQFr7xGDHE5AQZeksmZN5yx16e706VIh2Lnc/edit?usp=sharing",
   },
   {
     id: 4,
@@ -34,6 +37,7 @@ export const homeFeaturedEvents = [
     location: "Cohen Room, Engineering VI",
     time: "Nov 5, 6–7 PM",
     rsvpLink: "https://forms.gle/9MktfkWMmRu9AhUi7",
+    slidesLink: "https://docs.google.com/presentation/d/1Di2NnPYUPjQq_I1-8BP5lbwNjaFsqKjXM9VZoZTEwwQ/edit?usp=sharing",
   },
   {
     id: 5,
@@ -43,5 +47,6 @@ export const homeFeaturedEvents = [
     location: "Cohen Room, Engineering VI",
     time: "Nov 10, 6–7 PM",
     rsvpLink: "https://forms.gle/YRbYjsJ2afs6ty149",
+    slidesLink: "https://docs.google.com/presentation/d/1o0KtRcezTewA6RuNVlnhS_4eqvRBVYeYIVS70_DTPBs/edit?usp=sharing",
   },
 ];
