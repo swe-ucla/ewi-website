@@ -139,7 +139,7 @@
   text-shadow: 0 1px 6px rgba(43, 33, 51, 0.25);
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: 1420px) {
   .home-hero__art {
     margin-top: -8%;
   }
@@ -147,6 +147,10 @@
   .home-hero__overlay {
     bottom: 40%;
     gap: 1.1rem;
+  }
+
+  .home-hero__tagline {
+    font-size: 2.15rem;
   }
 
   .home-hero__actions {
@@ -178,4 +182,113 @@
   .home-hero .home-countdown__label {
     font-size: clamp(1.5rem, 5.2vw, 2.1rem);
   }
+}
+
+@media screen and (max-width: 1024px) {
+  .home-hero__overlay {
+    bottom: 40%;
+    gap: 1.1rem;
+  }
+
+  .home-hero__tagline {
+    font-size: 1.8rem;
+  }
+
+  .home-hero__button {
+    font-size: 1.8rem;
+  }
+
+  .home-hero .home-countdown-section {
+    max-width: 20rem;
+  }
+
+  .home-hero .home-countdown__box {
+    width: clamp(2.7rem, 10vw, 1.8rem);
+    height: clamp(4rem, 14.5vw, 1.8rem);
+    font-size: clamp(3.3rem, 12vw, 1.8rem);
+    border-radius: 16px;
+  }
+
+  .home-hero .home-countdown__colon {
+    font-size: clamp(2.7rem, 10vw, 1.8rem);
+    margin-top: 0.55em;
+  }
+
+  .home-hero .home-countdown__label {
+    font-size: clamp(1.5rem, 5.2vw, 1.8rem);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .home-hero__overlay {
+    bottom: 40%;
+    gap: 1.1rem;
+  }
+
+  .home-hero__tagline {
+    font-size: 1.4rem;
+  }
+
+  .home-hero__button {
+    font-size: 1.4rem;
+    min-width: 8rem;
+    height: 2.5rem;
+  }
+
+  .home-hero .home-countdown-section {
+    max-width: 20rem;
+  }
+
+  .home-hero .home-countdown__box {
+    width: clamp(2.7rem, 10vw, 1.4rem);
+    height: clamp(4rem, 14.5vw, 1.4rem);
+    font-size: clamp(3.3rem, 12vw, 1.4rem);
+    border-radius: 16px;
+  }
+
+  .home-hero .home-countdown__colon {
+    font-size: clamp(2.7rem, 10vw, 1.4rem);
+    margin-top: 0.55em;
+  }
+
+  .home-hero .home-countdown__label {
+    font-size: clamp(1.5rem, 5.2vw, 1.4rem);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .home-hero__overlay {
+    bottom: 20%;
+    gap: 0.8rem;
+  }
+
+  .home-hero__tagline {
+    font-size: 1rem;
+  }
+
+  .home-hero__button {
+    font-size: 1rem;
+    min-width: 8rem;
+    height: 1.5rem;
+  }
+
+  .home-hero .home-countdown-section {
+    max-width: 10rem;
+  }
+
+  .home-hero .home-countdown__box {
+  width: clamp(1.5rem, 5vw, 2.5rem);
+  height: clamp(2rem, 7vw, 3rem);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  border-radius: 8px;
+}
+
+.home-hero .home-countdown__colon {
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  margin-top: 0.3em;
+}
+
+.home-hero .home-countdown__label {
+  font-size: clamp(0.65rem, 2vw, 0.85rem);
+}
 }
