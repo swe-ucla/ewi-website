@@ -1,0 +1,57 @@
+.student-survival-section {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.student-survival-guide {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 0.5rem;
+}
+
+.student-survival-title{
+  font-size: 5rem;
+  text-align: center;
+  margin: 0;
+  font-family: "Abhaya Libre Extra";
+  color: #2B2133;
+  text-shadow: 0 4px 8px rgba(95, 64, 117, 0.5);
+}
+
+.student-registration-document {
+  width: 100%;
+  max-width: 1200px;
+  margin: 3rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 1024px) {
+  .student-survival-title {
+    font-size: 2.5rem;
+  }
+
+  .student-registration-document {
+    margin: 2rem auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .student-survival-guide {
+    padding: 3rem 1rem 2rem;
+  }
+
+  .student-survival-title {
+    font-size: 2rem;
+  }
+
+  .student-registration-document {
+    margin: 1.5rem auto;
+  }
+}
