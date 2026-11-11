@@ -4,7 +4,7 @@
   --committee-grid-header-padding: 2rem 2rem 1rem;
   --committee-grid-content-padding-bottom: 6rem;
   --committee-grid-title-size: 4rem;
-  --committee-grid-subtitle-size: 1.35rem;
+  --committee-grid-subtitle-size: 2.8rem;
   --committee-grid-text: #000000;
   --committee-grid-text-muted: #5F4077;
   --committee-grid-max-width: 54rem;
@@ -63,6 +63,7 @@
 }
 
 .committee-grid__subtitle {
+  font-family: "Abhaya Libre Extra";
   font-size: var(--committee-grid-subtitle-size);
   font-weight: 600;
   color: var(--committee-grid-text-muted);

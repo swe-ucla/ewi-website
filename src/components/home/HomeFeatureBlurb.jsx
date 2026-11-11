@@ -1,7 +1,8 @@
 import React from "react";
+import { HiOutlineClock } from "react-icons/hi";
 import "./HomeFeatureBlurb.css";
 
-const HomeFeatureBlurb = ({ title, image, imageAlt, blurb }) => {
+const HomeFeatureBlurb = ({ title, image, imageAlt, blurb, time }) => {
   return (
     <article className="home-feature-blurb">
       {image ? (
@@ -12,6 +13,12 @@ const HomeFeatureBlurb = ({ title, image, imageAlt, blurb }) => {
       <div className="home-feature-blurb__copy">
         {title ? <h3 className="home-feature-blurb__title">{title}</h3> : null}
         <p className="home-feature-blurb__text">{blurb}</p>
+      </div>
+      <div className="home-feature-blurb__meta">
+        <span>
+          <HiOutlineClock aria-hidden="true" />
+          {time}
+        </span>
       </div>
     </article>
   );

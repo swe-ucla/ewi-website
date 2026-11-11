@@ -69,6 +69,16 @@
   line-height: 1;
 }
 
+.home-event-item__meta a {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+  color: #5f4077;
+  font-family: "Dongle", sans-serif;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
 .home-event-item__meta span {
   display: inline-flex;
   align-items: center;

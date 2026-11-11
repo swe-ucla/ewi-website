@@ -9,27 +9,30 @@ import "./HomeWhatIsEwi.css";
 const blurbs = [
   {
     id: 1,
-    title: "networking",
+    title: "Networking",
     image: networkingPhoto,
     imageAlt: "Students networking together at EWI",
     blurb:
       "Connect with companies through informal networking and a traditional career fair portion of the evening.",
+    time: "5:30 PM - 6:45 PM",
   },
   {
     id: 2,
-    title: "dinner conversations",
+    title: "Dinner Conversations",
     image: dinnerPhoto,
     imageAlt: "Students seated with recruiters at the EWI dinner",
     blurb:
       "Six to eight students sit with company representatives for unscripted dinner conversations, not just a typical resume drop",
+    time: "6:45 PM - 8:30 PM",
   },
   {
     id: 3,
-    title: "career fair",
+    title: "Career Fair",
     image: careerFairPhoto,
     imageAlt: "Students with company representatives at the EWI career fair",
     blurb:
       "Attending companies table in a formal career fair to allow students to talk to all representatives and explore different opportunities.",
+    time: "8:30 PM - 10:00 PM",
   },
 ];
 
@@ -44,6 +47,7 @@ const HomeWhatIsEwi = () => {
             image={item.image}
             imageAlt={item.imageAlt}
             blurb={item.blurb}
+            time={item.time}
           />
         ))}
       </div>

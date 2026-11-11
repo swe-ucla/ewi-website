@@ -414,6 +414,7 @@ textarea.input-box {
     text-align: center;
 }
 
+.meal-select label,
 .photo-consent label {
     display: flex;
     flex-direction: row;
@@ -425,6 +426,7 @@ textarea.input-box {
     line-height: 1.05;
 }
 
+.meal-select input[type="checkbox"],
 .photo-consent input[type="checkbox"] {
     width: 20px;
     height: 21px;

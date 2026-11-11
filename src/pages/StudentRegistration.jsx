@@ -40,7 +40,7 @@ const formatEventSubtitle = (eventDate) => {
         hour: "numeric",
         minute: "2-digit",
     });
-    return `${dateLabel} - ${startLabel} to 10:00 PM - ${homeEventConfig.location} - Free`;
+    return `${dateLabel} | ${startLabel} to 10:00 PM | ${homeEventConfig.location} | Free`;
 };
 
 // maps the timeline's current step to one of the 3 registration statuses
@@ -70,15 +70,15 @@ const studentMajors = [
     { id: 12, name: "Other" },
 ]
 
-const mealPreferences = [
-    { id: 1, name: "Achiote-Marinated Portobello Sopes (Vegan)"},
-    { id: 2, name: "Broccoli Pesto w/ Fusilli Pasta (Vegetarian)"}
-]
+// const mealPreferences = [
+//     { id: 1, name: "Achiote-Marinated Portobello Sopes (Vegan)"},
+//     { id: 2, name: "Broccoli Pesto w/ Fusilli Pasta (Vegetarian)"}
+// ]
 
-const dessertPreferences = [
-    { id: 1, name: "Seasonal Fresh Fruit Cup (Vegan)"},
-    { id: 2, name: "Classic Opera Cake (Vegeterian)"}
-]
+// const dessertPreferences = [
+//     { id: 1, name: "Seasonal Fresh Fruit Cup (Vegan)"},
+//     { id: 2, name: "Classic Opera Cake (Vegeterian)"}
+// ]
 
 const checkInTimes = [
     { id: 1, time: "5:30 - 5:45 PM"},
@@ -120,8 +120,8 @@ const POSITION_OPTIONS = [
 
 const MAJOR_OPTIONS = studentMajors.map((major) => ({ value: major.name, label: major.name }));
 const CHECK_IN_OPTIONS = checkInTimes.map((timeSlot) => ({ value: timeSlot.time, label: timeSlot.time }));
-const MEAL_OPTIONS = mealPreferences.map((meal) => ({ value: meal.name, label: meal.name }));
-const DESSERT_OPTIONS = dessertPreferences.map((dessert) => ({ value: dessert.name, label: dessert.name }));
+// const MEAL_OPTIONS = mealPreferences.map((meal) => ({ value: meal.name, label: meal.name }));
+// const DESSERT_OPTIONS = dessertPreferences.map((dessert) => ({ value: dessert.name, label: dessert.name }));
 
 const WILL_CALL_OPTIONS = [
     { value: "yes", label: "Yes" },
@@ -150,8 +150,8 @@ const StudentRegistrationForm = () => {
         membershipId: "",
         membershipProof: null,
         companyPreferences: new Array(10).fill(""),
-        meal: "",
-        dessert: "",
+        meal: false, // vegetarian by default, vegan if true
+        // dessert: "",
         dietaryRestrictions: "",
         photoConsent: false,
         willCall: "",
@@ -276,7 +276,7 @@ const StudentRegistrationForm = () => {
         return "";
     };
 
-    const valdiateCheckbox = (label, isChecked) => {
+    const validateCheckbox = (label, isChecked) => {
         return isChecked ? "" : `You must agree to ${label}`;
     }
 
@@ -399,10 +399,10 @@ const StudentRegistrationForm = () => {
             membershipId: "",
             membershipProof: null,
             companyPreferences: validateCompanyPreferences(formData.companyPreferences),
-            meal: validateField("Meal", formData.meal),
-            dessert: validateField("Dessert", formData.dessert),
+            // meal: validateField("Meal", formData.meal),
+            // dessert: validateField("Dessert", formData.dessert),
             dietaryRestrictions: "",
-            photoConsent: valdiateCheckbox("the photo consent", formData.photoConsent),
+            photoConsent: validateCheckbox("the photo consent", formData.photoConsent),
             willCall: validateField("Will call status", formData.willCall),
             additionalComments: "",
         };
@@ -763,7 +763,16 @@ const StudentRegistrationForm = () => {
 
                 <fieldset className="student-meal-preferences">
                     <h3 className="student-reg-subtitle">Meal preferences</h3>
-                    <div className="meal-choice">
+                    <div className="meal-select">
+                        <label className="student-reg-labels">
+                            <input type="checkbox" value={formData.meal} name="meal" onChange={handleCheckboxChange}/>
+                            I would like a vegan meal.
+                            {errors.meal && <span className="error">{errors.meal}</span>}
+                        </label>
+                        <p className="hint">Default meal is vegetarian.</p>
+                    </div>
+
+                    {/* <div className="meal-choice">
                         <RegistrationSelect
                             id="meal"
                             name="meal"
@@ -785,10 +794,10 @@ const StudentRegistrationForm = () => {
                             onChange={handleChange}
                             error={errors.dessert}
                         />
-                    </div>
+                    </div> */}
 
                     <div className="dietary-restrictions">
-                        <label className="student-reg-labels">Dietary restrictions</label>
+                        <label className="student-reg-labels">Other dietary restrictions</label>
                         <input className="input-box" type="text" value={formData.dietaryRestrictions} name="dietaryRestrictions" onChange={handleChange}/>
                     </div>
                 </fieldset>

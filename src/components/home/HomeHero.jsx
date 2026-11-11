@@ -23,6 +23,9 @@ const HomeHero = () => {
         </h1>
 
         <div className="home-hero__overlay">
+          <p className="home-hero__tagline">
+            Nov 20, 2026 5:30 PM - 10:00 PM @ Carnesale Commons 
+          </p>
           <nav className="home-hero__actions" aria-label="Audience pages">
             <Link
               to="/companies"
