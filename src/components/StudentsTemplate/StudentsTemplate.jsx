@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiPlus, FiX } from "react-icons/fi";
-import guidePreview from "../../assets/students/guide-preview.png";
 import foliage from "../../assets/students/hero-foliage.png";
 import mascot from "../../assets/students/mascot.png";
 import registrationWordmark from "../../assets/students/registration.svg";
@@ -78,11 +77,6 @@ const StudentsTemplate = () => {
                             </div>
                         </div>
                     ) : (
-                        // <img
-                        //     className="students-template-guide-preview"
-                        //     src={guidePreview}
-                        //     alt="Student Survival Guide preview"
-                        // />
                         <StudentSurvivalGuide />
                     )}
                 </section>
