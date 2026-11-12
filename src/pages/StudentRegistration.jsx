@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
-import { doc, getDoc, collection, getDocs, runTransaction } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, runTransaction, serverTimestamp } from "firebase/firestore";
 import RegistrationTimeline, { getCurrentStep, STEPS } from "../components/registrationTimeline/registrationTimeline";
 import registrationTimelineDates from "../data/registrationDates";
 import { homeEventConfig } from "../components/home/homeEventConfig";
@@ -335,8 +335,18 @@ const StudentRegistrationForm = () => {
                 }
             }
 
+            // preserve the original submission time across edits, since table
+            // assignments are first come, first serve based on registration
+            const existingCreatedAt = registrationSnap.exists()
+                ? registrationSnap.data().createdAt
+                : null;
+
             // firstChoiceCount is kept in sync by the onRegistrationWritten Cloud Function
-            tx.set(registrationRef, dataToSave);
+            tx.set(registrationRef, {
+                ...dataToSave,
+                createdAt: existingCreatedAt ?? serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            });
         });
 
         console.log("Registration submitted successfully");
