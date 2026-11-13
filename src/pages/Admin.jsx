@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FiChevronRight } from "react-icons/fi";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
@@ -149,6 +150,7 @@ const Admin = () => {
   const [settingsError, setSettingsError] = useState(null);
   const [companyPage, setCompanyPage] = useState(0);
   const [regsPage, setRegsPage] = useState(0);
+  const [expandedRegKey, setExpandedRegKey] = useState(null);
   const settingsChanged = JSON.stringify(matchingSettings) !== JSON.stringify(savedSettings);
 
   const saveSettings = async () => {
@@ -992,7 +994,7 @@ const Admin = () => {
             />
           </div>
           <div className="admin-table-wrapper">
-            <table className="admin-table">
+            <table className="admin-table registrations-table">
               <thead>
                 <tr>
                   <th>name</th>
@@ -1007,18 +1009,59 @@ const Admin = () => {
                     <td colSpan={4} className="admin-empty">No registrations found.</td>
                   </tr>
                 ) : (
-                  pagedRegistrations.map((r, i) => (
-                    <tr key={r.email || i}>
-                      <td>{r.fullName}</td>
-                      <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
-                      <td>
-                        <span className={`status-badge ${r.status || "unknown"}`}>
-                          {r.status || "—"}
-                        </span>
-                      </td>
-                      <td>{r.companyPreferences?.[0] || "—"}</td>
-                    </tr>
-                  ))
+                  pagedRegistrations.map((r, i) => {
+                    const rowKey = r.email || r.uid || `${r.fullName}-${i}`;
+                    const open = expandedRegKey === rowKey;
+                    const prefs = (r.companyPreferences || [])
+                      .map((name, rank) => ({ rank: rank + 1, name }))
+                      .filter((pref) => pref.name);
+                    return (
+                      <React.Fragment key={rowKey}>
+                        <tr className={`${i % 2 === 1 ? "admin-row--alt" : ""}${open ? " is-open" : ""}`}>
+                          <td>
+                            <button
+                              type="button"
+                              className={`admin-name-toggle${open ? " is-open" : ""}`}
+                              aria-expanded={open}
+                              aria-controls={`reg-prefs-${safeRegsPage}-${i}`}
+                              onClick={() => setExpandedRegKey(open ? null : rowKey)}
+                            >
+                              <FiChevronRight className="admin-name-toggle__chevron" aria-hidden="true" />
+                              {r.fullName}
+                            </button>
+                          </td>
+                          <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
+                          <td>
+                            <span className={`status-badge ${r.status || "unknown"}`}>
+                              {r.status || "—"}
+                            </span>
+                          </td>
+                          <td>{r.companyPreferences?.[0] || "—"}</td>
+                        </tr>
+                        {open && (
+                          <tr className="admin-prefs-row">
+                            <td colSpan={4} id={`reg-prefs-${safeRegsPage}-${i}`}>
+                              <div className="admin-prefs">
+                                <p className="admin-prefs__label">Company preferences</p>
+                                {prefs.length === 0 ? (
+                                  <p className="admin-prefs__empty">No company preferences.</p>
+                                ) : (
+                                  <ol className="admin-prefs__list">
+                                    {prefs.map((pref) => (
+                                      <li key={pref.rank} className={pref.rank === 1 ? "is-top" : undefined}>
+                                        <span className="admin-prefs__rank">{pref.rank}</span>
+                                        <span className="admin-prefs__name">{pref.name}</span>
+                                      </li>
+                                    ))}
+                                  </ol>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })
                 )}
               </tbody>
             </table>
