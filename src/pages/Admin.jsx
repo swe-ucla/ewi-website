@@ -46,6 +46,38 @@ const DEFAULT_MATCHING_SETTINGS = {
   protectedPercent: 40,
   canBumpPercent: 60,
   largeTables: [],
+  majorOverrides: {},
+};
+
+const STANDARD_TABLE_SEATS = DEFAULT_MATCHING_SETTINGS.seatsPerTable;
+
+const majorCapForSeats = (seats, settings) => {
+  const standardSeats = Number(settings.seatsPerTable) || STANDARD_TABLE_SEATS;
+  const standardMajor = Number(settings.maxPerMajor) || DEFAULT_MATCHING_SETTINGS.maxPerMajor;
+  const scaled = Math.round((seats * standardMajor) / standardSeats);
+  return Math.max(1, Math.min(seats, scaled || 1));
+};
+
+const tablesFromCapacity = (companyList, settings) => {
+  const tableSeats = Number(settings.seatsPerTable);
+  const standardSeats = Number.isInteger(tableSeats) && tableSeats > 0
+    ? tableSeats
+    : STANDARD_TABLE_SEATS;
+
+  return companyList
+    .filter((company) => {
+      const capacity = Number(company.capacity);
+      return Number.isInteger(capacity) && capacity > 0 && capacity !== standardSeats;
+    })
+    .map((company) => {
+      const seats = Number(company.capacity);
+      const stored = Number(settings.majorOverrides?.[company.name]);
+      const maxPerMajor = Number.isInteger(stored) && stored >= 1 && stored <= seats
+        ? stored
+        : majorCapForSeats(seats, settings);
+      return { company: company.name, seats, maxPerMajor };
+    })
+    .sort((a, b) => a.company.localeCompare(b.company));
 };
 const YEAR_LABELS = {
   "grad-student-masters": "Grad Student - Master's",
@@ -181,6 +213,8 @@ const Admin = () => {
   const lineSpots = (count) => (count === 0 ? "Nobody" : count === 1 ? "Student #1" : `Students #1–${count}`);
   const lockedCount = lineCount(matchingSettings.protectedPercent, true);
   const secondChanceCount = lineCount(matchingSettings.canBumpPercent);
+  const capacityTables = tablesFromCapacity(companies, matchingSettings);
+  const capacityTableNames = new Set(capacityTables.map((table) => table.company));
 
   const updateSetting = (key, value) =>
     setMatchingSettings((prev) => ({ ...prev, [key]: value === "" ? "" : Number(value) }));
@@ -201,6 +235,17 @@ const Admin = () => {
 
   const removeLargeTable = (index) =>
     setMatchingSettings((prev) => ({ ...prev, largeTables: prev.largeTables.filter((_, i) => i !== index) }));
+
+  const updateCapacityMajor = (company, seats, raw) => {
+    const parsed = Number(raw);
+    const next = raw === "" || !Number.isInteger(parsed)
+      ? raw
+      : Math.max(1, Math.min(seats, parsed));
+    setMatchingSettings((prev) => ({
+      ...prev,
+      majorOverrides: { ...(prev.majorOverrides || {}), [company]: next },
+    }));
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
@@ -309,9 +354,12 @@ const Admin = () => {
             protectedPercent: matchingSettings.protectedPercent,
             canBumpPercent: matchingSettings.canBumpPercent,
             largeTables: Object.fromEntries(
-              matchingSettings.largeTables
-                .filter((t) => t.company)
-                .map((t) => [t.company, { seats: t.seats, maxPerMajor: t.maxPerMajor }])
+              [
+                ...capacityTables,
+                ...matchingSettings.largeTables.filter(
+                  (table) => table.company && !capacityTableNames.has(table.company)
+                ),
+              ].map((table) => [table.company, { seats: table.seats, maxPerMajor: table.maxPerMajor }])
             ),
           },
         }),
@@ -692,21 +740,45 @@ const Admin = () => {
                 <div className="matching-large-tables">
                   <div className="setting-subhead">
                     <div className="setting-label">
-                      <span>Larger tables</span>
+                      <span>Custom tables</span>
                       <InfoTip id="hint-large-tables">
-                        Companies with a bigger table use their own seat and major limits.
+                        A company whose capacity doesn't match Seats per table is listed here and seated at that capacity. Max of one major scales with the table size. Add a row only for an extra override.
                       </InfoTip>
                     </div>
                   </div>
-                  {matchingSettings.largeTables.length > 0 && (
+                  {capacityTables.map((table) => (
+                    <div className="capacity-table-card" key={table.company}>
+                      <p className="capacity-table-card__name">{table.company}</p>
+                      <div className="capacity-table-card__stats">
+                        <span className="capacity-table-card__stat">
+                          <strong>{table.seats}</strong>
+                          seats
+                        </span>
+                        <label className="capacity-table-card__stat">
+                          <input
+                            type="number"
+                            min="1"
+                            max={table.seats}
+                            aria-label={`Max of one major for ${table.company}`}
+                            value={matchingSettings.majorOverrides?.[table.company] ?? table.maxPerMajor}
+                            onChange={(e) => updateCapacityMajor(table.company, table.seats, e.target.value)}
+                          />
+                          per major
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                  {matchingSettings.largeTables.some((table) => !capacityTableNames.has(table.company)) && (
                     <div className="large-table-head" aria-hidden="true">
                       <span>Company</span>
                       <span>Seats</span>
-                      <span>Max major</span>
+                      <span>Major</span>
                       <span />
                     </div>
                   )}
-                  {matchingSettings.largeTables.map((t, i) => (
+                  {matchingSettings.largeTables.filter((t) => !capacityTableNames.has(t.company)).map((t) => {
+                    const i = matchingSettings.largeTables.indexOf(t);
+                    return (
                     <div className="large-table-row" key={i}>
                       <select
                         id={`largeCompany${i}`}
@@ -741,15 +813,16 @@ const Admin = () => {
                       <button
                         type="button"
                         className="large-table-remove"
-                        aria-label="Remove larger table"
+                        aria-label="Remove custom table"
                         onClick={() => removeLargeTable(i)}
                       >
                         ×
                       </button>
                     </div>
-                  ))}
+                    );
+                  })}
                   <button type="button" className="matching-link-btn" onClick={addLargeTable}>
-                    + Add larger table
+                    + Add custom table
                   </button>
                 </div>
 
