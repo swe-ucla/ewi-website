@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FiChevronRight } from "react-icons/fi";
+import { FiCheck, FiChevronRight } from "react-icons/fi";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
@@ -53,6 +53,7 @@ const YEAR_LABELS = {
 };
 
 const TABLE_PAGE_SIZE = 6;
+const REG_PAGE_SIZE = 10;
 
 const pageItems = (items, page, size = TABLE_PAGE_SIZE) => {
   const start = page * size;
@@ -62,9 +63,9 @@ const pageItems = (items, page, size = TABLE_PAGE_SIZE) => {
 const pageCount = (total, size = TABLE_PAGE_SIZE) =>
   Math.max(1, Math.ceil(total / size));
 
-const AdminPager = ({ page, totalItems, onChange, label }) => {
-  const pages = pageCount(totalItems);
-  if (totalItems <= TABLE_PAGE_SIZE) return null;
+const AdminPager = ({ page, totalItems, onChange, label, pageSize = TABLE_PAGE_SIZE }) => {
+  const pages = pageCount(totalItems, pageSize);
+  if (totalItems <= pageSize) return null;
 
   return (
     <nav className="admin-pager" aria-label={label}>
@@ -451,9 +452,9 @@ const Admin = () => {
     companyPage,
     pageCount(companiesWithStats.length) - 1
   );
-  const safeRegsPage = Math.min(regsPage, pageCount(sortedFiltered.length) - 1);
+  const safeRegsPage = Math.min(regsPage, pageCount(sortedFiltered.length, REG_PAGE_SIZE) - 1);
   const pagedCompanies = pageItems(companiesWithStats, safeCompanyPage);
-  const pagedRegistrations = pageItems(sortedFiltered, safeRegsPage);
+  const pagedRegistrations = pageItems(sortedFiltered, safeRegsPage, REG_PAGE_SIZE);
 
   useEffect(() => {
     setCompanyPage(0);
@@ -1042,19 +1043,36 @@ const Admin = () => {
                           <tr className="admin-prefs-row">
                             <td colSpan={4} id={`reg-prefs-${safeRegsPage}-${i}`}>
                               <div className="admin-prefs">
-                                <p className="admin-prefs__label">Company preferences</p>
-                                {prefs.length === 0 ? (
-                                  <p className="admin-prefs__empty">No company preferences.</p>
-                                ) : (
-                                  <ol className="admin-prefs__list">
-                                    {prefs.map((pref) => (
-                                      <li key={pref.rank} className={pref.rank === 1 ? "is-top" : undefined}>
-                                        <span className="admin-prefs__rank">{pref.rank}</span>
-                                        <span className="admin-prefs__name">{pref.name}</span>
-                                      </li>
-                                    ))}
-                                  </ol>
-                                )}
+                                <div className="admin-prefs__companies">
+                                  <p className="admin-prefs__label">Company preferences</p>
+                                  {prefs.length === 0 ? (
+                                    <p className="admin-prefs__empty">No company preferences.</p>
+                                  ) : (
+                                    <ol className="admin-prefs__list">
+                                      {prefs.map((pref) => (
+                                        <li key={pref.rank} className={pref.rank === 1 ? "is-top" : undefined}>
+                                          <span className="admin-prefs__rank">{pref.rank}</span>
+                                          <span className="admin-prefs__name">{pref.name}</span>
+                                        </li>
+                                      ))}
+                                    </ol>
+                                  )}
+                                </div>
+                                <aside className="admin-prefs__meal">
+                                  <div className="admin-prefs__meal-item">
+                                    <span className="admin-prefs__meal-label">Meal</span>
+                                    <p className="admin-prefs__vegan">
+                                      <FiCheck aria-hidden="true" />
+                                      {r.meal ? "Vegan" : "Vegetarian"}
+                                    </p>
+                                  </div>
+                                  <div className="admin-prefs__meal-item">
+                                    <span className="admin-prefs__meal-label">Dietary restrictions</span>
+                                    <span className="admin-prefs__meal-notes">
+                                      {r.dietaryRestrictions?.trim() || "None"}
+                                    </span>
+                                  </div>
+                                </aside>
                               </div>
                             </td>
                           </tr>
@@ -1069,6 +1087,7 @@ const Admin = () => {
           <AdminPager
             page={safeRegsPage}
             totalItems={sortedFiltered.length}
+            pageSize={REG_PAGE_SIZE}
             onChange={setRegsPage}
             label="Registrations pages"
           />
