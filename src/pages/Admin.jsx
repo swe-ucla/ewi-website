@@ -5,7 +5,7 @@ import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import PieChartView from "../components/admin/PieChartView";
-import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV, exportMatchingCSV } from "../components/admin/adminExports";
+import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV, exportMatchingCSV, normalizeCompanyName } from "../components/admin/adminExports";
 import { exportResumesByMajorZip, exportAllResumesZip } from "../utils/resumeExports";
 import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
 import avatarPlaceholder from "../assets/admin/avatar-placeholder.png";
@@ -253,7 +253,8 @@ const Admin = () => {
     for (const [company, data] of Object.entries(matchingResults)) {
       for (const name of data.students || []) {
         seated += 1;
-        if (firstChoiceByName.get((name || "").trim().toLowerCase()) === company) firstChoice += 1;
+        const theirFirst = firstChoiceByName.get((name || "").trim().toLowerCase());
+        if (normalizeCompanyName(theirFirst) === normalizeCompanyName(company)) firstChoice += 1;
       }
     }
     return { seated, firstChoice, unseated: Math.max(0, dedupeByStudent(registrations).length - seated) };

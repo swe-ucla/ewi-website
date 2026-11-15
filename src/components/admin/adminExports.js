@@ -122,6 +122,23 @@ export const exportAllCSV = (registrations) => {
 
 // Table assignments from a matching run, one row per student. The algorithm
 // returns student names only, so the rest comes from their registration.
+// functions/index.js rewrites a few company names before matching, so results
+// can come back under a different name than the student ranked. Keep this in
+// step with COMPANY_NAME_MAP there, or those students read as "not ranked".
+const COMPANY_NAME_MAP = {
+  "boeing": "The Boeing Company",
+  "trimas aerospace": "TriMas Aerospace",
+  "takeda pharmaceuticals": "Takeda Pharmaceutical Company Ltd.",
+  "siemens": "Siemens Digital Industries Software",
+  "socal gas": "SoCalGas",
+  "acco engineering systems": "ACCO Engineered Systems",
+};
+
+export const normalizeCompanyName = (name) => {
+  if (!name) return name;
+  return COMPANY_NAME_MAP[name.trim().toLowerCase()] || name.trim();
+};
+
 export const exportMatchingCSV = (matchingResults, registrations) => {
   const byName = new Map(
     registrations.map((r) => [(r.fullName || "").trim().toLowerCase(), r])
@@ -137,8 +154,8 @@ export const exportMatchingCSV = (matchingResults, registrations) => {
   for (const [company, data] of Object.entries(matchingResults)) {
     for (const studentName of data.students || []) {
       const r = byName.get((studentName || "").trim().toLowerCase()) || {};
-      const prefs = (r.companyPreferences || []).filter(Boolean);
-      const rank = prefs.indexOf(company);
+      const prefs = (r.companyPreferences || []).filter(Boolean).map(normalizeCompanyName);
+      const rank = prefs.indexOf(normalizeCompanyName(company));
       rows.push(
         [
           company, data.rep1, data.rep2, studentName, r.email, r.uid,
