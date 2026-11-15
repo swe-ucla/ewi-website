@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FiCheck, FiChevronRight } from "react-icons/fi";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import PieChartView from "../components/admin/PieChartView";
-import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV } from "../components/admin/adminExports";
+import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV, exportMatchingCSV } from "../components/admin/adminExports";
 import { exportResumesByMajorZip, exportAllResumesZip } from "../utils/resumeExports";
 import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
 import avatarPlaceholder from "../assets/admin/avatar-placeholder.png";
@@ -40,11 +40,16 @@ const EXPORT_OPTIONS = [
 const provider = new GoogleAuthProvider();
 // .env.local can point this at the local emulator
 const FUNCTIONS_URL = process.env.REACT_APP_FIREBASE_FUNCTIONS_URL || "https://us-central1-swe-ewi.cloudfunctions.net";
+// Students are seated strictly in order — workshop attendees first, then by
+// registration time — and nobody loses a seat once assigned. canBumpPercent: 0
+// switches off the second-chance pass that would let a student who got none of
+// their picks take a seat from someone later in line; the inputs for it are
+// hidden in the UI. Raising it here re-enables that pass.
 const DEFAULT_MATCHING_SETTINGS = {
   seatsPerTable: 8,
   maxPerMajor: 4,
-  protectedPercent: 40,
-  canBumpPercent: 60,
+  protectedPercent: 100,
+  canBumpPercent: 0,
   largeTables: [],
   majorOverrides: {},
 };
@@ -196,6 +201,9 @@ const Admin = () => {
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyCapacity, setNewCompanyCapacity] = useState("");
   const [matchingResults, setMatchingResults] = useState(null);
+  // Results render below the settings, so scroll them into view once a run
+  // finishes — otherwise it looks like nothing happened.
+  const matchingResultsRef = useRef(null);
   const [matchingLoading, setMatchingLoading] = useState(false);
   const [matchingError, setMatchingError] = useState(null);
   const [showMatchingConfirm, setShowMatchingConfirm] = useState(false);
@@ -226,17 +234,30 @@ const Admin = () => {
     }
   };
 
-  // Mirrors the cutoffs in functions/index.js; the locked cutoff includes one extra student, as in the original script
-  const lineCount = (percent, locked = false) => {
-    const total = registrations.length;
-    const cutoff = Math.floor(total * ((Number(percent) || 0) / 100));
-    return locked ? Math.min(total, cutoff + 1) : cutoff;
-  };
-  const lineSpots = (count) => (count === 0 ? "Nobody" : count === 1 ? "Student #1" : `Students #1–${count}`);
-  const lockedCount = lineCount(matchingSettings.protectedPercent, true);
-  const secondChanceCount = lineCount(matchingSettings.canBumpPercent);
   const capacityTables = tablesFromCapacity(companies, matchingSettings);
   const capacityTableNames = new Set(capacityTables.map((table) => table.company));
+
+  // How the last run turned out: seated, how many got their top pick, and
+  // whether anyone was left out. Students are matched back by name, which is
+  // what the algorithm returns.
+  const matchingSummary = (() => {
+    if (!matchingResults) return { seated: 0, firstChoice: 0, unseated: 0 };
+    const firstChoiceByName = new Map(
+      registrations.map((r) => [
+        (r.fullName || "").trim().toLowerCase(),
+        (r.companyPreferences || []).filter(Boolean)[0],
+      ])
+    );
+    let seated = 0;
+    let firstChoice = 0;
+    for (const [company, data] of Object.entries(matchingResults)) {
+      for (const name of data.students || []) {
+        seated += 1;
+        if (firstChoiceByName.get((name || "").trim().toLowerCase()) === company) firstChoice += 1;
+      }
+    }
+    return { seated, firstChoice, unseated: Math.max(0, dedupeByStudent(registrations).length - seated) };
+  })();
 
   const updateSetting = (key, value) =>
     setMatchingSettings((prev) => ({ ...prev, [key]: value === "" ? "" : Number(value) }));
@@ -326,6 +347,12 @@ const Admin = () => {
     fetchData();
     fetchSettings();
   }, [isAuthorized]);
+
+  useEffect(() => {
+    if (matchingResults) {
+      matchingResultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [matchingResults]);
 
   const handleSignIn = async () => {
     try {
@@ -687,6 +714,17 @@ const Admin = () => {
 
             <div className="admin-matching-panel__body">
               <div className="matching-settings">
+                {capacityTables.length > 0 && (
+                  <p
+                    className={`matching-override-note${
+                      capacityTables.length === companies.length ? " is-warning" : ""
+                    }`}
+                  >
+                    {capacityTables.length === companies.length
+                      ? `Warning: all ${companies.length} companies have their own seat count, so the settings below aren't used.`
+                      : `${capacityTables.length} of ${companies.length} companies have their own seat count and ignore the settings below.`}
+                  </p>
+                )}
                 <div className="matching-settings-grid">
                   <div className="setting-row">
                     <div className="setting-copy">
@@ -720,51 +758,13 @@ const Admin = () => {
                       onChange={(e) => updateSetting("maxPerMajor", e.target.value)}
                     />
                   </div>
-                  <div className="setting-row">
-                    <div className="setting-copy">
-                      <div className="setting-label">
-                        <label htmlFor="protectedPercent">Can't lose their seat</label>
-                        <InfoTip id="hint-protected">
-                          Students line up by signup order. The first {matchingSettings.protectedPercent}% keep
-                          their seat — {lineSpots(lockedCount).toLowerCase()} of {registrations.length} right now.
-                        </InfoTip>
-                      </div>
-                    </div>
-                    <span className="setting-input">
-                      <input
-                        id="protectedPercent"
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={matchingSettings.protectedPercent}
-                        onChange={(e) => updateSetting("protectedPercent", e.target.value)}
-                      />
-                      <span>%</span>
-                    </span>
-                  </div>
-                  <div className="setting-row">
-                    <div className="setting-copy">
-                      <div className="setting-label">
-                        <label htmlFor="canBumpPercent">Can take someone's seat</label>
-                        <InfoTip id="hint-bump">
-                          If someone in the first {matchingSettings.canBumpPercent}% gets none of their picks,
-                          they can take a seat from a later student who ranked that company 3rd or 4th —{" "}
-                          {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length} right now.
-                        </InfoTip>
-                      </div>
-                    </div>
-                    <span className="setting-input">
-                      <input
-                        id="canBumpPercent"
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={matchingSettings.canBumpPercent}
-                        onChange={(e) => updateSetting("canBumpPercent", e.target.value)}
-                      />
-                      <span>%</span>
-                    </span>
-                  </div>
+                  {/* The "can't lose their seat" / "can take someone's seat"
+                      inputs lived here. They only applied to students who got
+                      none of their ten picks, which can't happen while there
+                      are more seats than students, and the rule they encoded —
+                      a later student taking an earlier one's seat — is not the
+                      one we want. DEFAULT_MATCHING_SETTINGS switches the pass
+                      off; restore these inputs to tune it again. */}
                 </div>
 
                 <div className="matching-large-tables">
@@ -772,10 +772,14 @@ const Admin = () => {
                     <div className="setting-label">
                       <span>Custom tables</span>
                       <InfoTip id="hint-large-tables">
-                        A company whose capacity doesn't match Seats per table is listed here and seated at that capacity. Max of one major scales with the table size. Add a row only for an extra override.
+                        A company appears here when its capacity — set on the
+                        Companies tab — is different from Seats per table. Its
+                        max of one major scales to match. To give a company a
+                        size that isn't its capacity, add a row for it.
                       </InfoTip>
                     </div>
                   </div>
+                  <p className="setting-subhead-note">Overrides both settings above</p>
                   {capacityTables.map((table) => (
                     <div className="capacity-table-card" key={table.company}>
                       <p className="capacity-table-card__name">{table.company}</p>
@@ -883,25 +887,43 @@ const Admin = () => {
 
               {matchingError && <p className="admin-error">{matchingError}</p>}
               {matchingResults && (
-                <div className="admin-table-wrapper admin-matching-results">
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>company</th>
-                        <th># students</th>
-                        <th>students</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(matchingResults).map(([company, data]) => (
-                        <tr key={company}>
-                          <td>{company}</td>
-                          <td>{data.students.length}</td>
-                          <td>{data.students.join(", ") || "—"}</td>
+                <div className="admin-matching-results" ref={matchingResultsRef}>
+                  <div className="matching-results-head">
+                    <p className="matching-results-summary">
+                      {matchingSummary.seated} students seated ·{" "}
+                      {matchingSummary.firstChoice} got their first choice
+                      {matchingSummary.unseated > 0
+                        ? ` · ${matchingSummary.unseated} not seated`
+                        : ""}
+                    </p>
+                    <button
+                      type="button"
+                      className="matching-download-btn"
+                      onClick={() => exportMatchingCSV(matchingResults, registrations)}
+                    >
+                      Download table assignments (CSV)
+                    </button>
+                  </div>
+                  <div className="admin-table-wrapper">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>company</th>
+                          <th># students</th>
+                          <th>students</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {Object.entries(matchingResults).map(([company, data]) => (
+                          <tr key={company}>
+                            <td>{company}</td>
+                            <td>{data.students.length}</td>
+                            <td>{data.students.join(", ") || "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>

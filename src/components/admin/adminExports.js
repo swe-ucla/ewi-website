@@ -119,3 +119,38 @@ export const exportAllCSV = (registrations) => {
   );
   downloadCSV([headers, ...rows], "ewi_registrations.csv");
 };
+
+// Table assignments from a matching run, one row per student. The algorithm
+// returns student names only, so the rest comes from their registration.
+export const exportMatchingCSV = (matchingResults, registrations) => {
+  const byName = new Map(
+    registrations.map((r) => [(r.fullName || "").trim().toLowerCase(), r])
+  );
+
+  const headers = [
+    "Company", "Rep 1", "Rep 2", "Full Name", "Email", "UID",
+    "Year", "Major", "Position Type", "Workshops Attended",
+    "Choice Rank", "Dietary Restrictions",
+  ];
+
+  const rows = [];
+  for (const [company, data] of Object.entries(matchingResults)) {
+    for (const studentName of data.students || []) {
+      const r = byName.get((studentName || "").trim().toLowerCase()) || {};
+      const prefs = (r.companyPreferences || []).filter(Boolean);
+      const rank = prefs.indexOf(company);
+      rows.push(
+        [
+          company, data.rep1, data.rep2, studentName, r.email, r.uid,
+          r.year, r.major === "Other" ? r.otherMajor : r.major,
+          r.positionType, r.workshopsAttended ?? 0,
+          rank === -1 ? "not ranked" : `#${rank + 1}`,
+          r.dietaryRestrictions,
+        ].map(escapeCSV)
+      );
+    }
+  }
+
+  rows.sort((a, b) => a[0].localeCompare(b[0]) || a[3].localeCompare(b[3]));
+  downloadCSV([headers, ...rows], "ewi_table_assignments.csv");
+};
