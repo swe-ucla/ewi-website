@@ -22,6 +22,28 @@ const YEAR_LABELS = {
   "grad-student-phd": "Grad Student - PhD",
 };
 
+// Attending this many of the five "Prep for EWI" workshops earns priority in
+// matching. Counts are imported from the attendance exports by
+// functions/import-workshops.js.
+const WORKSHOP_PRIORITY_THRESHOLD = 4;
+
+// A few students registered twice under different email addresses, which the
+// form's duplicate check can't catch because registrations are keyed by email.
+// Both records are kept, but matching should see each student once — and the
+// algorithm itself keys students by name, so duplicates would collide there.
+// The most recent registration wins, as it holds their latest preferences.
+const dedupeByStudent = (registrations) => {
+  const byStudent = new Map();
+  for (const r of registrations) {
+    const key = String(r.uid || "").trim() || (r.fullName || "").trim().toLowerCase();
+    if (!key) continue;
+    const existing = byStudent.get(key);
+    const time = r.createdAt?.toMillis?.() ?? 0;
+    if (!existing || time > (existing.createdAt?.toMillis?.() ?? 0)) byStudent.set(key, r);
+  }
+  return [...byStudent.values()];
+};
+
 
 const InfoTip = ({ children }) => {
   const [open, setOpen] = useState(false);
@@ -183,8 +205,16 @@ const Admin = () => {
     setMatchingError(null);
     setMatchingResults(null);
     try {
-      const students = [...registrations]
-        .sort((a, b) => (a.submittedAt?.toMillis?.() ?? 0) - (b.submittedAt?.toMillis?.() ?? 0))
+      const students = dedupeByStudent(registrations)
+        // Students who attended 4 of 5 prep workshops are promised their top
+        // company choice, so they go first; everyone else is first come,
+        // first serve by registration time.
+        .sort((a, b) => {
+          const aQualifies = (a.workshopsAttended ?? 0) >= WORKSHOP_PRIORITY_THRESHOLD;
+          const bQualifies = (b.workshopsAttended ?? 0) >= WORKSHOP_PRIORITY_THRESHOLD;
+          if (aQualifies !== bQualifies) return aQualifies ? -1 : 1;
+          return (a.createdAt?.toMillis?.() ?? 0) - (b.createdAt?.toMillis?.() ?? 0);
+        })
         .map((r) => ({
           fullName: r.fullName,
           major: r.major === "Other" ? r.otherMajor : r.major,

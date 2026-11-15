@@ -396,10 +396,27 @@ exports.runMatchingAlgorithm = onRequest(async (req, res) => {
             }
         }
 
-        // Run matching pipeline
-        let infoDict = majorMatch(students, companies);
-        infoDict = intlMatch(students, companies, infoDict);
-        infoDict = roleMatch(students, companies, infoDict, manuallyAddedSet);
+        // The eligibility filters below need majorsHired / rolesHired /
+        // requiresCitizenship on each company, which only the company
+        // registration form supplies. Without that data every eligibility list
+        // comes out empty, so fcfs seats nobody and every student falls through
+        // to matchToFirstAvail — preferences ignored entirely. When it's
+        // missing, treat everyone as eligible everywhere so students are at
+        // least seated by their own rankings. Restoring the company data
+        // re-enables the filters with no further change.
+        const hasCompanyCriteria = companies.some(
+            (c) => c.majorsHired || c.rolesHired || c.requiresCitizenship
+        );
+
+        let infoDict;
+        if (hasCompanyCriteria) {
+            infoDict = majorMatch(students, companies);
+            infoDict = intlMatch(students, companies, infoDict);
+            infoDict = roleMatch(students, companies, infoDict, manuallyAddedSet);
+        } else {
+            const everyone = students.map((s) => s.fullName);
+            infoDict = Object.fromEntries(companies.map((c) => [c.name, [...everyone]]));
+        }
 
         let { matches, noPreferences } = fcfs(students, companies, infoDict, priorityLists, normalizedManualMatches, settings);
         ({ matches, noPreferences } = moreMatching(students, matches, infoDict, priorityLists, noPreferences, normalizedManualMatches, settings));
