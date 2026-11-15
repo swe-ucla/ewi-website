@@ -1,70 +1,83 @@
 .home-countdown-section {
+  position: relative;
+  z-index: 3;
   width: 100%;
-  max-width: 1100px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 0 2rem 2.5rem;
+  padding: 0;
 }
 
-.home-countdown {
-  width: 100%;
-  padding: 1.25rem 2rem 1.5rem;
+.home-countdown__digits {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
   gap: 0.65rem;
-}
-
-.home-countdown__heading {
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 0;
-  text-transform: lowercase;
-}
-
-.home-countdown__logistics {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 0.35rem 0.5rem;
-  font-size: 0.95rem;
-  color: #333;
-}
-
-.home-countdown__logistics-sep {
-  color: #666;
-}
-
-.home-countdown__timer {
-  display: flex;
-  justify-content: center;
-  gap: 1.25rem;
-  width: 100%;
-  padding: 0.35rem 0;
 }
 
 .home-countdown__unit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 3rem;
+  gap: 0.35rem;
 }
 
-.home-countdown__value {
-  font-size: 2rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.15;
+.home-countdown__pair {
+  display: flex;
+  gap: 0.55rem;
+}
+
+.home-countdown__box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(2.6rem, 5.8vw, 4.6rem);
+  height: clamp(3.8rem, 8.2vw, 6.6rem);
+  border-radius: 20px;
+  background: rgba(249, 246, 240, 0.48);
+  box-shadow:
+    0 4px 4px rgba(12, 12, 13, 0.05),
+    0 16px 28px rgba(12, 12, 13, 0.08);
+  color: #f9f6f0;
+  font-family: "Dongle", sans-serif;
+  font-size: clamp(3.4rem, 7.2vw, 6.4rem);
+  line-height: 0.8;
+  padding-top: 0.12em;
+}
+
+.home-countdown__colon {
+  color: #f9f6f0;
+  font-family: "Dongle", sans-serif;
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  line-height: 0.7;
+  margin-top: 0.55em;
 }
 
 .home-countdown__label {
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  color: #444;
-  margin-top: 0.15rem;
+  color: #f9f6f0;
+  font-family: "Dongle", sans-serif;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  line-height: 1;
+  text-align: center;
 }
 
 .home-countdown__ended {
-  font-size: 0.875rem;
   margin: 0;
+  text-align: center;
+  color: #f9f6f0;
+  font-family: "Dongle", sans-serif;
+  font-size: 2.4rem;
+}
+
+@media screen and (max-width: 640px) {
+  .home-countdown__digits {
+    gap: 0.3rem;
+  }
+
+  .home-countdown__pair {
+    gap: 0.28rem;
+  }
+
+  .home-countdown__box {
+    border-radius: 16px;
+  }
 }

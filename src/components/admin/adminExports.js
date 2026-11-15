@@ -25,13 +25,25 @@ const downloadCSV = (rows, filename) => {
   URL.revokeObjectURL(url);
 };
 
+// export const exportMealCSV = (registrations) => {
+//   const headers = ["Full Name", "Email", "Status", "Pronouns", "Meal", "Dessert", "Dietary Restrictions"];
+//   const rows = registrations.map((r) =>
+//     [
+//       r.fullName, r.email, r.status,
+//       r.pronouns === "other" ? r.otherPronouns : r.pronouns,
+//       r.meal, r.dessert, r.dietaryRestrictions,
+//     ].map(escapeCSV)
+//   );
+//   downloadCSV([headers, ...rows], "ewi_meal_preferences.csv");
+// };
+
 export const exportMealCSV = (registrations) => {
-  const headers = ["Full Name", "Email", "Status", "Pronouns", "Meal", "Dessert", "Dietary Restrictions"];
+  const headers = ["Full Name", "Email", "Status", "Pronouns", "Meal", "Dietary Restrictions"];
   const rows = registrations.map((r) =>
     [
       r.fullName, r.email, r.status,
       r.pronouns === "other" ? r.otherPronouns : r.pronouns,
-      r.meal, r.dessert, r.dietaryRestrictions,
+      r.meal ? "Vegan" : "Vegetarian", r.dietaryRestrictions,
     ].map(escapeCSV)
   );
   downloadCSV([headers, ...rows], "ewi_meal_preferences.csv");
@@ -53,11 +65,38 @@ export const exportCompanyPrefsCSV = (registrations) => {
   downloadCSV([headers, ...rows], "ewi_company_preferences.csv");
 };
 
+// export const exportAllCSV = (registrations) => {
+//   const headers = [
+//     "Full Name", "Email", "UID", "Status", "Pronouns", "Year", "Transfer",
+//     "Major", "Position Type", "Need Sponsorship", "Check-in Time",
+//     "National SWE ID", "Meal", "Dessert", "Dietary Restrictions",
+//     "Photo Consent", "Will Call",
+//     "Company Pref 1", "Company Pref 2", "Company Pref 3", "Company Pref 4",
+//     "Company Pref 5", "Company Pref 6", "Company Pref 7", "Company Pref 8",
+//     "Company Pref 9", "Company Pref 10",
+//     "Resume URL", "Membership Proof URL", "Additional Comments",
+//   ];
+//   const rows = registrations.map((r) =>
+//     [
+//       r.fullName, r.email, r.uid, r.status,
+//       r.pronouns === "other" ? r.otherPronouns : r.pronouns,
+//       r.year, r.transfer,
+//       r.major === "Other" ? r.otherMajor : r.major,
+//       r.positionType, r.needSponsorship, r.checkInTime,
+//       r.membershipId, r.meal, r.dessert, r.dietaryRestrictions,
+//       r.photoConsent ? "Yes" : "No", r.willCall,
+//       ...(r.companyPreferences || new Array(10).fill("")),
+//       r.resume, r.membershipProof, r.additionalComments,
+//     ].map(escapeCSV)
+//   );
+//   downloadCSV([headers, ...rows], "ewi_registrations.csv");
+// };
+
 export const exportAllCSV = (registrations) => {
   const headers = [
     "Full Name", "Email", "UID", "Status", "Pronouns", "Year", "Transfer",
     "Major", "Position Type", "Need Sponsorship", "Check-in Time",
-    "National SWE ID", "Meal", "Dessert", "Dietary Restrictions",
+    "National SWE ID", "Meal", "Dietary Restrictions",
     "Photo Consent", "Will Call",
     "Company Pref 1", "Company Pref 2", "Company Pref 3", "Company Pref 4",
     "Company Pref 5", "Company Pref 6", "Company Pref 7", "Company Pref 8",
@@ -71,7 +110,8 @@ export const exportAllCSV = (registrations) => {
       r.year, r.transfer,
       r.major === "Other" ? r.otherMajor : r.major,
       r.positionType, r.needSponsorship, r.checkInTime,
-      r.membershipId, r.meal, r.dessert, r.dietaryRestrictions,
+      r.membershipId,
+      r.meal ? "Vegan" : "Vegetarian", r.dietaryRestrictions,
       r.photoConsent ? "Yes" : "No", r.willCall,
       ...(r.companyPreferences || new Array(10).fill("")),
       r.resume, r.membershipProof, r.additionalComments,

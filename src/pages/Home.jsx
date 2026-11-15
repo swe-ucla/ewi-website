@@ -1,6 +1,5 @@
 import React from "react";
 import HomeHero from "../components/home/HomeHero";
-import HomeCountdown from "../components/home/HomeCountdown";
 import HomeWhatIsEwi from "../components/home/HomeWhatIsEwi";
 import HomeEvents from "../components/home/HomeEvents";
 import HomeTestimonials from "../components/home/HomeTestimonials";
@@ -10,12 +9,15 @@ import "./Home.css";
 const Home = () => {
   return (
     <main className="home">
-      <HomeHero />
-      <HomeCountdown />
+      <div className="home-top">
+        <HomeHero />
+      </div>
       <HomeWhatIsEwi />
       <HomeEvents />
-      <HomeTestimonials />
-      <HomeCompanies />
+      <div className="home-cream-band">
+        <HomeTestimonials />
+        <HomeCompanies />
+      </div>
     </main>
   );
 };

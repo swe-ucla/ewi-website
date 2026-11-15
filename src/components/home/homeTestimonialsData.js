@@ -18,6 +18,7 @@ export const homeTestimonials = [
     image: crystal,
     imageAlt: "Crystal, EWI attendee",
   },
+  /*
   {
     id: 3,
     name: "SWE Member",
@@ -26,4 +27,5 @@ export const homeTestimonials = [
     image: null,
     imageAlt: "",
   },
+  */
 ];

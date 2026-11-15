@@ -2,18 +2,21 @@
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 1.5rem 1.5rem 2.5rem;
   text-align: center;
 }
 
 .home-section__title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  margin-bottom: 1.75rem;
-  margin-left: 0;
+  margin: 0 0 1.5rem;
+  color: #2b2133;
+  font-family: "Abhaya Libre Extra", serif;
+  font-size: clamp(3rem, 6vw, 5.4rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
   text-align: center;
-  width: 100%;
+  text-transform: lowercase;
+  text-shadow: 0 4px 8px rgba(95, 64, 117, 0.28);
 }
 
 .home-section__content {

@@ -4,6 +4,7 @@ import CompanyHero from "../components/company/CompanyHero";
 import CompanyPricingTiers from "../components/company/CompanyPricingTiers";
 import CompanyGetInvolved from "../components/company/CompanyGetInvolved";
 import CompanySurvivalGuide from "../components/company/CompanySurvivalGuide";
+import "./Companies.css";
 
 const Companies = () => {
   const location = useLocation();

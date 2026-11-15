@@ -1,75 +1,87 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { FiPlus, FiX } from "react-icons/fi";
+import foliage from "../../assets/students/hero-foliage.png";
+import mascot from "../../assets/students/mascot.png";
+import registrationWordmark from "../../assets/students/registration.svg";
+import studentWordmark from "../../assets/students/student.svg";
 import "./StudentsTemplate.css";
+import StudentSurvivalGuide from "./StudentSurvivalGuide";
 
-const PAGE_TITLE = "For Students";
-const PAGE_SUBHEADING = "subheading";
-const REGISTER_LABEL = "Register";
-const SURVIVAL_TIPS_TITLE = "Survival Tips";
-const SURVIVAL_GUIDE_TITLE = "Student Survival Guide";
-const PDF_PLACEHOLDER_TEXT = "PDF preview placeholder";
+const SHOW_GUIDE_COMING_SOON = false;
+
+const QUESTIONS = [
+    {
+        id: 1,
+        question: "What should I bring to EWI?",
+        answer:
+            "Prepare multiple copies of your resume to hand out during the career fair, a prepared elevator pitch and a positive attitude! If you are interested in multiple types of roles (ex: software engineer and product management), bring multiple versions of your resume to hand out!",
+    },
+    {
+        id: 2,
+        question: "How do I prepare for networking conversations?",
+        answer:
+            "Research the companies you're interested in beforehand. Prepare thoughtful questions about their work culture, projects, and opportunities. A good question can bring you a long way. Practice your elevator pitch and be ready to discuss your experiences and career goals.",
+    },
+    {
+        id: 3,
+        question: "How do company assignments work?",
+        answer:
+            'Table assignments are first come, first serve based on registration. Register as early as possible to ensure you get to sit with your top choice company during the dinner portion of the event. Priority company registration is also offered to participants who attend 4/5 of our "Prep for EWI" workshops. If you qualify, you will be guaranteed one of your top 5 company choices. Workshops are held the weeks prior to EWI and are advertised on our Instagram and website.',
+    },
+];
 
 const StudentsTemplate = () => {
-    const [openIndex, setOpenIndex] = useState(null);
-    const questions = [
-        { id: 1, question: "question 1", answer: "answer 1" },
-        { id: 2, question: "question 2", answer: "answer 2" },
-        { id: 3, question: "question 3", answer: "answer 3" },
-    ];
-
-    const toggleQuestion = (index) => {
-        setOpenIndex(openIndex === index ? null : index);
-    };
+    const [openIndexes, setOpenIndexes] = useState([0]);
 
     return (
-        <div className="students-template-page">
+        <main className="students-template-page">
+            <img className="students-template-foliage" src={foliage} alt="" aria-hidden="true" />
             <div className="students-template-content">
                 <header className="students-template-header">
-                    <h1>{PAGE_TITLE}</h1>
-                    <p className="students-template-subhead">{PAGE_SUBHEADING}</p>
-                    <Link className="students-template-button" to="/student-registration">
-                        {REGISTER_LABEL}
-                    </Link>
+                    <img className="students-template-mascot" src={mascot} alt="" aria-hidden="true" />
+                    <h1 className="students-template-wordmark" aria-label="Student registration">
+                        <img src={studentWordmark} alt="" aria-hidden="true" />
+                        <img src={registrationWordmark} alt="" aria-hidden="true" />
+                    </h1>
+                    <Link className="students-template-button" to="/student-registration">Register</Link>
                 </header>
 
-                <section className="students-template-section">
-                    <h2>{SURVIVAL_TIPS_TITLE}</h2>
+                <section className="students-template-section" aria-labelledby="survival-tips-title">
+                    <h2 id="survival-tips-title">survival tips</h2>
                     <div className="students-template-accordion">
-                        {questions.map((item, index) => (
-                            <div key={item.id} className="students-template-accordion-item">
-                                <button
-                                    type="button"
-                                    className="students-template-question"
-                                    onClick={() => toggleQuestion(index)}
-                                >
-                                    {item.question}
-                                    <span className={`students-template-icon ${openIndex === index ? "open" : ""}`}>
-                                        ▾
-                                    </span>
-                                </button>
-                                {openIndex === index && (
-                                    <div className="students-template-answer">
-                                        {item.answer}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                        {QUESTIONS.map((item, index) => {
+                            const isOpen = openIndexes.includes(index);
+                            const answerId = `students-template-answer-${item.id}`;
+
+                            return (
+                                <article key={item.id} className="students-template-accordion-item">
+                                    <button type="button" className="students-template-question" onClick={() => setOpenIndexes((current) => isOpen ? current.filter((itemIndex) => itemIndex !== index) : [...current, index])} aria-expanded={isOpen} aria-controls={answerId}>
+                                        {item.question}
+                                        <span className="students-template-icon" aria-hidden="true">{isOpen ? <FiX /> : <FiPlus />}</span>
+                                    </button>
+                                    {isOpen && <p className="students-template-answer" id={answerId}>{item.answer}</p>}
+                                </article>
+                            );
+                        })}
                     </div>
                 </section>
 
-                <section className="students-template-section">
-                    <h2>{SURVIVAL_GUIDE_TITLE}</h2>
-                    <div className="students-template-guide">
-                        <div className="students-template-guide-placeholder">
-                            {PDF_PLACEHOLDER_TEXT}
+                <section className="students-template-section students-template-guide-section" aria-labelledby="survival-guide-title">
+                    {SHOW_GUIDE_COMING_SOON ? (
+                        <div className="students-survival-soon" role="status">
+                            <h2 id="survival-guide-title">student survival guide</h2>
+                            <div className="students-survival-soon__card">
+                                <h3 className="students-survival-soon__title">coming soon</h3>
+                                <p className="students-survival-soon__tagline">harvest your potential</p>
+                            </div>
                         </div>
-                    </div>
-                </section>
-                <section className="students-template-section">
-                    <h2>hellohellohello</h2>
+                    ) : (
+                        <StudentSurvivalGuide />
+                    )}
                 </section>
             </div>
-        </div>
+        </main>
     );
 };
 

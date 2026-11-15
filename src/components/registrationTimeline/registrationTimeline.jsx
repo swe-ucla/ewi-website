@@ -3,6 +3,8 @@ import "./registrationTimeline.css";
 
 export const STEPS = ["early registration", "normal registration", "waitlist", "EWI"];
 
+const DISPLAY_LABELS = ["early", "normal", "waitlist", "EWI"];
+
 export const getCurrentStep = (dates) => {
   const now = new Date();
 
@@ -47,7 +49,7 @@ const RegistrationTimeline = ({ dates }) => {
                   {isCompleted && <span className="reg-timeline-check">✓</span>}
                   {isActive && <span className="reg-timeline-dot" />}
                 </div>
-                <span className="reg-timeline-label">{label}</span>
+                <span className="reg-timeline-label">{DISPLAY_LABELS[index]}</span>
               </div>
 
               {!isLastStep && (
@@ -62,6 +64,7 @@ const RegistrationTimeline = ({ dates }) => {
           );
         })}
       </div>
+      <p className="reg-timeline-caption">timeline of application status</p>
     </div>
   );
 };

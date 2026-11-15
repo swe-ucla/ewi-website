@@ -3,12 +3,19 @@ import { Link } from "react-router-dom";
 import "./footer.css";
 import SWE_LOGO from "../../assets/purple-swe-logo.svg";
 import { BsLinkedin, BsInstagram } from "react-icons/bs";
+import FOOTER_LEAVES from "../../assets/footer-leaves.svg";
 
 const EWI_EMAIL = "ewi.swe.ucla@gmail.com";
 
 const Footer = () => {
   return (
     <footer className="footer">
+      <div className="footer__leaves" aria-hidden="true">
+        {Array.from({ length: 16 }, (_, i) => (
+          <img key={i} src={FOOTER_LEAVES} alt="" />
+        ))}
+      </div>
+
       <div className="footer__content">
         <Link to="/" className="footer__logo" aria-label="EWI home">
           <img src={SWE_LOGO} alt="SWE logo" />

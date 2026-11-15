@@ -35,58 +35,50 @@ const HomeCountdown = () => {
     return () => clearInterval(interval);
   }, [targetMs]);
 
-  const units = [
-    { label: "DAYS", value: timeLeft.days },
-    { label: "HOURS", value: timeLeft.hours },
-    { label: "MIN", value: timeLeft.minutes },
-    { label: "SEC", value: timeLeft.seconds },
+  const groups = [
+    { label: "days", value: pad(timeLeft.days) },
+    { label: "hours", value: pad(timeLeft.hours) },
+    { label: "min", value: pad(timeLeft.minutes) },
   ];
 
   const { date, time, location } = homeEventConfig;
 
   const timerSummary = timeLeft.ended
     ? "Event countdown complete"
-    : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes, ${timeLeft.seconds} seconds until EWI`;
+    : `${timeLeft.days} days, ${timeLeft.hours} hours, ${timeLeft.minutes} minutes until EWI. ${date}, ${time}, ${location}`;
 
   return (
     <section className="home-countdown-section" aria-label="Countdown to EWI">
-      <div className="home-countdown home-wire-box">
-        <p className="home-countdown__heading">countdown</p>
-
+      {timeLeft.ended ? (
+        <p className="home-countdown__ended">See you at {location}!</p>
+      ) : (
         <div
-          className="home-countdown__logistics"
-          aria-label={`Event details: ${date}, ${time}, ${location}`}
+          className="home-countdown"
+          role="timer"
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label={timerSummary}
         >
-          <span>{date}</span>
-          <span className="home-countdown__logistics-sep" aria-hidden="true">
-            ·
-          </span>
-          <span>{time}</span>
-          <span className="home-countdown__logistics-sep" aria-hidden="true">
-            ·
-          </span>
-          <span>{location}</span>
-        </div>
-
-        {timeLeft.ended ? (
-          <p className="home-countdown__ended">See you at {location}!</p>
-        ) : (
-          <div
-            className="home-countdown__timer"
-            role="timer"
-            aria-live="polite"
-            aria-atomic="true"
-            aria-label={timerSummary}
-          >
-            {units.map((unit) => (
-              <div key={unit.label} className="home-countdown__unit">
-                <span className="home-countdown__value">{pad(unit.value)}</span>
-                <span className="home-countdown__label">{unit.label}</span>
-              </div>
+          <div className="home-countdown__digits">
+            {groups.map((group, index) => (
+              <React.Fragment key={group.label}>
+                {index > 0 ? (
+                  <span className="home-countdown__colon" aria-hidden="true">
+                    :
+                  </span>
+                ) : null}
+                <span className="home-countdown__unit">
+                  <span className="home-countdown__pair">
+                    <span className="home-countdown__box">{group.value[0]}</span>
+                    <span className="home-countdown__box">{group.value[1]}</span>
+                  </span>
+                  <span className="home-countdown__label">{group.label}</span>
+                </span>
+              </React.Fragment>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };
