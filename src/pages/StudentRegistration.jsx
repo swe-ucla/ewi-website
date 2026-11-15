@@ -15,7 +15,7 @@ const WAITLIST_STEP = STEPS.indexOf("waitlist");
 
 // Temporary: show coming-soon graphic instead of the live form.
 // Set to false to restore the registration form.
-const SHOW_COMING_SOON = true;
+const SHOW_COMING_SOON = false;
 
 // Temporary override: show the open "normal" registration state (no capacity
 // banner, timeline marker on normal). Set to false to restore the date-based

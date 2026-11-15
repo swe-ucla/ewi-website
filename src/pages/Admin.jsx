@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { FiCheck, FiChevronRight } from "react-icons/fi";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import PieChartView from "../components/admin/PieChartView";
-import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV } from "../components/admin/adminExports";
+import { exportMealCSV, exportCompanyPrefsCSV, exportAllCSV, exportMatchingCSV, normalizeCompanyName } from "../components/admin/adminExports";
 import { exportResumesByMajorZip, exportAllResumesZip } from "../utils/resumeExports";
 import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
 import avatarPlaceholder from "../assets/admin/avatar-placeholder.png";
@@ -39,12 +40,49 @@ const EXPORT_OPTIONS = [
 const provider = new GoogleAuthProvider();
 // .env.local can point this at the local emulator
 const FUNCTIONS_URL = process.env.REACT_APP_FIREBASE_FUNCTIONS_URL || "https://us-central1-swe-ewi.cloudfunctions.net";
+// Students are seated strictly in order — workshop attendees first, then by
+// registration time — and nobody loses a seat once assigned. canBumpPercent: 0
+// switches off the second-chance pass that would let a student who got none of
+// their picks take a seat from someone later in line; the inputs for it are
+// hidden in the UI. Raising it here re-enables that pass.
 const DEFAULT_MATCHING_SETTINGS = {
   seatsPerTable: 8,
   maxPerMajor: 4,
-  protectedPercent: 40,
-  canBumpPercent: 60,
+  protectedPercent: 100,
+  canBumpPercent: 0,
   largeTables: [],
+  majorOverrides: {},
+};
+
+const STANDARD_TABLE_SEATS = DEFAULT_MATCHING_SETTINGS.seatsPerTable;
+
+const majorCapForSeats = (seats, settings) => {
+  const standardSeats = Number(settings.seatsPerTable) || STANDARD_TABLE_SEATS;
+  const standardMajor = Number(settings.maxPerMajor) || DEFAULT_MATCHING_SETTINGS.maxPerMajor;
+  const scaled = Math.round((seats * standardMajor) / standardSeats);
+  return Math.max(1, Math.min(seats, scaled || 1));
+};
+
+const tablesFromCapacity = (companyList, settings) => {
+  const tableSeats = Number(settings.seatsPerTable);
+  const standardSeats = Number.isInteger(tableSeats) && tableSeats > 0
+    ? tableSeats
+    : STANDARD_TABLE_SEATS;
+
+  return companyList
+    .filter((company) => {
+      const capacity = Number(company.capacity);
+      return Number.isInteger(capacity) && capacity > 0 && capacity !== standardSeats;
+    })
+    .map((company) => {
+      const seats = Number(company.capacity);
+      const stored = Number(settings.majorOverrides?.[company.name]);
+      const maxPerMajor = Number.isInteger(stored) && stored >= 1 && stored <= seats
+        ? stored
+        : majorCapForSeats(seats, settings);
+      return { company: company.name, seats, maxPerMajor };
+    })
+    .sort((a, b) => a.company.localeCompare(b.company));
 };
 const YEAR_LABELS = {
   "grad-student-masters": "Grad Student - Master's",
@@ -52,6 +90,29 @@ const YEAR_LABELS = {
 };
 
 const TABLE_PAGE_SIZE = 6;
+const REG_PAGE_SIZE = 10;
+
+// Attending this many of the five "Prep for EWI" workshops earns priority in
+// matching. Counts are imported from the attendance exports by
+// functions/import-workshops.js.
+const WORKSHOP_PRIORITY_THRESHOLD = 4;
+
+// A few students registered twice under different email addresses, which the
+// form's duplicate check can't catch because registrations are keyed by email.
+// Both records are kept, but matching should see each student once — and the
+// algorithm itself keys students by name, so duplicates would collide there.
+// The most recent registration wins, as it holds their latest preferences.
+const dedupeByStudent = (registrations) => {
+  const byStudent = new Map();
+  for (const r of registrations) {
+    const key = String(r.uid || "").trim() || (r.fullName || "").trim().toLowerCase();
+    if (!key) continue;
+    const existing = byStudent.get(key);
+    const time = r.createdAt?.toMillis?.() ?? 0;
+    if (!existing || time > (existing.createdAt?.toMillis?.() ?? 0)) byStudent.set(key, r);
+  }
+  return [...byStudent.values()];
+};
 
 const pageItems = (items, page, size = TABLE_PAGE_SIZE) => {
   const start = page * size;
@@ -61,9 +122,9 @@ const pageItems = (items, page, size = TABLE_PAGE_SIZE) => {
 const pageCount = (total, size = TABLE_PAGE_SIZE) =>
   Math.max(1, Math.ceil(total / size));
 
-const AdminPager = ({ page, totalItems, onChange, label }) => {
-  const pages = pageCount(totalItems);
-  if (totalItems <= TABLE_PAGE_SIZE) return null;
+const AdminPager = ({ page, totalItems, onChange, label, pageSize = TABLE_PAGE_SIZE }) => {
+  const pages = pageCount(totalItems, pageSize);
+  if (totalItems <= pageSize) return null;
 
   return (
     <nav className="admin-pager" aria-label={label}>
@@ -140,6 +201,9 @@ const Admin = () => {
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyCapacity, setNewCompanyCapacity] = useState("");
   const [matchingResults, setMatchingResults] = useState(null);
+  // Results render below the settings, so scroll them into view once a run
+  // finishes — otherwise it looks like nothing happened.
+  const matchingResultsRef = useRef(null);
   const [matchingLoading, setMatchingLoading] = useState(false);
   const [matchingError, setMatchingError] = useState(null);
   const [showMatchingConfirm, setShowMatchingConfirm] = useState(false);
@@ -149,6 +213,7 @@ const Admin = () => {
   const [settingsError, setSettingsError] = useState(null);
   const [companyPage, setCompanyPage] = useState(0);
   const [regsPage, setRegsPage] = useState(0);
+  const [expandedRegKey, setExpandedRegKey] = useState(null);
   const settingsChanged = JSON.stringify(matchingSettings) !== JSON.stringify(savedSettings);
 
   const saveSettings = async () => {
@@ -169,15 +234,31 @@ const Admin = () => {
     }
   };
 
-  // Mirrors the cutoffs in functions/index.js; the locked cutoff includes one extra student, as in the original script
-  const lineCount = (percent, locked = false) => {
-    const total = registrations.length;
-    const cutoff = Math.floor(total * ((Number(percent) || 0) / 100));
-    return locked ? Math.min(total, cutoff + 1) : cutoff;
-  };
-  const lineSpots = (count) => (count === 0 ? "Nobody" : count === 1 ? "Student #1" : `Students #1–${count}`);
-  const lockedCount = lineCount(matchingSettings.protectedPercent, true);
-  const secondChanceCount = lineCount(matchingSettings.canBumpPercent);
+  const capacityTables = tablesFromCapacity(companies, matchingSettings);
+  const capacityTableNames = new Set(capacityTables.map((table) => table.company));
+
+  // How the last run turned out: seated, how many got their top pick, and
+  // whether anyone was left out. Students are matched back by name, which is
+  // what the algorithm returns.
+  const matchingSummary = (() => {
+    if (!matchingResults) return { seated: 0, firstChoice: 0, unseated: 0 };
+    const firstChoiceByName = new Map(
+      registrations.map((r) => [
+        (r.fullName || "").trim().toLowerCase(),
+        (r.companyPreferences || []).filter(Boolean)[0],
+      ])
+    );
+    let seated = 0;
+    let firstChoice = 0;
+    for (const [company, data] of Object.entries(matchingResults)) {
+      for (const name of data.students || []) {
+        seated += 1;
+        const theirFirst = firstChoiceByName.get((name || "").trim().toLowerCase());
+        if (normalizeCompanyName(theirFirst) === normalizeCompanyName(company)) firstChoice += 1;
+      }
+    }
+    return { seated, firstChoice, unseated: Math.max(0, dedupeByStudent(registrations).length - seated) };
+  })();
 
   const updateSetting = (key, value) =>
     setMatchingSettings((prev) => ({ ...prev, [key]: value === "" ? "" : Number(value) }));
@@ -198,6 +279,17 @@ const Admin = () => {
 
   const removeLargeTable = (index) =>
     setMatchingSettings((prev) => ({ ...prev, largeTables: prev.largeTables.filter((_, i) => i !== index) }));
+
+  const updateCapacityMajor = (company, seats, raw) => {
+    const parsed = Number(raw);
+    const next = raw === "" || !Number.isInteger(parsed)
+      ? raw
+      : Math.max(1, Math.min(seats, parsed));
+    setMatchingSettings((prev) => ({
+      ...prev,
+      majorOverrides: { ...(prev.majorOverrides || {}), [company]: next },
+    }));
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
@@ -257,6 +349,12 @@ const Admin = () => {
     fetchSettings();
   }, [isAuthorized]);
 
+  useEffect(() => {
+    if (matchingResults) {
+      matchingResultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [matchingResults]);
+
   const handleSignIn = async () => {
     try {
       await signInWithPopup(auth, provider);
@@ -273,8 +371,16 @@ const Admin = () => {
     setMatchingError(null);
     setMatchingResults(null);
     try {
-      const students = [...registrations]
-        .sort((a, b) => (a.submittedAt?.toMillis?.() ?? 0) - (b.submittedAt?.toMillis?.() ?? 0))
+      const students = dedupeByStudent(registrations)
+        // Students who attended 4 of 5 prep workshops are promised their top
+        // company choice, so they go first; everyone else is first come,
+        // first serve by registration time.
+        .sort((a, b) => {
+          const aQualifies = (a.workshopsAttended ?? 0) >= WORKSHOP_PRIORITY_THRESHOLD;
+          const bQualifies = (b.workshopsAttended ?? 0) >= WORKSHOP_PRIORITY_THRESHOLD;
+          if (aQualifies !== bQualifies) return aQualifies ? -1 : 1;
+          return (a.createdAt?.toMillis?.() ?? 0) - (b.createdAt?.toMillis?.() ?? 0);
+        })
         .map((r) => ({
           fullName: r.fullName,
           major: r.major === "Other" ? r.otherMajor : r.major,
@@ -306,9 +412,12 @@ const Admin = () => {
             protectedPercent: matchingSettings.protectedPercent,
             canBumpPercent: matchingSettings.canBumpPercent,
             largeTables: Object.fromEntries(
-              matchingSettings.largeTables
-                .filter((t) => t.company)
-                .map((t) => [t.company, { seats: t.seats, maxPerMajor: t.maxPerMajor }])
+              [
+                ...capacityTables,
+                ...matchingSettings.largeTables.filter(
+                  (table) => table.company && !capacityTableNames.has(table.company)
+                ),
+              ].map((table) => [table.company, { seats: table.seats, maxPerMajor: table.maxPerMajor }])
             ),
           },
         }),
@@ -449,9 +558,9 @@ const Admin = () => {
     companyPage,
     pageCount(companiesWithStats.length) - 1
   );
-  const safeRegsPage = Math.min(regsPage, pageCount(sortedFiltered.length) - 1);
+  const safeRegsPage = Math.min(regsPage, pageCount(sortedFiltered.length, REG_PAGE_SIZE) - 1);
   const pagedCompanies = pageItems(companiesWithStats, safeCompanyPage);
-  const pagedRegistrations = pageItems(sortedFiltered, safeRegsPage);
+  const pagedRegistrations = pageItems(sortedFiltered, safeRegsPage, REG_PAGE_SIZE);
 
   useEffect(() => {
     setCompanyPage(0);
@@ -606,6 +715,17 @@ const Admin = () => {
 
             <div className="admin-matching-panel__body">
               <div className="matching-settings">
+                {capacityTables.length > 0 && (
+                  <p
+                    className={`matching-override-note${
+                      capacityTables.length === companies.length ? " is-warning" : ""
+                    }`}
+                  >
+                    {capacityTables.length === companies.length
+                      ? `Warning: all ${companies.length} companies have their own seat count, so the settings below aren't used.`
+                      : `${capacityTables.length} of ${companies.length} companies have their own seat count and ignore the settings below.`}
+                  </p>
+                )}
                 <div className="matching-settings-grid">
                   <div className="setting-row">
                     <div className="setting-copy">
@@ -639,71 +759,61 @@ const Admin = () => {
                       onChange={(e) => updateSetting("maxPerMajor", e.target.value)}
                     />
                   </div>
-                  <div className="setting-row">
-                    <div className="setting-copy">
-                      <div className="setting-label">
-                        <label htmlFor="protectedPercent">Can't lose their seat</label>
-                        <InfoTip id="hint-protected">
-                          Students line up by signup order. The first {matchingSettings.protectedPercent}% keep
-                          their seat — {lineSpots(lockedCount).toLowerCase()} of {registrations.length} right now.
-                        </InfoTip>
-                      </div>
-                    </div>
-                    <span className="setting-input">
-                      <input
-                        id="protectedPercent"
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={matchingSettings.protectedPercent}
-                        onChange={(e) => updateSetting("protectedPercent", e.target.value)}
-                      />
-                      <span>%</span>
-                    </span>
-                  </div>
-                  <div className="setting-row">
-                    <div className="setting-copy">
-                      <div className="setting-label">
-                        <label htmlFor="canBumpPercent">Can take someone's seat</label>
-                        <InfoTip id="hint-bump">
-                          If someone in the first {matchingSettings.canBumpPercent}% gets none of their picks,
-                          they can take a seat from a later student who ranked that company 3rd or 4th —{" "}
-                          {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length} right now.
-                        </InfoTip>
-                      </div>
-                    </div>
-                    <span className="setting-input">
-                      <input
-                        id="canBumpPercent"
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={matchingSettings.canBumpPercent}
-                        onChange={(e) => updateSetting("canBumpPercent", e.target.value)}
-                      />
-                      <span>%</span>
-                    </span>
-                  </div>
+                  {/* The "can't lose their seat" / "can take someone's seat"
+                      inputs lived here. They only applied to students who got
+                      none of their ten picks, which can't happen while there
+                      are more seats than students, and the rule they encoded —
+                      a later student taking an earlier one's seat — is not the
+                      one we want. DEFAULT_MATCHING_SETTINGS switches the pass
+                      off; restore these inputs to tune it again. */}
                 </div>
 
                 <div className="matching-large-tables">
                   <div className="setting-subhead">
                     <div className="setting-label">
-                      <span>Larger tables</span>
+                      <span>Custom tables</span>
                       <InfoTip id="hint-large-tables">
-                        Companies with a bigger table use their own seat and major limits.
+                        A company appears here when its capacity — set on the
+                        Companies tab — is different from Seats per table. Its
+                        max of one major scales to match. To give a company a
+                        size that isn't its capacity, add a row for it.
                       </InfoTip>
                     </div>
                   </div>
-                  {matchingSettings.largeTables.length > 0 && (
+                  <p className="setting-subhead-note">Overrides both settings above</p>
+                  {capacityTables.map((table) => (
+                    <div className="capacity-table-card" key={table.company}>
+                      <p className="capacity-table-card__name">{table.company}</p>
+                      <div className="capacity-table-card__stats">
+                        <span className="capacity-table-card__stat">
+                          <strong>{table.seats}</strong>
+                          seats
+                        </span>
+                        <label className="capacity-table-card__stat">
+                          <input
+                            type="number"
+                            min="1"
+                            max={table.seats}
+                            aria-label={`Max of one major for ${table.company}`}
+                            value={matchingSettings.majorOverrides?.[table.company] ?? table.maxPerMajor}
+                            onChange={(e) => updateCapacityMajor(table.company, table.seats, e.target.value)}
+                          />
+                          per major
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                  {matchingSettings.largeTables.some((table) => !capacityTableNames.has(table.company)) && (
                     <div className="large-table-head" aria-hidden="true">
                       <span>Company</span>
                       <span>Seats</span>
-                      <span>Max major</span>
+                      <span>Major</span>
                       <span />
                     </div>
                   )}
-                  {matchingSettings.largeTables.map((t, i) => (
+                  {matchingSettings.largeTables.filter((t) => !capacityTableNames.has(t.company)).map((t) => {
+                    const i = matchingSettings.largeTables.indexOf(t);
+                    return (
                     <div className="large-table-row" key={i}>
                       <select
                         id={`largeCompany${i}`}
@@ -738,15 +848,16 @@ const Admin = () => {
                       <button
                         type="button"
                         className="large-table-remove"
-                        aria-label="Remove larger table"
+                        aria-label="Remove custom table"
                         onClick={() => removeLargeTable(i)}
                       >
                         ×
                       </button>
                     </div>
-                  ))}
+                    );
+                  })}
                   <button type="button" className="matching-link-btn" onClick={addLargeTable}>
-                    + Add larger table
+                    + Add custom table
                   </button>
                 </div>
 
@@ -777,25 +888,43 @@ const Admin = () => {
 
               {matchingError && <p className="admin-error">{matchingError}</p>}
               {matchingResults && (
-                <div className="admin-table-wrapper admin-matching-results">
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>company</th>
-                        <th># students</th>
-                        <th>students</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(matchingResults).map(([company, data]) => (
-                        <tr key={company}>
-                          <td>{company}</td>
-                          <td>{data.students.length}</td>
-                          <td>{data.students.join(", ") || "—"}</td>
+                <div className="admin-matching-results" ref={matchingResultsRef}>
+                  <div className="matching-results-head">
+                    <p className="matching-results-summary">
+                      {matchingSummary.seated} students seated ·{" "}
+                      {matchingSummary.firstChoice} got their first choice
+                      {matchingSummary.unseated > 0
+                        ? ` · ${matchingSummary.unseated} not seated`
+                        : ""}
+                    </p>
+                    <button
+                      type="button"
+                      className="matching-download-btn"
+                      onClick={() => exportMatchingCSV(matchingResults, registrations)}
+                    >
+                      Download table assignments (CSV)
+                    </button>
+                  </div>
+                  <div className="admin-table-wrapper">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>company</th>
+                          <th># students</th>
+                          <th>students</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {Object.entries(matchingResults).map(([company, data]) => (
+                          <tr key={company}>
+                            <td>{company}</td>
+                            <td>{data.students.length}</td>
+                            <td>{data.students.join(", ") || "—"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
             </div>
@@ -992,7 +1121,7 @@ const Admin = () => {
             />
           </div>
           <div className="admin-table-wrapper">
-            <table className="admin-table">
+            <table className="admin-table registrations-table">
               <thead>
                 <tr>
                   <th>name</th>
@@ -1007,18 +1136,76 @@ const Admin = () => {
                     <td colSpan={4} className="admin-empty">No registrations found.</td>
                   </tr>
                 ) : (
-                  pagedRegistrations.map((r, i) => (
-                    <tr key={r.email || i}>
-                      <td>{r.fullName}</td>
-                      <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
-                      <td>
-                        <span className={`status-badge ${r.status || "unknown"}`}>
-                          {r.status || "—"}
-                        </span>
-                      </td>
-                      <td>{r.companyPreferences?.[0] || "—"}</td>
-                    </tr>
-                  ))
+                  pagedRegistrations.map((r, i) => {
+                    const rowKey = r.email || r.uid || `${r.fullName}-${i}`;
+                    const open = expandedRegKey === rowKey;
+                    const prefs = (r.companyPreferences || [])
+                      .map((name, rank) => ({ rank: rank + 1, name }))
+                      .filter((pref) => pref.name);
+                    return (
+                      <React.Fragment key={rowKey}>
+                        <tr className={`${i % 2 === 1 ? "admin-row--alt" : ""}${open ? " is-open" : ""}`}>
+                          <td>
+                            <button
+                              type="button"
+                              className={`admin-name-toggle${open ? " is-open" : ""}`}
+                              aria-expanded={open}
+                              aria-controls={`reg-prefs-${safeRegsPage}-${i}`}
+                              onClick={() => setExpandedRegKey(open ? null : rowKey)}
+                            >
+                              <FiChevronRight className="admin-name-toggle__chevron" aria-hidden="true" />
+                              {r.fullName}
+                            </button>
+                          </td>
+                          <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
+                          <td>
+                            <span className={`status-badge ${r.status || "unknown"}`}>
+                              {r.status || "—"}
+                            </span>
+                          </td>
+                          <td>{r.companyPreferences?.[0] || "—"}</td>
+                        </tr>
+                        {open && (
+                          <tr className="admin-prefs-row">
+                            <td colSpan={4} id={`reg-prefs-${safeRegsPage}-${i}`}>
+                              <div className="admin-prefs">
+                                <div className="admin-prefs__companies">
+                                  <p className="admin-prefs__label">Company preferences</p>
+                                  {prefs.length === 0 ? (
+                                    <p className="admin-prefs__empty">No company preferences.</p>
+                                  ) : (
+                                    <ol className="admin-prefs__list">
+                                      {prefs.map((pref) => (
+                                        <li key={pref.rank} className={pref.rank === 1 ? "is-top" : undefined}>
+                                          <span className="admin-prefs__rank">{pref.rank}</span>
+                                          <span className="admin-prefs__name">{pref.name}</span>
+                                        </li>
+                                      ))}
+                                    </ol>
+                                  )}
+                                </div>
+                                <aside className="admin-prefs__meal">
+                                  <div className="admin-prefs__meal-item">
+                                    <span className="admin-prefs__meal-label">Meal</span>
+                                    <p className="admin-prefs__vegan">
+                                      <FiCheck aria-hidden="true" />
+                                      {r.meal ? "Vegan" : "Vegetarian"}
+                                    </p>
+                                  </div>
+                                  <div className="admin-prefs__meal-item">
+                                    <span className="admin-prefs__meal-label">Dietary restrictions</span>
+                                    <span className="admin-prefs__meal-notes">
+                                      {r.dietaryRestrictions?.trim() || "None"}
+                                    </span>
+                                  </div>
+                                </aside>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -1026,6 +1213,7 @@ const Admin = () => {
           <AdminPager
             page={safeRegsPage}
             totalItems={sortedFiltered.length}
+            pageSize={REG_PAGE_SIZE}
             onChange={setRegsPage}
             label="Registrations pages"
           />

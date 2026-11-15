@@ -15,6 +15,12 @@ firebase-debug.log*
 # production
 /build
 
+# service account keys and data backups — never commit, these hold
+# full project credentials and registrant personal data
+*serviceAccount*.json
+*firebase-adminsdk*.json
+/backups
+
 # misc
 .DS_Store
 .cursor/
