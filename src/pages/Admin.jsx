@@ -37,6 +37,12 @@ const EXPORT_OPTIONS = [
   { value: "resumes-by-major", label: "Export Resumes by Major" },
 ];
 
+const registrationRowStatus = (registration) => {
+  if (registration.status === "waitlisted" || registration.status === "registered") return registration.status;
+  if (registration.registrationStatus === "waitlist") return "waitlisted";
+  if (registration.registrationStatus) return "registered";
+  return "";
+};
 const provider = new GoogleAuthProvider();
 // .env.local can point this at the local emulator
 const FUNCTIONS_URL = process.env.REACT_APP_FIREBASE_FUNCTIONS_URL || "https://us-central1-swe-ewi.cloudfunctions.net";
@@ -466,8 +472,8 @@ const Admin = () => {
     }
   };
 
-  const attending = registrations.filter((r) => r.status === "registered").length;
-  const onWaitList = registrations.filter((r) => r.status === "waitlisted").length;
+  const attending = registrations.filter((r) => registrationRowStatus(r) === "registered").length;
+  const onWaitList = registrations.filter((r) => registrationRowStatus(r) === "waitlisted").length;
   const onWillCall = registrations.filter((r) => r.willCall).length;
 
   const sortedFiltered = registrations
@@ -481,7 +487,7 @@ const Admin = () => {
     })
     .sort((a, b) => {
       if (sortBy === "name") return (a.fullName || "").localeCompare(b.fullName || "");
-      if (sortBy === "status") return (a.status || "").localeCompare(b.status || "");
+      if (sortBy === "status") return registrationRowStatus(a).localeCompare(registrationRowStatus(b));
       if (sortBy === "year") return (a.year || "").localeCompare(b.year || "");
       if (sortBy === "major") return (a.major || "").localeCompare(b.major || "");
       return 0;
@@ -1106,8 +1112,8 @@ const Admin = () => {
                           </td>
                           <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
                           <td>
-                            <span className={`status-badge ${r.status || "unknown"}`}>
-                              {r.status || "—"}
+                            <span className={`status-badge ${registrationRowStatus(r) || "unknown"}`}>
+                              {registrationRowStatus(r) || "—"}
                             </span>
                           </td>
                           <td>{r.companyPreferences?.[0] || "—"}</td>

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc, collection, getDocs, runTransaction, serverTimestamp } from "firebase/firestore";
-import RegistrationTimeline, { getCurrentStep, STEPS } from "../components/registrationTimeline/registrationTimeline";
+import RegistrationTimeline from "../components/registrationTimeline/registrationTimeline";
 import registrationTimelineDates from "../data/registrationDates";
 import { homeEventConfig } from "../components/home/homeEventConfig";
 import { sanitizeCloudinaryId, uploadToCloudinary } from "../utils/cloudinary";
@@ -11,7 +11,7 @@ import OverlaySelect from "../components/OverlaySelect/OverlaySelect";
 import mascot from "../assets/home-2026/mascot.png";
 import "./StudentRegistration.css";
 
-const WAITLIST_STEP = STEPS.indexOf("waitlist");
+const WAITLIST_CAPACITY = 136;
 
 // Temporary: show coming-soon graphic instead of the live form.
 // Set to false to restore the registration form.
@@ -41,16 +41,6 @@ const formatEventSubtitle = (eventDate) => {
         minute: "2-digit",
     });
     return `${dateLabel} | ${startLabel} to 10:00 PM | ${homeEventConfig.location} | Free`;
-};
-
-// maps the timeline's current step to one of the 3 registration statuses
-// empty str if registration hasn't opened yet or the event date has passed
-const getRegistrationStatus = (dates) => {
-    const currentStep = getCurrentStep(dates);
-    if (currentStep < 0 || currentStep >= STEPS.length - 1) {
-        return "";
-    }
-    return STEPS[currentStep];
 };
 
 const companyRankLabels = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"];
@@ -161,11 +151,15 @@ const StudentRegistrationForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showDuplicateAlert, setShowDuplicateAlert] = useState(false);
     const [companies, setCompanies] = useState([]);
+    const [registrationCount, setRegistrationCount] = useState(null);
     const navigate = useNavigate();
 
     const resumeInputRef = useRef(null);
     const membershipProofInputRef = useRef(null);
-    const isWaitlist = getCurrentStep(registrationDatesForDisplay) === WAITLIST_STEP;
+    const isWaitlist = registrationCount !== null && registrationCount >= WAITLIST_CAPACITY;
+    const timelineDates = isWaitlist
+        ? { ...registrationDatesForDisplay, waitlistStart: new Date("2020-01-01T00:00:00") }
+        : { ...registrationDatesForDisplay, waitlistStart: registrationDatesForDisplay.eventDate };
     const eventSubtitle = formatEventSubtitle(registrationTimelineDates.eventDate);
 
     const fetchCompanies = async () => {
@@ -175,6 +169,9 @@ const StudentRegistrationForm = () => {
 
     useEffect(() => {
         fetchCompanies().catch((err) => console.error("Failed to load companies:", err));
+        getDocs(collection(db, "Registrations"))
+            .then((snap) => setRegistrationCount(snap.size))
+            .catch((err) => console.error("Failed to count registrations:", err));
     }, []);
 
     const isCompanyFull = (company) =>
@@ -309,7 +306,6 @@ const StudentRegistrationForm = () => {
 
         const dataToSave = {
             ...formData,
-            registrationStatus: getRegistrationStatus(registrationDatesForDisplay), // computed at submit time
             resume: resumeUrl,
             resumeFilename: formData.resume ? formData.resume.name : null,
             membershipProof: membershipProofUrl,
@@ -318,9 +314,11 @@ const StudentRegistrationForm = () => {
         const registrationRef = doc(db, "Registrations", formData.email);
         const newFirstChoiceName = formData.companyPreferences[0];
         const newCompanyRef = newFirstChoiceName ? doc(db, "Companies", newFirstChoiceName) : null;
+        let savedStatus = "registered";
 
         await runTransaction(db, async (tx) => {
             const registrationSnap = await tx.get(registrationRef);
+            const registrationsSnap = await tx.get(collection(db, "Registrations"));
             const oldFirstChoiceName = registrationSnap.exists()
                 ? registrationSnap.data().companyPreferences?.[0]
                 : null;
@@ -335,15 +333,23 @@ const StudentRegistrationForm = () => {
                 }
             }
 
+            const prior = registrationSnap.exists() ? registrationSnap.data() : null;
+            const priorStatus = prior?.status === "waitlisted" || prior?.registrationStatus === "waitlist"
+                ? "waitlisted"
+                : prior
+                    ? "registered"
+                    : null;
+            savedStatus = priorStatus ?? (registrationsSnap.size >= WAITLIST_CAPACITY ? "waitlisted" : "registered");
+
             // preserve the original submission time across edits, since table
             // assignments are first come, first serve based on registration
-            const existingCreatedAt = registrationSnap.exists()
-                ? registrationSnap.data().createdAt
-                : null;
+            const existingCreatedAt = prior?.createdAt ?? null;
 
             // firstChoiceCount is kept in sync by the onRegistrationWritten Cloud Function
             tx.set(registrationRef, {
                 ...dataToSave,
+                status: savedStatus,
+                registrationStatus: savedStatus === "waitlisted" ? "waitlist" : "normal registration",
                 createdAt: existingCreatedAt ?? serverTimestamp(),
                 updatedAt: serverTimestamp(),
             });
@@ -351,7 +357,7 @@ const StudentRegistrationForm = () => {
 
         console.log("Registration submitted successfully");
         navigate("/student-registration/success", {
-            state: { waitlist: isWaitlist },
+            state: { waitlist: savedStatus === "waitlisted" },
         });
     };
 
@@ -535,7 +541,7 @@ const StudentRegistrationForm = () => {
             <div className="student-reg-header">
                 <h1 className="student-reg-title">Student Registration</h1>
                 <p className="student-reg-meta">{eventSubtitle}</p>
-                <RegistrationTimeline dates={registrationDatesForDisplay} />
+                <RegistrationTimeline dates={timelineDates} />
                 <Link className="ewi-info" to="/students">
                     <span className="ewi-info-bold">What is EWI?</span>
                     <span className="ewi-desc">
