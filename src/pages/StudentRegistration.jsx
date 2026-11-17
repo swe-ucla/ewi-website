@@ -314,11 +314,11 @@ const StudentRegistrationForm = () => {
         const registrationRef = doc(db, "Registrations", formData.email);
         const newFirstChoiceName = formData.companyPreferences[0];
         const newCompanyRef = newFirstChoiceName ? doc(db, "Companies", newFirstChoiceName) : null;
+        const registrationsSnap = await getDocs(collection(db, "Registrations"));
         let savedStatus = "registered";
 
         await runTransaction(db, async (tx) => {
             const registrationSnap = await tx.get(registrationRef);
-            const registrationsSnap = await tx.get(collection(db, "Registrations"));
             const oldFirstChoiceName = registrationSnap.exists()
                 ? registrationSnap.data().companyPreferences?.[0]
                 : null;
