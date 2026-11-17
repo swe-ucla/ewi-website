@@ -13,6 +13,12 @@ import "./StudentRegistration.css";
 
 const WAITLIST_CAPACITY = 136;
 
+// Students can read Companies but cannot list Registrations. The
+// onRegistrationWritten function stores each company's first-choice total, and
+// those totals add up to the number of registrations.
+const registrationCountFromCompanies = (companyList) =>
+    companyList.reduce((sum, company) => sum + (Number(company.firstChoiceCount) || 0), 0);
+
 // Temporary: show coming-soon graphic instead of the live form.
 // Set to false to restore the registration form.
 const SHOW_COMING_SOON = false;
@@ -164,14 +170,14 @@ const StudentRegistrationForm = () => {
 
     const fetchCompanies = async () => {
         const snapshot = await getDocs(collection(db, "Companies"));
-        setCompanies(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+        const nextCompanies = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+        setCompanies(nextCompanies);
+        setRegistrationCount(registrationCountFromCompanies(nextCompanies));
+        return nextCompanies;
     };
 
     useEffect(() => {
         fetchCompanies().catch((err) => console.error("Failed to load companies:", err));
-        getDocs(collection(db, "Registrations"))
-            .then((snap) => setRegistrationCount(snap.size))
-            .catch((err) => console.error("Failed to count registrations:", err));
     }, []);
 
     const isCompanyFull = (company) =>
@@ -314,7 +320,8 @@ const StudentRegistrationForm = () => {
         const registrationRef = doc(db, "Registrations", formData.email);
         const newFirstChoiceName = formData.companyPreferences[0];
         const newCompanyRef = newFirstChoiceName ? doc(db, "Companies", newFirstChoiceName) : null;
-        const registrationsSnap = await getDocs(collection(db, "Registrations"));
+        const companyList = await fetchCompanies();
+        const registrationCount = registrationCountFromCompanies(companyList);
         let savedStatus = "registered";
 
         await runTransaction(db, async (tx) => {
@@ -339,7 +346,7 @@ const StudentRegistrationForm = () => {
                 : prior
                     ? "registered"
                     : null;
-            savedStatus = priorStatus ?? (registrationsSnap.size >= WAITLIST_CAPACITY ? "waitlisted" : "registered");
+            savedStatus = priorStatus ?? (registrationCount >= WAITLIST_CAPACITY ? "waitlisted" : "registered");
 
             // preserve the original submission time across edits, since table
             // assignments are first come, first serve based on registration
