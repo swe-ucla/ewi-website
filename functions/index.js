@@ -240,16 +240,37 @@ function fcfs(students, companies, infoDict, priorityLists, manuallyAdded, setti
     }
 
     for (const student of students) {
-        if (!manuallyAddedSet.has(student.fullName)) noPreferences.push(student.fullName);
+        if (!manuallyAddedSet.has(student.matchKey)) noPreferences.push(student.matchKey);
     }
 
+    // Every priority or committee attendee gets their first choice, even if that table goes past its seat cap.
     for (const student of students) {
-        const name = student.fullName;
-        if (!priorityLists[name] || manuallyAddedSet.has(name)) continue;
+        if (!(student.isCommitteeMember || student.priorityMatching) || manuallyAddedSet.has(student.matchKey)) continue;
+        const name = student.matchKey;
+        let companyName = (priorityLists[name] || [])[0];
+        if (!companyName) continue;
+        if (!matches[companyName]) {
+            const known = Object.keys(matches).find((company) => company.toLowerCase() === companyName.toLowerCase());
+            if (!known) continue;
+            companyName = known;
+        }
+        if (matches[companyName].includes(name)) continue;
+        matches[companyName].push(name);
+        matchedStudents.add(name);
+        const idx = noPreferences.indexOf(name);
+        if (idx !== -1) noPreferences.splice(idx, 1);
+    }
+
+    const bySignup = [...students].sort((a, b) => (a.submittedAt || 0) - (b.submittedAt || 0));
+    for (const student of bySignup) {
+        const name = student.matchKey;
+        if (!priorityLists[name] || manuallyAddedSet.has(name) || matchedStudents.has(name)) continue;
 
         for (const companyName of priorityLists[name]) {
             const company = companies.find(c => c.name === companyName);
-            if (!company || !infoDict[companyName] || !infoDict[companyName].includes(name)) continue;
+            const eligible = infoDict[companyName];
+            const passesMajorFilter = !eligible || eligible.length === 0 || eligible.includes(name);
+            if (!company || !passesMajorFilter) continue;
 
             const major = student.major;
             const currentMajorCount = (majorCounts[companyName] || {})[major] || 0;
@@ -275,7 +296,7 @@ function moreMatching(students, matches, infoDict, priorityLists, noPreferences,
     const SKIP_COMPANIES = new Set(["Lightship RV", "Takeda Pharmaceutical Company Ltd."]);
     const rematchCount = {};
     const matchedStudents = new Set(Object.values(matches).flat());
-    const studentIndexMap = Object.fromEntries(students.map((s, i) => [s.fullName, i]));
+    const studentIndexMap = Object.fromEntries(students.map((s, i) => [s.matchKey, i]));
     const earlyThreshold = Math.floor(students.length * (settings.canBumpPercent / 100));
     const protectedThreshold = Math.floor(students.length * (settings.protectedPercent / 100));
 
@@ -328,27 +349,38 @@ function moreMatching(students, matches, infoDict, priorityLists, noPreferences,
     return { matches, noPreferences };
 }
 
+// Last step. Priority and committee students stay on their first choice even if an earlier pass moved them.
+function lockPriorityFirstChoices(students, matches, priorityLists) {
+    for (const student of students) {
+        if (!(student.isCommitteeMember || student.priorityMatching)) continue;
+        const name = student.matchKey;
+        if (!name) continue;
+        let top = (priorityLists[name] || [])[0];
+        if (!top) continue;
+        const known = Object.keys(matches).find((company) => company.toLowerCase() === String(top).toLowerCase());
+        if (known) top = known;
+        if (!matches[top]) matches[top] = [];
+        for (const company of Object.keys(matches)) {
+            matches[company] = (matches[company] || []).filter((studentName) => studentName !== name);
+        }
+        matches[top].unshift(name);
+    }
+    return matches;
+}
+
 function matchToFirstAvail(students, companies, matches, infoDict, noPreferences, settings) {
     const matchedStudents = new Set(Object.values(matches).flat());
+    const signupTime = Object.fromEntries(students.map((student) => [student.matchKey, student.submittedAt || 0]));
+    noPreferences.sort((a, b) => (signupTime[a] || 0) - (signupTime[b] || 0));
 
-    for (const studentName of noPreferences) {
-        const student = students.find(s => s.fullName === studentName);
-        const major = student ? student.major : "";
-
-        if (major === "Mechanical Engineering" || major === "Civil Engineering") {
-            if ((matches["ACCO Engineered Systems"] || []).length < tableLimits(settings, "ACCO Engineered Systems").seats) {
-                matches["ACCO Engineered Systems"] = matches["ACCO Engineered Systems"] || [];
-                matches["ACCO Engineered Systems"].push(studentName);
-                matchedStudents.add(studentName);
-                continue;
-            }
-        }
+    for (const studentKey of noPreferences) {
+        if (matchedStudents.has(studentKey)) continue;
 
         for (const company of companies) {
             if ((matches[company.name] || []).length < tableLimits(settings, company.name).seats) {
                 matches[company.name] = matches[company.name] || [];
-                matches[company.name].push(studentName);
-                matchedStudents.add(studentName);
+                matches[company.name].push(studentKey);
+                matchedStudents.add(studentKey);
                 break;
             }
         }
@@ -398,13 +430,21 @@ exports.runMatchingAlgorithm = onRequest(async (req, res) => {
             normalizedManualMatches[normalizeCompanyName(company)] = studentList;
         }
 
+        // Two registrations can share a name. Seat each document on its own.
+        students = students.map((student, index) => ({
+            ...student,
+            fullName: String(student.fullName || "").trim(),
+            matchKey: String(student.email || student.id || `${student.fullName || "student"}#${index}`).trim(),
+        }));
+
         // Build priority lists with normalized company names
         const priorityLists = {};
         for (const student of students) {
             if (student.preferences) {
-                priorityLists[student.fullName] = student.preferences.map(normalizeCompanyName);
+                priorityLists[student.matchKey] = student.preferences.map(normalizeCompanyName);
             }
         }
+        const nameByKey = Object.fromEntries(students.map((student) => [student.matchKey, student.fullName]));
 
         // Run matching pipeline
         let infoDict = majorMatch(students, companies);
@@ -414,6 +454,7 @@ exports.runMatchingAlgorithm = onRequest(async (req, res) => {
         let { matches, noPreferences } = fcfs(students, companies, infoDict, priorityLists, normalizedManualMatches, settings);
         ({ matches, noPreferences } = moreMatching(students, matches, infoDict, priorityLists, noPreferences, normalizedManualMatches, settings));
         matches = matchToFirstAvail(students, companies, matches, infoDict, noPreferences, settings);
+        matches = lockPriorityFirstChoices(students, matches, priorityLists);
 
         // Build output with rep info merged in
         const repMap = {};
@@ -425,7 +466,7 @@ exports.runMatchingAlgorithm = onRequest(async (req, res) => {
             output[companyName] = {
                 rep1: rep.rep1 || null,
                 rep2: rep.rep2 || null,
-                students: studentList,
+                students: studentList.map((key) => nameByKey[key] || key),
             };
         }
 

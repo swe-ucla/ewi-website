@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FiCheck, FiChevronRight } from "react-icons/fi";
+import { createPortal } from "react-dom";
+import { FiCheck, FiChevronRight, FiEdit2, FiUserCheck } from "react-icons/fi";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
@@ -27,6 +28,13 @@ const SORT_OPTIONS = [
   { value: "status", label: "Status" },
   { value: "year", label: "Year" },
   { value: "major", label: "Major" },
+  { value: "submitted-asc", label: "Earliest to latest" },
+];
+
+const FILTER_OPTIONS = [
+  { value: "all", label: "Everyone" },
+  { value: "committee", label: "Committee" },
+  { value: "priority", label: "Priority" },
 ];
 
 const EXPORT_OPTIONS = [
@@ -37,6 +45,266 @@ const EXPORT_OPTIONS = [
   { value: "resumes-by-major", label: "Export Resumes by Major" },
 ];
 
+const NA = "N/A";
+
+const isCommitteeMember = (registration) => registration?.participantType === "committee";
+
+const hasPrioritySeat = (registration) =>
+  isCommitteeMember(registration) || registration?.priorityMatching === true;
+
+const orNA = (value) => {
+  const trimmed = String(value ?? "").trim();
+  return trimmed || NA;
+};
+
+const committeeDocId = (fullName) => {
+  const slug = fullName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "member";
+  return `committee-${slug}-${Math.random().toString(36).slice(2, 7)}`;
+};
+
+const PRONOUN_OPTIONS = [
+  { value: "she/her/hers", label: "she/her/hers" },
+  { value: "he/him/hims", label: "he/him/hims" },
+  { value: "they/them/theirs", label: "they/them/theirs" },
+  { value: "other", label: "Other" },
+];
+
+const YEAR_OPTIONS = [
+  { value: "first-year", label: "First" },
+  { value: "second-year", label: "Second" },
+  { value: "third-year", label: "Third" },
+  { value: "fourth-year", label: "Fourth" },
+  { value: "fifth-year-or-greater", label: "Fifth+" },
+  { value: "grad-student-masters", label: "Grad Student - Master's" },
+  { value: "grad-student-phd", label: "Grad Student - PhD" },
+  { value: "Other", label: "Other" },
+];
+
+const YES_NO_OPTIONS = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No" },
+];
+
+const POSITION_OPTIONS = [
+  { value: "full-time", label: "Full-time" },
+  { value: "coop", label: "Co-op" },
+  { value: "internship", label: "Internship" },
+];
+
+const MAJOR_ABBREVIATIONS = {
+  "Aerospace Engineering": "AE",
+  "Bioengineering": "BIOE",
+  "Chemical Engineering": "ChemE",
+  "Civil Engineering": "CE",
+  "Computer Engineering": "CompE",
+  "Computer Science": "CS",
+  "Computer Science and Engineering": "CSE",
+  "Electrical Engineering": "EE",
+  "Materials Science and Engineering": "MSE",
+  "Mechanical Engineering": "ME",
+  "Undeclared Engineering": "UND",
+  "Other": "Other",
+};
+
+const MAJOR_OPTIONS = Object.keys(MAJOR_ABBREVIATIONS).map((name) => ({ value: name, label: name }));
+
+const MAJOR_COLORS = ["#5F4077", "#D48C70", "#E3C4FB", "#A35C45", "#7A5A96", "#E8B8A4", "#2B2133", "#C9A4E8", "#8E6B4A", "#F0D8CE"];
+
+const ADMIN_TABS = [
+  { id: "companies", label: "Companies" },
+  { id: "majors", label: "Majors" },
+  { id: "years", label: "Years" },
+  { id: "matches", label: "Matches" },
+];
+
+const abbreviateMajor = (major) => {
+  const trimmed = String(major || "").trim();
+  if (!trimmed || trimmed === NA) return "";
+  if (MAJOR_ABBREVIATIONS[trimmed]) return MAJOR_ABBREVIATIONS[trimmed];
+  const initials = trimmed
+    .split(/\s+/)
+    .filter((word) => word && word.toLowerCase() !== "and")
+    .map((word) => word[0].toUpperCase())
+    .join("");
+  return initials.slice(0, 6) || trimmed;
+};
+
+const formatSeat = (fullName, major) => {
+  const name = String(fullName || "").trim();
+  const abbr = abbreviateMajor(major);
+  if (!name) return "";
+  return abbr ? `${name} (${abbr})` : name;
+};
+
+const seatName = (student) => (typeof student === "string" ? student : student?.fullName || "");
+const seatMajor = (student) => (typeof student === "string" ? "" : student?.major || "");
+
+const majorLegend = (matches) => {
+  const counts = new Map();
+  for (const data of Object.values(matches || {})) {
+    for (const student of data?.students || []) {
+      const major = seatMajor(student) || "Unknown";
+      const abbr = abbreviateMajor(major) || "—";
+      const key = `${abbr}\0${major}`;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .map(([key, count]) => {
+      const [abbr, major] = key.split("\0");
+      return { abbr, major, count };
+    })
+    .sort((a, b) => b.count - a.count || a.abbr.localeCompare(b.abbr));
+};
+
+const majorParts = (students) => {
+  const counts = new Map();
+  for (const student of students || []) {
+    const abbr = abbreviateMajor(seatMajor(student)) || "—";
+    const major = seatMajor(student) || "Unknown";
+    const key = `${abbr}\0${major}`;
+    counts.set(key, (counts.get(key) || 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([key, count]) => {
+      const [abbr, major] = key.split("\0");
+      return { abbr, major, count };
+    })
+    .sort((a, b) => b.count - a.count || a.abbr.localeCompare(b.abbr));
+};
+
+const LATEST_MATCH_ID = "latest";
+
+const matchesFromSaved = (row) => {
+  const matches = {};
+  for (const table of row?.tables || []) {
+    matches[table.company] = { students: table.students || [] };
+  }
+  return matches;
+};
+
+const escapeCsv = (value) => {
+  const str = String(value ?? "");
+  if (/[",\n]/.test(str)) return `"${str.replace(/"/g, '""')}"`;
+  return str;
+};
+
+const buildMatchingCsv = (matches, companyOrder) => {
+  const orderedNames = [
+    ...companyOrder.filter((name) => matches[name]),
+    ...Object.keys(matches).filter((name) => !companyOrder.includes(name)),
+  ];
+  const legend = majorLegend(matches);
+  const maxStudents = Math.max(
+    8,
+    ...orderedNames.map((name) => matches[name]?.students?.length || 0)
+  );
+  const legendRows = [
+    ["Abbreviation", "Major", "Count"],
+    ...legend.map((item) => [item.abbr, item.major, item.count]),
+    [],
+  ];
+  const headers = ["Company", ...Array.from({ length: maxStudents }, (_, index) => `Student ${index + 1}`)];
+  const tableRows = orderedNames.map((name) => {
+    const students = matches[name]?.students || [];
+    return [
+      name,
+      ...Array.from({ length: maxStudents }, (_, index) => (
+        students[index] ? formatSeat(seatName(students[index]), seatMajor(students[index])) : ""
+      )),
+    ];
+  });
+  return [...legendRows, headers, ...tableRows].map((row) => row.map(escapeCsv).join(",")).join("\n");
+};
+
+const downloadCsvFile = (csv, filename) => {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
+const CHECK_IN_OPTIONS = [
+  "5:30 - 5:45 PM",
+  "5:45 - 6:00 PM",
+  "6:00 - 6:15 PM",
+  "6:15 - 6:30 PM",
+  "6:30 - 6:45 PM",
+].map((time) => ({ value: time, label: time }));
+
+const WILL_CALL_OPTIONS = [
+  { value: "yes", label: "Yes" },
+  { value: "no", label: "No, but I'd like to stay on the waitlist" },
+];
+
+const MEAL_OPTIONS = [
+  { value: "vegetarian", label: "Vegetarian" },
+  { value: "vegan", label: "Vegan" },
+];
+
+const knownOption = (value, options) => {
+  if (!value || value === NA) return "";
+  return options.some((option) => option.value === value) ? value : "";
+};
+
+const emptyParticipant = () => ({
+  id: null,
+  fullName: "",
+  company: "",
+  email: NA,
+  uid: NA,
+  pronouns: "",
+  otherPronouns: "",
+  year: "",
+  transfer: "",
+  major: "",
+  otherMajor: "",
+  positionType: "",
+  needSponsorship: "",
+  checkInTime: "",
+  willCall: "",
+  dietaryRestrictions: NA,
+  meal: "vegetarian",
+});
+
+const ParticipantSelect = ({ id, label, value, options, onChange, allowEmpty = true }) => {
+  const selected = knownOption(value, options) || (allowEmpty ? "" : options[0]?.value || "");
+  return (
+    <div className="participant-form__field">
+      <label htmlFor={id}>{label}</label>
+      <select
+        id={id}
+        className="participant-form__select"
+        value={selected}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {allowEmpty && <option value="">{NA}</option>}
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>{option.label}</option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
+const registrationSubmittedMs = (registration) =>
+  registration?.submittedAt?.toMillis?.() ?? registration?.createdAt?.toMillis?.() ?? 0;
+
+const formatSubmittedAt = (registration) => {
+  const ms = registrationSubmittedMs(registration);
+  if (!ms) return "—";
+  return new Date(ms).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+};
+
 const registrationRowStatus = (registration) => {
   if (registration.status === "cancelled" || registration.registrationStatus === "cancelled") return "cancelled";
   if (registration.status === "waitlisted" || registration.status === "registered") return registration.status;
@@ -44,6 +312,34 @@ const registrationRowStatus = (registration) => {
   if (registration.registrationStatus) return "registered";
   return "";
 };
+// The live matching function can still leave a priority student at another table.
+// Put each of them on their first choice before the results are shown or downloaded.
+const lockPrioritySeats = (matches, students) => {
+  const next = {};
+  for (const [company, data] of Object.entries(matches || {})) {
+    next[company] = { ...data, students: [...(data?.students || [])] };
+  }
+  for (const student of students) {
+    if (!student.priorityMatching) continue;
+    const name = (student.fullName || "").trim();
+    const topPref = (student.preferences || []).map((company) => String(company).trim()).find(Boolean);
+    if (!name || !topPref) continue;
+    const copies = Object.values(next).reduce(
+      (count, data) => count + (data.students || []).filter((studentName) => String(studentName).trim() === name).length,
+      0
+    );
+    if (copies > 1) continue;
+    const known = Object.keys(next).find((company) => company.toLowerCase() === topPref.toLowerCase());
+    const top = known || topPref;
+    if (!next[top]) next[top] = { rep1: null, rep2: null, students: [] };
+    for (const company of Object.keys(next)) {
+      next[company].students = next[company].students.filter((studentName) => String(studentName).trim() !== name);
+    }
+    next[top].students.unshift(name);
+  }
+  return next;
+};
+
 const provider = new GoogleAuthProvider();
 // .env.local can point this at the local emulator
 const FUNCTIONS_URL = process.env.REACT_APP_FIREBASE_FUNCTIONS_URL || "https://us-central1-swe-ewi.cloudfunctions.net";
@@ -91,7 +387,7 @@ const YEAR_LABELS = {
   "grad-student-phd": "Grad Student - PhD",
 };
 
-const TABLE_PAGE_SIZE = 6;
+const TABLE_PAGE_SIZE = 10;
 const REG_PAGE_SIZE = 10;
 
 const pageItems = (items, page, size = TABLE_PAGE_SIZE) => {
@@ -173,8 +469,11 @@ const Admin = () => {
   const [showMatching, setShowMatching] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [confirmCancel, setConfirmCancel] = useState(null);
+  const [confirmRegister, setConfirmRegister] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
+  const [participantFilter, setParticipantFilter] = useState("all");
+  const [confirmPriority, setConfirmPriority] = useState(null);
   const [error, setError] = useState(null);
   const [editingCapacityId, setEditingCapacityId] = useState(null);
   const [capacityDraft, setCapacityDraft] = useState("");
@@ -182,10 +481,15 @@ const Admin = () => {
   const [newCompanyName, setNewCompanyName] = useState("");
   const [newCompanyCapacity, setNewCompanyCapacity] = useState("");
   const [matchingResults, setMatchingResults] = useState(null);
+  const [savedMatch, setSavedMatch] = useState(null);
+  const [matchSaveError, setMatchSaveError] = useState(null);
   const [matchingLoading, setMatchingLoading] = useState(false);
   const [matchingError, setMatchingError] = useState(null);
   const [showMatchingConfirm, setShowMatchingConfirm] = useState(false);
   const [includeCancelledCharts, setIncludeCancelledCharts] = useState(false);
+  const [participantEditor, setParticipantEditor] = useState(null);
+  const [participantSaving, setParticipantSaving] = useState(false);
+  const [participantError, setParticipantError] = useState(null);
   const [matchingSettings, setMatchingSettings] = useState(DEFAULT_MATCHING_SETTINGS);
   const [savedSettings, setSavedSettings] = useState(DEFAULT_MATCHING_SETTINGS);
   const [settingsSaving, setSettingsSaving] = useState(false);
@@ -326,20 +630,58 @@ const Admin = () => {
 
   const handleSignOut = () => signOut(auth);
 
+  const companyOrder = companies.map((company) => company.name);
+
+  const downloadMatchingCsv = () => {
+    const saved = savedMatch;
+    const source = matchingResults || matchesFromSaved(saved);
+    if (!saved?.csv && !Object.keys(source).length) return;
+    const csv = saved?.csv || buildMatchingCsv(source, companyOrder);
+    downloadCsvFile(csv, "ewi_table_matching.csv");
+  };
+
+  const attachMajors = (matches, students) => {
+    const majorsByName = new Map();
+    for (const student of students) {
+      const name = (student.fullName || "").trim();
+      if (name && !majorsByName.has(name)) majorsByName.set(name, student);
+    }
+    const next = {};
+    for (const [company, data] of Object.entries(matches || {})) {
+      next[company] = {
+        ...data,
+        students: (data?.students || []).map((studentName) => {
+          const fullName = String(studentName).trim();
+          const source = majorsByName.get(fullName);
+          return {
+            fullName,
+            major: source?.major || "",
+            priority: Boolean(source?.priorityMatching),
+          };
+        }),
+      };
+    }
+    return next;
+  };
+
   const handleRunMatching = async () => {
     setShowMatchingConfirm(false);
     setMatchingLoading(true);
     setMatchingError(null);
     setMatchingResults(null);
     try {
-      const students = [...activeRegistrations]
-        .sort((a, b) => (a.submittedAt?.toMillis?.() ?? 0) - (b.submittedAt?.toMillis?.() ?? 0))
+      const students = registrations
+        .filter((r) => registrationRowStatus(r) === "registered")
         .map((r) => ({
           fullName: r.fullName,
+          email: r.email && r.email !== NA ? r.email : r.id,
           major: r.major === "Other" ? r.otherMajor : r.major,
           year: YEAR_LABELS[r.year] || r.year,
           role: r.positionType,
           isInternational: r.needSponsorship === "yes" ? "Yes" : "No",
+          isCommitteeMember: isCommitteeMember(r),
+          priorityMatching: hasPrioritySeat(r),
+          submittedAt: r.submittedAt?.toMillis?.() ?? r.createdAt?.toMillis?.() ?? 0,
           preferences: (r.companyPreferences || []).filter(Boolean),
         }));
 
@@ -378,7 +720,44 @@ const Admin = () => {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Matching failed");
-      setMatchingResults(data.matches);
+      const seated = attachMajors(lockPrioritySeats(data.matches, students), students);
+      const csv = buildMatchingCsv(seated, companyOrder);
+      const createdAtMs = Date.now();
+      const tables = companyOrder
+        .filter((name) => seated[name])
+        .concat(Object.keys(seated).filter((name) => !companyOrder.includes(name)))
+        .map((company) => ({
+          company,
+          students: (seated[company]?.students || []).map((student) => ({
+            fullName: seatName(student),
+            major: seatMajor(student),
+            priority: student?.priority === true,
+          })),
+        }));
+      setMatchingResults(seated);
+      setMatchSaveError(null);
+      const matchRecord = {
+        createdAt: serverTimestamp(),
+        createdAtMs,
+        createdBy: user.email || "",
+        csv,
+        tables,
+      };
+      try {
+        await setDoc(doc(db, "TableMatches", LATEST_MATCH_ID), matchRecord);
+        const older = await getDocs(collection(db, "TableMatches"));
+        await Promise.all(
+          older.docs
+            .filter((entry) => entry.id !== LATEST_MATCH_ID)
+            .map((entry) => deleteDoc(entry.ref))
+        );
+        setSavedMatch({ id: LATEST_MATCH_ID, ...matchRecord });
+        setActiveTab("matches");
+        setShowMatching(false);
+      } catch (saveErr) {
+        console.error("Saving table match failed:", saveErr);
+        setMatchSaveError("The match ran, but it could not be saved. Check that the Firestore rule for TableMatches is published.");
+      }
     } catch (err) {
       console.error("Matching error:", err);
       setMatchingError(err.message);
@@ -442,6 +821,38 @@ const Admin = () => {
     }
   };
 
+  const handleMoveToRegistered = async () => {
+    const registration = confirmRegister;
+    setConfirmRegister(null);
+    if (!registration) return;
+
+    const docId = registration.id || registration.email;
+    if (!docId) {
+      setError("This registration has no email, so it can't be moved.");
+      return;
+    }
+
+    const prevRegistrations = registrations;
+    setRegistrations((prev) =>
+      prev.map((r) =>
+        (r.id || r.email) === docId
+          ? { ...r, status: "registered", registrationStatus: "normal registration" }
+          : r
+      )
+    );
+    try {
+      await updateDoc(doc(db, "Registrations", docId), {
+        status: "registered",
+        registrationStatus: "normal registration",
+      });
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to move registration off the waitlist.");
+      setRegistrations(prevRegistrations);
+    }
+  };
+
   const handleCancelRegistration = async () => {
     const registration = confirmCancel;
     setConfirmCancel(null);
@@ -470,6 +881,160 @@ const Admin = () => {
     } catch (err) {
       console.error(err);
       setError("Failed to cancel registration.");
+      setRegistrations(prevRegistrations);
+    }
+  };
+
+  const openParticipantEditor = (registration) => {
+    setParticipantError(null);
+    if (!registration) {
+      setParticipantEditor(emptyParticipant());
+      return;
+    }
+    const storedPronouns = registration.pronouns || "";
+    const pronouns = storedPronouns === "other" || knownOption(storedPronouns, PRONOUN_OPTIONS)
+      ? knownOption(storedPronouns, PRONOUN_OPTIONS) || (storedPronouns === "other" ? "other" : "")
+      : (storedPronouns && storedPronouns !== NA ? "other" : "");
+    const storedMajor = registration.major || "";
+    const major = storedMajor === "Other" || knownOption(storedMajor, MAJOR_OPTIONS)
+      ? knownOption(storedMajor, MAJOR_OPTIONS) || (storedMajor === "Other" ? "Other" : "")
+      : (storedMajor && storedMajor !== NA ? "Other" : "");
+
+    setParticipantEditor({
+      id: registration.id,
+      fullName: registration.fullName || "",
+      company: registration.companyPreferences?.[0] || "",
+      email: registration.email || NA,
+      uid: registration.uid || NA,
+      pronouns,
+      otherPronouns: pronouns === "other"
+        ? (registration.otherPronouns && registration.otherPronouns !== NA
+          ? registration.otherPronouns
+          : (storedPronouns !== "other" ? storedPronouns : ""))
+        : "",
+      year: knownOption(registration.year, YEAR_OPTIONS),
+      transfer: knownOption(registration.transfer, YES_NO_OPTIONS),
+      major,
+      otherMajor: major === "Other"
+        ? (registration.otherMajor && registration.otherMajor !== NA
+          ? registration.otherMajor
+          : (storedMajor !== "Other" && storedMajor !== NA ? storedMajor : ""))
+        : "",
+      positionType: knownOption(registration.positionType, POSITION_OPTIONS),
+      needSponsorship: knownOption(registration.needSponsorship, YES_NO_OPTIONS),
+      checkInTime: knownOption(registration.checkInTime, CHECK_IN_OPTIONS),
+      willCall: knownOption(registration.willCall, WILL_CALL_OPTIONS),
+      dietaryRestrictions: registration.dietaryRestrictions || NA,
+      meal: registration.meal ? "vegan" : "vegetarian",
+    });
+  };
+
+  const updateParticipantField = (key, value) => {
+    setParticipantEditor((prev) => (prev ? { ...prev, [key]: value } : prev));
+  };
+
+  const handleSaveParticipant = async (e) => {
+    e.preventDefault();
+    if (!participantEditor) return;
+
+    const fullName = participantEditor.fullName.trim();
+    const company = participantEditor.company.trim();
+    if (!fullName || !company) {
+      setParticipantError("Full name and top company preference are required.");
+      return;
+    }
+
+    const existing = participantEditor.id
+      ? registrations.find((registration) => registration.id === participantEditor.id)
+      : null;
+    const companyPreferences = [...(existing?.companyPreferences || Array(10).fill(""))];
+    while (companyPreferences.length < 10) companyPreferences.push("");
+    companyPreferences[0] = company;
+
+    const pronouns = knownOption(participantEditor.pronouns, PRONOUN_OPTIONS);
+    const major = knownOption(participantEditor.major, MAJOR_OPTIONS);
+
+    const saved = {
+      fullName,
+      email: orNA(participantEditor.email),
+      uid: orNA(participantEditor.uid),
+      pronouns,
+      otherPronouns: pronouns === "other" ? orNA(participantEditor.otherPronouns) : "",
+      year: knownOption(participantEditor.year, YEAR_OPTIONS),
+      transfer: knownOption(participantEditor.transfer, YES_NO_OPTIONS),
+      major,
+      otherMajor: major === "Other" ? orNA(participantEditor.otherMajor) : "",
+      positionType: knownOption(participantEditor.positionType, POSITION_OPTIONS),
+      needSponsorship: knownOption(participantEditor.needSponsorship, YES_NO_OPTIONS),
+      checkInTime: knownOption(participantEditor.checkInTime, CHECK_IN_OPTIONS),
+      willCall: knownOption(participantEditor.willCall, WILL_CALL_OPTIONS),
+      dietaryRestrictions: orNA(participantEditor.dietaryRestrictions),
+      meal: participantEditor.meal === "vegan",
+      companyPreferences,
+      participantType: "committee",
+      status: existing?.status || "registered",
+      registrationStatus: existing?.registrationStatus || "normal registration",
+    };
+
+    setParticipantSaving(true);
+    setParticipantError(null);
+    try {
+      if (participantEditor.id) {
+        await updateDoc(doc(db, "Registrations", participantEditor.id), {
+          ...saved,
+          updatedAt: serverTimestamp(),
+        });
+        setRegistrations((prev) =>
+          prev.map((registration) =>
+            registration.id === participantEditor.id ? { ...registration, ...saved } : registration
+          )
+        );
+      } else {
+        const id = committeeDocId(fullName);
+        await setDoc(doc(db, "Registrations", id), {
+          ...saved,
+          resume: null,
+          resumeFilename: null,
+          membershipId: NA,
+          membershipProof: null,
+          meal: false,
+          photoConsent: false,
+          additionalComments: "",
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+          submittedAt: serverTimestamp(),
+        });
+        setRegistrations((prev) => [...prev, { id, ...saved }]);
+      }
+      setParticipantEditor(null);
+    } catch (err) {
+      console.error(err);
+      setParticipantError("Couldn't save this committee member. Check Firestore rules for Registrations.");
+    } finally {
+      setParticipantSaving(false);
+    }
+  };
+
+  const togglePriorityMatching = async (registration) => {
+    const docId = registration.id || registration.email;
+    if (!docId) {
+      setError("This registration has no id, so priority matching can't be saved.");
+      return;
+    }
+
+    const next = !registration.priorityMatching;
+    const prevRegistrations = registrations;
+    setRegistrations((prev) =>
+      prev.map((entry) =>
+        (entry.id || entry.email) === docId ? { ...entry, priorityMatching: next } : entry
+      )
+    );
+    try {
+      await updateDoc(doc(db, "Registrations", docId), { priorityMatching: next });
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Couldn't update priority matching.");
       setRegistrations(prevRegistrations);
     }
   };
@@ -511,10 +1076,12 @@ const Admin = () => {
 
   const attending = registrations.filter((r) => registrationRowStatus(r) === "registered").length;
   const onWaitList = registrations.filter((r) => registrationRowStatus(r) === "waitlisted").length;
-  const onWillCall = activeRegistrations.filter((r) => r.willCall).length;
+  const onWillCall = activeRegistrations.filter((r) => String(r.willCall || "").toLowerCase() === "yes").length;
 
   const sortedFiltered = registrations
     .filter((r) => {
+      if (participantFilter === "committee" && !isCommitteeMember(r)) return false;
+      if (participantFilter === "priority" && r.priorityMatching !== true) return false;
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -527,6 +1094,7 @@ const Admin = () => {
       if (sortBy === "status") return registrationRowStatus(a).localeCompare(registrationRowStatus(b));
       if (sortBy === "year") return (a.year || "").localeCompare(b.year || "");
       if (sortBy === "major") return (a.major || "").localeCompare(b.major || "");
+      if (sortBy === "submitted-asc") return registrationSubmittedMs(a) - registrationSubmittedMs(b);
       return 0;
     });
 
@@ -553,7 +1121,54 @@ const Admin = () => {
 
   useEffect(() => {
     setRegsPage(0);
-  }, [searchQuery, sortBy, registrations.length]);
+  }, [searchQuery, sortBy, registrations.length, participantFilter]);
+
+  useEffect(() => {
+    if (!isAuthorized) return undefined;
+    let cancelled = false;
+    (async () => {
+      try {
+        const latestRef = doc(db, "TableMatches", LATEST_MATCH_ID);
+        const latestSnap = await getDoc(latestRef);
+        if (cancelled) return;
+        let row = latestSnap.exists() ? { id: latestSnap.id, ...latestSnap.data() } : null;
+        if (!row) {
+          const snap = await getDocs(collection(db, "TableMatches"));
+          if (cancelled) return;
+          const newest = snap.docs
+            .map((entry) => ({ id: entry.id, ...entry.data() }))
+            .sort((a, b) => (b.createdAtMs || 0) - (a.createdAtMs || 0))[0];
+          if (newest) {
+            row = {
+              id: LATEST_MATCH_ID,
+              createdAtMs: newest.createdAtMs || 0,
+              createdBy: newest.createdBy || "",
+              csv: newest.csv || "",
+              tables: newest.tables || [],
+            };
+            await setDoc(latestRef, {
+              createdAt: serverTimestamp(),
+              createdAtMs: row.createdAtMs,
+              createdBy: row.createdBy,
+              csv: row.csv,
+              tables: row.tables,
+            });
+            await Promise.all(
+              snap.docs.filter((entry) => entry.id !== LATEST_MATCH_ID).map((entry) => deleteDoc(entry.ref))
+            );
+          }
+        }
+        if (!row || cancelled) return;
+        setSavedMatch(row);
+        setMatchingResults((current) => current || matchesFromSaved(row));
+      } catch (err) {
+        console.error("Loading saved matches failed:", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthorized]);
 
   useEffect(() => {
     if (!showMatching) return undefined;
@@ -568,6 +1183,21 @@ const Admin = () => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [showMatching]);
+
+  const activeLegend = majorLegend(matchesFromSaved(savedMatch));
+  const majorColor = Object.fromEntries(
+    activeLegend.map((item, index) => [item.abbr, MAJOR_COLORS[index % MAJOR_COLORS.length]])
+  );
+  const priorityNames = new Set(
+    registrations
+      .filter((registration) => hasPrioritySeat(registration))
+      .map((registration) => (registration.fullName || "").trim())
+  );
+  const studentIsPriority = (student) => {
+    if (student?.priority === true) return true;
+    if (student?.priority === false) return false;
+    return priorityNames.has(String(seatName(student)).trim());
+  };
 
   if (authLoading) {
     return <div className="admin-shell admin-center"><p className="admin-loading-text">Loading...</p></div>;
@@ -644,13 +1274,13 @@ const Admin = () => {
 
       <div className="admin-tabs-row">
         <div className="admin-tabs">
-          {["companies", "majors", "years"].map((tab) => (
+          {ADMIN_TABS.map((tab) => (
             <button
-              key={tab}
-              className={`filter-btn ${activeTab === tab ? "active" : ""}`}
-              onClick={() => setActiveTab(tab)}
+              key={tab.id}
+              className={`filter-btn ${activeTab === tab.id ? "active" : ""}`}
+              onClick={() => setActiveTab(tab.id)}
             >
-              {tab === "companies" ? "Companies" : tab === "majors" ? "Majors" : "Years"}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -680,14 +1310,9 @@ const Admin = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <header className="admin-matching-panel__header">
-              <div className="admin-matching-intro">
-                <h2 id="admin-matching-title" className="admin-matching-title">
-                  Table Matching
-                </h2>
-                <p className="admin-matching-desc">
-                  Runs the sorting algorithm against current registrations. Cancelled profiles are left out.
-                </p>
-              </div>
+              <h2 id="admin-matching-title" className="admin-matching-title">
+                Table Matching
+              </h2>
               <button
                 type="button"
                 className="admin-matching-panel__close"
@@ -895,28 +1520,7 @@ const Admin = () => {
               </div>
 
               {matchingError && <p className="admin-error">{matchingError}</p>}
-              {matchingResults && (
-                <div className="admin-table-wrapper admin-matching-results">
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>company</th>
-                        <th># students</th>
-                        <th>students</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(matchingResults).map(([company, data]) => (
-                        <tr key={company}>
-                          <td>{company}</td>
-                          <td>{data.students.length}</td>
-                          <td>{data.students.join(", ") || "—"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+              {matchSaveError && <p className="admin-error">{matchSaveError}</p>}
             </div>
 
             <footer className="admin-matching-panel__footer">
@@ -1083,6 +1687,85 @@ const Admin = () => {
             />
           )}
 
+          {activeTab === "matches" && (
+            <div className="match-view">
+              {matchSaveError && <p className="admin-error">{matchSaveError}</p>}
+              {!savedMatch ? (
+                <p className="match-view__empty">No saved match yet. Run matching and the tables will show up here.</p>
+              ) : (
+                <>
+                  <div className="match-view__toolbar">
+                    <button type="button" className="matching-link-btn" onClick={downloadMatchingCsv}>
+                      Download CSV
+                    </button>
+                  </div>
+                  <div className="match-view__legend">
+                    {activeLegend.map((item) => (
+                      <span key={`${item.abbr}-${item.major}`} className="match-key" title={`${item.major} · ${item.count}`}>
+                        <i style={{ background: majorColor[item.abbr] }} />
+                        {item.abbr}
+                      </span>
+                    ))}
+                    <span className="match-key match-key--priority" title="Priority match">
+                      <i />
+                      Priority
+                    </span>
+                  </div>
+                  <div className="match-board">
+                    {(savedMatch.tables || []).map((table) => {
+                      const parts = majorParts(table.students);
+                      const total = (table.students || []).length;
+                      const people = [...(table.students || [])].sort(
+                        (a, b) => Number(studentIsPriority(b)) - Number(studentIsPriority(a))
+                      );
+                      return (
+                        <article className="match-cluster" key={table.company}>
+                          <header className="match-cluster__head">
+                            <h3 className="match-cluster__name">{table.company}</h3>
+                            <span className="match-cluster__count">{total}</span>
+                          </header>
+                          <div className="match-bar" aria-hidden="true">
+                            {parts.map((part) => (
+                              <span
+                                key={part.abbr}
+                                title={`${part.abbr} ${part.count}`}
+                                style={{ flexGrow: part.count, background: majorColor[part.abbr] || "#ddd" }}
+                              />
+                            ))}
+                          </div>
+                          <ul className="match-people">
+                            {people.length === 0 ? (
+                              <li className="match-person match-person--empty">No students</li>
+                            ) : (
+                              people.map((student, index) => {
+                                const priority = studentIsPriority(student);
+                                const abbr = abbreviateMajor(seatMajor(student));
+                                return (
+                                  <li
+                                    key={`${seatName(student)}-${index}`}
+                                    className={`match-person${priority ? " is-priority" : ""}`}
+                                  >
+                                    <span>{seatName(student)}</span>
+                                    {abbr && (
+                                      <abbr title={seatMajor(student) || abbr} style={{ color: majorColor[abbr] }}>
+                                        {abbr}
+                                      </abbr>
+                                    )}
+                                  </li>
+                                );
+                              })
+                            )}
+                          </ul>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {activeTab !== "matches" && <>
           <div className="admin-search-row">
             <input
               className="admin-search-input"
@@ -1090,6 +1773,17 @@ const Admin = () => {
               placeholder="Search name/uid"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <OverlaySelect
+              id="admin-filter"
+              name="participantFilter"
+              ariaLabel="Filter registrations"
+              size="compact"
+              className="admin-filter-select"
+              value={participantFilter}
+              placeholder="Filter..."
+              options={FILTER_OPTIONS}
+              onChange={(e) => setParticipantFilter(e.target.value)}
             />
             <OverlaySelect
               id="admin-sort"
@@ -1113,6 +1807,13 @@ const Admin = () => {
               options={EXPORT_OPTIONS}
               onChange={(e) => handleExport(e.target.value)}
             />
+            <button
+              type="button"
+              className="admin-add-participant"
+              onClick={() => openParticipantEditor(null)}
+            >
+              + Add committee member
+            </button>
           </div>
           <div className="admin-table-wrapper">
             <table className="admin-table registrations-table">
@@ -1122,17 +1823,18 @@ const Admin = () => {
                   <th>major/yr</th>
                   <th>status</th>
                   <th>top choice</th>
+                  <th title="Attended 4 of 5 EWI events">priority</th>
                   <th aria-label="actions" />
                 </tr>
               </thead>
               <tbody>
                 {sortedFiltered.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="admin-empty">No registrations found.</td>
+                    <td colSpan={6} className="admin-empty">No registrations found.</td>
                   </tr>
                 ) : (
                   pagedRegistrations.map((r, i) => {
-                    const rowKey = r.email || r.uid || `${r.fullName}-${i}`;
+                    const rowKey = r.id || r.email || r.uid || `${r.fullName}-${i}`;
                     const open = expandedRegKey === rowKey;
                     const prefs = (r.companyPreferences || [])
                       .map((name, rank) => ({ rank: rank + 1, name }))
@@ -1154,12 +1856,46 @@ const Admin = () => {
                           </td>
                           <td>{(r.major === "Other" ? r.otherMajor : r.major) || "—"} / {r.year || "—"}</td>
                           <td>
-                            <span className={`status-badge ${registrationRowStatus(r) || "unknown"}`}>
-                              {registrationRowStatus(r) || "—"}
-                            </span>
+                            <div className="status-badges">
+                              <span className={`status-badge ${registrationRowStatus(r) || "unknown"}`}>
+                                {registrationRowStatus(r) || "—"}
+                              </span>
+                              {isCommitteeMember(r) && (
+                                <span className="status-badge committee">committee</span>
+                              )}
+                            </div>
                           </td>
                           <td>{r.companyPreferences?.[0] || "—"}</td>
+                          <td className="priority-cell">
+                            <input
+                              type="checkbox"
+                              className="priority-toggle"
+                              checked={r.priorityMatching === true}
+                              aria-label={`Priority matching for ${r.fullName || "this attendee"}. Eligible after attending 4 of 5 EWI events.`}
+                              onChange={() => setConfirmPriority(r)}
+                            />
+                          </td>
                           <td className="remove-cell">
+                            {isCommitteeMember(r) && (
+                              <button
+                                type="button"
+                                className="admin-edit-reg"
+                                aria-label={`Edit ${r.fullName || "committee member"}`}
+                                onClick={() => openParticipantEditor(r)}
+                              >
+                                <FiEdit2 aria-hidden="true" />
+                              </button>
+                            )}
+                            {registrationRowStatus(r) === "waitlisted" && (
+                              <button
+                                type="button"
+                                className="admin-register-btn"
+                                aria-label={`Move ${r.fullName || r.email} to the registered list`}
+                                onClick={() => setConfirmRegister(r)}
+                              >
+                                <FiUserCheck aria-hidden="true" />
+                              </button>
+                            )}
                             {registrationRowStatus(r) !== "cancelled" && (
                               <button
                                 type="button"
@@ -1174,7 +1910,7 @@ const Admin = () => {
                         </tr>
                         {open && (
                           <tr className="admin-prefs-row">
-                            <td colSpan={5} id={`reg-prefs-${safeRegsPage}-${i}`}>
+                            <td colSpan={6} id={`reg-prefs-${safeRegsPage}-${i}`}>
                               <div className="admin-prefs">
                                 <div className="admin-prefs__companies">
                                   <p className="admin-prefs__label">Company preferences</p>
@@ -1192,6 +1928,10 @@ const Admin = () => {
                                   )}
                                 </div>
                                 <aside className="admin-prefs__meal">
+                                  <div className="admin-prefs__meal-item">
+                                    <span className="admin-prefs__meal-label">Submitted</span>
+                                    <span className="admin-prefs__meal-notes">{formatSubmittedAt(r)}</span>
+                                  </div>
                                   <div className="admin-prefs__meal-item">
                                     <span className="admin-prefs__meal-label">Meal</span>
                                     <p className="admin-prefs__vegan">
@@ -1224,6 +1964,7 @@ const Admin = () => {
             onChange={setRegsPage}
             label="Registrations pages"
           />
+          </>}
         </>
       )}
       </div>
@@ -1237,6 +1978,232 @@ const Admin = () => {
             <div className="modal-actions">
               <button className="modal-cancel" onClick={() => setShowMatchingConfirm(false)}>Cancel</button>
               <button className="modal-delete" onClick={handleRunMatching}>Run anyway</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {participantEditor && createPortal(
+        <div className="participant-overlay">
+          <form className="participant-modal" onSubmit={handleSaveParticipant} role="dialog" aria-modal="true" aria-labelledby="participant-editor-title">
+            <h2 id="participant-editor-title" className="participant-modal__title">
+              {participantEditor.id ? "Edit committee member" : "Add committee member"}
+            </h2>
+            <p className="participant-modal__note">
+              {participantEditor.id
+                ? "This entry stays tagged as a committee member. Menus use the same choices as student registration."
+                : "They join the applicant pool as a committee member. Anything you don't have yet is saved as N/A."}
+            </p>
+            <div className="participant-form">
+              <div className="participant-form__field">
+                <label htmlFor="participant-fullName">Full name</label>
+                <input
+                  id="participant-fullName"
+                  className="participant-form__input"
+                  type="text"
+                  value={participantEditor.fullName}
+                  onChange={(e) => updateParticipantField("fullName", e.target.value)}
+                  onFocus={(e) => e.target.select()}
+                  required
+                />
+              </div>
+              <div className="participant-form__field">
+                <label htmlFor="participant-company">Top company preference</label>
+                <select
+                  id="participant-company"
+                  className="participant-form__select"
+                  value={participantEditor.company}
+                  onChange={(e) => updateParticipantField("company", e.target.value)}
+                  required
+                >
+                  <option value="">Select company</option>
+                  {[...companies].sort((a, b) => (a.name || "").localeCompare(b.name || "")).map((company) => (
+                    <option key={company.id || company.name} value={company.name}>{company.name}</option>
+                  ))}
+                </select>
+              </div>
+              {participantEditor.id && (
+                <>
+                  <div className="participant-form__field">
+                    <label htmlFor="participant-email">Email</label>
+                    <input
+                      id="participant-email"
+                      className="participant-form__input"
+                      type="text"
+                      value={participantEditor.email}
+                      placeholder={NA}
+                      onChange={(e) => updateParticipantField("email", e.target.value)}
+                      onFocus={(e) => { if (e.target.value === NA) e.target.select(); }}
+                    />
+                  </div>
+                  <div className="participant-form__field">
+                    <label htmlFor="participant-uid">UID</label>
+                    <input
+                      id="participant-uid"
+                      className="participant-form__input"
+                      type="text"
+                      value={participantEditor.uid}
+                      placeholder={NA}
+                      onChange={(e) => updateParticipantField("uid", e.target.value)}
+                      onFocus={(e) => { if (e.target.value === NA) e.target.select(); }}
+                    />
+                  </div>
+                  <ParticipantSelect
+                    id="participant-pronouns"
+                    label="Pronouns"
+                    value={participantEditor.pronouns}
+                    options={PRONOUN_OPTIONS}
+                    onChange={(value) => updateParticipantField("pronouns", value)}
+                  />
+                  {participantEditor.pronouns === "other" && (
+                    <div className="participant-form__field">
+                      <label htmlFor="participant-otherPronouns">Pronouns</label>
+                      <input
+                        id="participant-otherPronouns"
+                        className="participant-form__input"
+                        type="text"
+                        value={participantEditor.otherPronouns}
+                        placeholder="Enter pronouns"
+                        onChange={(e) => updateParticipantField("otherPronouns", e.target.value)}
+                      />
+                    </div>
+                  )}
+                  <ParticipantSelect
+                    id="participant-year"
+                    label="Year"
+                    value={participantEditor.year}
+                    options={YEAR_OPTIONS}
+                    onChange={(value) => updateParticipantField("year", value)}
+                  />
+                  <ParticipantSelect
+                    id="participant-transfer"
+                    label="Transfer"
+                    value={participantEditor.transfer}
+                    options={YES_NO_OPTIONS}
+                    onChange={(value) => updateParticipantField("transfer", value)}
+                  />
+                  <ParticipantSelect
+                    id="participant-major"
+                    label="Major"
+                    value={participantEditor.major}
+                    options={MAJOR_OPTIONS}
+                    onChange={(value) => updateParticipantField("major", value)}
+                  />
+                  {participantEditor.major === "Other" && (
+                    <div className="participant-form__field">
+                      <label htmlFor="participant-otherMajor">Major</label>
+                      <input
+                        id="participant-otherMajor"
+                        className="participant-form__input"
+                        type="text"
+                        value={participantEditor.otherMajor}
+                        placeholder="Enter major"
+                        onChange={(e) => updateParticipantField("otherMajor", e.target.value)}
+                      />
+                    </div>
+                  )}
+                  <ParticipantSelect
+                    id="participant-position"
+                    label="Position type"
+                    value={participantEditor.positionType}
+                    options={POSITION_OPTIONS}
+                    onChange={(value) => updateParticipantField("positionType", value)}
+                  />
+                  <ParticipantSelect
+                    id="participant-sponsorship"
+                    label="Sponsorship"
+                    value={participantEditor.needSponsorship}
+                    options={YES_NO_OPTIONS}
+                    onChange={(value) => updateParticipantField("needSponsorship", value)}
+                  />
+                  <ParticipantSelect
+                    id="participant-checkin"
+                    label="Check-in time"
+                    value={participantEditor.checkInTime}
+                    options={CHECK_IN_OPTIONS}
+                    onChange={(value) => updateParticipantField("checkInTime", value)}
+                  />
+                  <ParticipantSelect
+                    id="participant-willcall"
+                    label="Will call"
+                    value={participantEditor.willCall}
+                    options={WILL_CALL_OPTIONS}
+                    onChange={(value) => updateParticipantField("willCall", value)}
+                  />
+                  <ParticipantSelect
+                    id="participant-meal"
+                    label="Meal"
+                    value={participantEditor.meal}
+                    options={MEAL_OPTIONS}
+                    allowEmpty={false}
+                    onChange={(value) => updateParticipantField("meal", value)}
+                  />
+                  <div className="participant-form__field">
+                    <label htmlFor="participant-dietary">Dietary restrictions</label>
+                    <input
+                      id="participant-dietary"
+                      className="participant-form__input"
+                      type="text"
+                      value={participantEditor.dietaryRestrictions}
+                      placeholder={NA}
+                      onChange={(e) => updateParticipantField("dietaryRestrictions", e.target.value)}
+                      onFocus={(e) => { if (e.target.value === NA) e.target.select(); }}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            {participantError && <p className="admin-error participant-modal__error">{participantError}</p>}
+            <div className="modal-actions">
+              <button type="button" className="modal-cancel" onClick={() => setParticipantEditor(null)} disabled={participantSaving}>
+                Cancel
+              </button>
+              <button type="submit" className="modal-delete" disabled={participantSaving}>
+                {participantSaving ? "Saving..." : participantEditor.id ? "Save changes" : "Add to pool"}
+              </button>
+            </div>
+          </form>
+        </div>,
+        document.body
+      )}
+      {confirmPriority && (
+        <div className="modal-overlay" onClick={() => setConfirmPriority(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <p>
+              {confirmPriority.priorityMatching ? (
+                <>Remove priority matching for <strong>{confirmPriority.fullName || "this attendee"}</strong>?</>
+              ) : (
+                <>
+                  Mark <strong>{confirmPriority.fullName || "this attendee"}</strong> for priority matching?
+                  This is for attendees who have been to 4 of 5 EWI events. They will be seated at their top company first.
+                </>
+              )}
+            </p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setConfirmPriority(null)}>Cancel</button>
+              <button
+                className="modal-delete"
+                onClick={() => {
+                  const registration = confirmPriority;
+                  setConfirmPriority(null);
+                  togglePriorityMatching(registration);
+                }}
+              >
+                {confirmPriority.priorityMatching ? "Remove priority" : "Mark priority"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmRegister && (
+        <div className="modal-overlay" onClick={() => setConfirmRegister(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <p>
+              Move <strong>{confirmRegister.fullName || confirmRegister.email}</strong> to the registered list?
+              Confirm you have sent them an email.
+            </p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setConfirmRegister(null)}>Not yet</button>
+              <button className="modal-delete" onClick={handleMoveToRegistered}>Email sent, move to registered</button>
             </div>
           </div>
         </div>
