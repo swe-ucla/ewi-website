@@ -942,6 +942,11 @@ td[data-label="capacity"] input.capacity-input {
   color: #fff;
 }
 
+.status-badge.cancelled {
+  background: #e7e5e4;
+  color: #44403c;
+}
+
 /* MATCHING SETTINGS */
 .matching-settings {
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1236,8 +1241,17 @@ td[data-label="capacity"] input.capacity-input {
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+.admin-chart__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
 .admin-shell .admin-chart__title {
-  margin: 0 0 0.75rem;
+  margin: 0;
   color: #5f4077;
   text-align: center;
   font-family: Inter, "Inter", system-ui, sans-serif;
@@ -1245,6 +1259,31 @@ td[data-label="capacity"] input.capacity-input {
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+}
+
+.admin-chart__include {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  color: #2b2133;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-chart__include input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  accent-color: #5f4077;
+  cursor: pointer;
 }
 
 .admin-chart__empty {
@@ -1475,6 +1514,16 @@ td[data-label="capacity"] input.capacity-input {
 
   .admin-chart__canvas {
     height: 280px;
+  }
+
+  .admin-chart__header {
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .admin-chart__include {
+    position: static;
+    transform: none;
   }
 }
 

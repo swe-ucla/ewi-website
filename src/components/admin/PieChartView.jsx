@@ -64,7 +64,7 @@ const ActiveSlice = ({
   );
 };
 
-const PieChartView = ({ data, title }) => {
+const PieChartView = ({ data, title, includeCancelled = false, onIncludeCancelledChange }) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const total = data.reduce((sum, d) => sum + (d.value || 0), 0);
   const chartData = data
@@ -73,7 +73,19 @@ const PieChartView = ({ data, title }) => {
 
   return (
     <div className="admin-chart">
-      {title ? <h2 className="admin-chart__title">{title}</h2> : null}
+      <div className="admin-chart__header">
+        {title ? <h2 className="admin-chart__title">{title}</h2> : <span />}
+        {onIncludeCancelledChange && (
+          <label className="admin-chart__include">
+            <input
+              type="checkbox"
+              checked={includeCancelled}
+              onChange={(e) => onIncludeCancelledChange(e.target.checked)}
+            />
+            Include cancelled registrations
+          </label>
+        )}
+      </div>
 
       {total === 0 ? (
         <p className="admin-chart__empty">No data yet.</p>

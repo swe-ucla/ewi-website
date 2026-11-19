@@ -7,7 +7,7 @@ const getAllRegistrationsWithResumes = async () => {
   const snapshot = await getDocs(collection(db, "Registrations"));
   return snapshot.docs
     .map((doc) => doc.data())
-    .filter((reg) => reg.resume) 
+    .filter((reg) => reg.resume && reg.status !== "cancelled" && reg.registrationStatus !== "cancelled") 
     .sort((a, b) => (a.fullName || "").localeCompare(b.fullName || "")); 
 };
 

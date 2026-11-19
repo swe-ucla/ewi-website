@@ -38,6 +38,7 @@ const EXPORT_OPTIONS = [
 ];
 
 const registrationRowStatus = (registration) => {
+  if (registration.status === "cancelled" || registration.registrationStatus === "cancelled") return "cancelled";
   if (registration.status === "waitlisted" || registration.status === "registered") return registration.status;
   if (registration.registrationStatus === "waitlist") return "waitlisted";
   if (registration.registrationStatus) return "registered";
@@ -171,6 +172,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState("companies");
   const [showMatching, setShowMatching] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(null);
+  const [confirmCancel, setConfirmCancel] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
   const [error, setError] = useState(null);
@@ -183,6 +185,7 @@ const Admin = () => {
   const [matchingLoading, setMatchingLoading] = useState(false);
   const [matchingError, setMatchingError] = useState(null);
   const [showMatchingConfirm, setShowMatchingConfirm] = useState(false);
+  const [includeCancelledCharts, setIncludeCancelledCharts] = useState(false);
   const [matchingSettings, setMatchingSettings] = useState(DEFAULT_MATCHING_SETTINGS);
   const [savedSettings, setSavedSettings] = useState(DEFAULT_MATCHING_SETTINGS);
   const [settingsSaving, setSettingsSaving] = useState(false);
@@ -210,9 +213,11 @@ const Admin = () => {
     }
   };
 
+  const activeRegistrations = registrations.filter((r) => registrationRowStatus(r) !== "cancelled");
+
   // Mirrors the cutoffs in functions/index.js; the locked cutoff includes one extra student, as in the original script
   const lineCount = (percent, locked = false) => {
-    const total = registrations.length;
+    const total = activeRegistrations.length;
     const cutoff = Math.floor(total * ((Number(percent) || 0) / 100));
     return locked ? Math.min(total, cutoff + 1) : cutoff;
   };
@@ -275,7 +280,7 @@ const Admin = () => {
       const failed = [];
 
       const registrationsFetch = getDocs(collection(db, "Registrations"))
-        .then((snap) => setRegistrations(snap.docs.map((d) => d.data())))
+        .then((snap) => setRegistrations(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
         .catch((err) => {
           console.error(err);
           failed.push("registrations");
@@ -327,7 +332,7 @@ const Admin = () => {
     setMatchingError(null);
     setMatchingResults(null);
     try {
-      const students = [...registrations]
+      const students = [...activeRegistrations]
         .sort((a, b) => (a.submittedAt?.toMillis?.() ?? 0) - (b.submittedAt?.toMillis?.() ?? 0))
         .map((r) => ({
           fullName: r.fullName,
@@ -384,8 +389,8 @@ const Admin = () => {
 
   const handleExport = (val) => {
     if (!val) return;
-    if (val === "meals") exportMealCSV(registrations);
-    else if (val === "companies") exportCompanyPrefsCSV(registrations);
+    if (val === "meals") exportMealCSV(activeRegistrations);
+    else if (val === "companies") exportCompanyPrefsCSV(activeRegistrations);
     else if (val === "all") exportAllCSV(registrations);
     else if (val === "resumes") exportAllResumesZip();
     else if (val === "resumes-by-major") exportResumesByMajorZip();
@@ -437,6 +442,38 @@ const Admin = () => {
     }
   };
 
+  const handleCancelRegistration = async () => {
+    const registration = confirmCancel;
+    setConfirmCancel(null);
+    if (!registration) return;
+
+    const docId = registration.id || registration.email;
+    if (!docId) {
+      setError("This registration has no email, so it can't be cancelled.");
+      return;
+    }
+
+    const prevRegistrations = registrations;
+    setRegistrations((prev) =>
+      prev.map((r) =>
+        (r.id || r.email) === docId
+          ? { ...r, status: "cancelled", registrationStatus: "cancelled" }
+          : r
+      )
+    );
+    try {
+      await updateDoc(doc(db, "Registrations", docId), {
+        status: "cancelled",
+        registrationStatus: "cancelled",
+      });
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to cancel registration.");
+      setRegistrations(prevRegistrations);
+    }
+  };
+
   const handleAddCompany = async (e) => {
     e.preventDefault();
     const trimmedName = newCompanyName.trim();
@@ -474,7 +511,7 @@ const Admin = () => {
 
   const attending = registrations.filter((r) => registrationRowStatus(r) === "registered").length;
   const onWaitList = registrations.filter((r) => registrationRowStatus(r) === "waitlisted").length;
-  const onWillCall = registrations.filter((r) => r.willCall).length;
+  const onWillCall = activeRegistrations.filter((r) => r.willCall).length;
 
   const sortedFiltered = registrations
     .filter((r) => {
@@ -496,7 +533,7 @@ const Admin = () => {
   const companiesWithStats = companies
     .map((company) => ({
       ...company,
-      firstChoiceCount: registrations.filter(
+      firstChoiceCount: activeRegistrations.filter(
         (r) => r.companyPreferences?.[0] === company.name
       ).length,
     }))
@@ -648,7 +685,7 @@ const Admin = () => {
                   Table Matching
                 </h2>
                 <p className="admin-matching-desc">
-                  Runs the sorting algorithm against all current student registrations.
+                  Runs the sorting algorithm against current registrations. Cancelled profiles are left out.
                 </p>
               </div>
               <button
@@ -702,7 +739,7 @@ const Admin = () => {
                         <label htmlFor="protectedPercent">Can't lose their seat</label>
                         <InfoTip id="hint-protected">
                           Students line up by signup order. The first {matchingSettings.protectedPercent}% keep
-                          their seat — {lineSpots(lockedCount).toLowerCase()} of {registrations.length} right now.
+                          their seat — {lineSpots(lockedCount).toLowerCase()} of {activeRegistrations.length} right now.
                         </InfoTip>
                       </div>
                     </div>
@@ -725,7 +762,7 @@ const Admin = () => {
                         <InfoTip id="hint-bump">
                           If someone in the first {matchingSettings.canBumpPercent}% gets none of their picks,
                           they can take a seat from a later student who ranked that company 3rd or 4th —{" "}
-                          {lineSpots(secondChanceCount).toLowerCase()} of {registrations.length} right now.
+                          {lineSpots(secondChanceCount).toLowerCase()} of {activeRegistrations.length} right now.
                         </InfoTip>
                       </div>
                     </div>
@@ -1019,8 +1056,10 @@ const Admin = () => {
           {activeTab === "majors" && (
             <PieChartView
               title="Majors"
+              includeCancelled={includeCancelledCharts}
+              onIncludeCancelledChange={setIncludeCancelledCharts}
               data={Object.entries(
-                registrations.reduce((acc, r) => {
+                (includeCancelledCharts ? registrations : activeRegistrations).reduce((acc, r) => {
                   const m = r.major === "Other" ? (r.otherMajor || "Other") : (r.major || "Unknown");
                   acc[m] = (acc[m] || 0) + 1;
                   return acc;
@@ -1032,8 +1071,10 @@ const Admin = () => {
           {activeTab === "years" && (
             <PieChartView
               title="Years"
+              includeCancelled={includeCancelledCharts}
+              onIncludeCancelledChange={setIncludeCancelledCharts}
               data={Object.entries(
-                registrations.reduce((acc, r) => {
+                (includeCancelledCharts ? registrations : activeRegistrations).reduce((acc, r) => {
                   const y = r.year || "Unknown";
                   acc[y] = (acc[y] || 0) + 1;
                   return acc;
@@ -1081,12 +1122,13 @@ const Admin = () => {
                   <th>major/yr</th>
                   <th>status</th>
                   <th>top choice</th>
+                  <th aria-label="actions" />
                 </tr>
               </thead>
               <tbody>
                 {sortedFiltered.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="admin-empty">No registrations found.</td>
+                    <td colSpan={5} className="admin-empty">No registrations found.</td>
                   </tr>
                 ) : (
                   pagedRegistrations.map((r, i) => {
@@ -1117,10 +1159,22 @@ const Admin = () => {
                             </span>
                           </td>
                           <td>{r.companyPreferences?.[0] || "—"}</td>
+                          <td className="remove-cell">
+                            {registrationRowStatus(r) !== "cancelled" && (
+                              <button
+                                type="button"
+                                className="admin-trash-btn"
+                                aria-label={`Cancel registration for ${r.fullName || r.email}`}
+                                onClick={() => setConfirmCancel(r)}
+                              >
+                                <TrashIcon />
+                              </button>
+                            )}
+                          </td>
                         </tr>
                         {open && (
                           <tr className="admin-prefs-row">
-                            <td colSpan={4} id={`reg-prefs-${safeRegsPage}-${i}`}>
+                            <td colSpan={5} id={`reg-prefs-${safeRegsPage}-${i}`}>
                               <div className="admin-prefs">
                                 <div className="admin-prefs__companies">
                                   <p className="admin-prefs__label">Company preferences</p>
@@ -1183,6 +1237,20 @@ const Admin = () => {
             <div className="modal-actions">
               <button className="modal-cancel" onClick={() => setShowMatchingConfirm(false)}>Cancel</button>
               <button className="modal-delete" onClick={handleRunMatching}>Run anyway</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmCancel && (
+        <div className="modal-overlay" onClick={() => setConfirmCancel(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <p>
+              Cancel registration for <strong>{confirmCancel.fullName || confirmCancel.email}</strong>?
+              Their status will be set to cancelled.
+            </p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setConfirmCancel(null)}>Keep registration</button>
+              <button className="modal-delete" onClick={handleCancelRegistration}>Cancel registration</button>
             </div>
           </div>
         </div>

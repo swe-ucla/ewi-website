@@ -12,7 +12,12 @@ const db = getFirestore();
 // cap how many copies/containers of the function that will run at once
 setGlobalOptions({maxInstances: 10});
 
-// recount every company's firstChoiceCount from the actual Registrations rows
+function isCancelled(data) {
+  if (!data) return false;
+  return data.status === "cancelled" || data.registrationStatus === "cancelled";
+}
+
+// recount every company's firstChoiceCount from registrations that are still active
 async function recomputeFirstChoiceCounts() {
   await db.runTransaction(async (tx) => {
     
@@ -21,7 +26,9 @@ async function recomputeFirstChoiceCounts() {
 
     const tally = {};
     registrationsSnap.forEach((doc) => {
-      const firstChoice = doc.data().companyPreferences?.[0];
+      const data = doc.data();
+      if (isCancelled(data)) return;
+      const firstChoice = data.companyPreferences?.[0];
       if (firstChoice) tally[firstChoice] = (tally[firstChoice] || 0) + 1;
     });
 
@@ -37,9 +44,12 @@ async function recomputeFirstChoiceCounts() {
 
 // runs on every registration create, overwrite, and delete
 exports.onRegistrationWritten = onDocumentWritten("Registrations/{email}", async (event) => {
-  const before = event.data.before.data()?.companyPreferences?.[0];
-  const after = event.data.after.data()?.companyPreferences?.[0];
-  if (before === after) return; // first choice unchanged, counts unaffected
+  const beforeData = event.data.before.data();
+  const afterData = event.data.after.data();
+  const before = beforeData?.companyPreferences?.[0];
+  const after = afterData?.companyPreferences?.[0];
+  // cancellation frees a first-choice seat even when the company pick itself did not change
+  if (before === after && isCancelled(beforeData) === isCancelled(afterData)) return;
   await recomputeFirstChoiceCounts();
 });
 
