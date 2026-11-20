@@ -35,6 +35,8 @@ const FILTER_OPTIONS = [
   { value: "all", label: "Everyone" },
   { value: "committee", label: "Committee" },
   { value: "priority", label: "Priority" },
+  { value: "waitlisted", label: "Waitlisted" },
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 const EXPORT_OPTIONS = [
@@ -1082,6 +1084,8 @@ const Admin = () => {
     .filter((r) => {
       if (participantFilter === "committee" && !isCommitteeMember(r)) return false;
       if (participantFilter === "priority" && r.priorityMatching !== true) return false;
+      if (participantFilter === "waitlisted" && registrationRowStatus(r) !== "waitlisted") return false;
+      if (participantFilter === "cancelled" && registrationRowStatus(r) !== "cancelled") return false;
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
       return (
