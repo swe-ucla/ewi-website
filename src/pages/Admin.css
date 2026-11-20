@@ -604,6 +604,19 @@
   background: #5f4077;
 }
 
+.match-waitlist-tag {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 999px;
+  background: #f3e6df;
+  color: #8a4b32;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  vertical-align: 1px;
+}
+
 .match-person--empty {
   color: rgba(43, 33, 51, 0.45);
 }
@@ -1142,6 +1155,11 @@ td[data-label="capacity"] input.capacity-input {
   color: #5f4077;
 }
 
+.status-badge.from-waitlist {
+  background: #f3e6df;
+  color: #8a4b32;
+}
+
 .status-badges {
   display: flex;
   flex-wrap: wrap;
@@ -1210,6 +1228,28 @@ td[data-label="capacity"] input.capacity-input {
 }
 
 .admin-register-btn:hover {
+  color: #2b2133;
+}
+
+.admin-restore-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #5f4077;
+  cursor: pointer;
+}
+
+.admin-restore-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.admin-restore-btn:hover {
   color: #2b2133;
 }
 

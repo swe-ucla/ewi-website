@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { FiCheck, FiChevronRight, FiEdit2, FiUserCheck } from "react-icons/fi";
+import { FiCheck, FiChevronRight, FiEdit2, FiRotateCcw, FiUserCheck } from "react-icons/fi";
 import "./Admin.css";
 import { db, auth } from "../firebase";
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
@@ -471,6 +471,7 @@ const Admin = () => {
   const [showMatching, setShowMatching] = useState(false);
   const [confirmRemove, setConfirmRemove] = useState(null);
   const [confirmCancel, setConfirmCancel] = useState(null);
+  const [confirmRestore, setConfirmRestore] = useState(null);
   const [confirmRegister, setConfirmRegister] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("name");
@@ -659,6 +660,7 @@ const Admin = () => {
             fullName,
             major: source?.major || "",
             priority: Boolean(source?.priorityMatching),
+            fromWaitlist: source?.fromWaitlist === true,
           };
         }),
       };
@@ -677,6 +679,7 @@ const Admin = () => {
         .map((r) => ({
           fullName: r.fullName,
           email: r.email && r.email !== NA ? r.email : r.id,
+          fromWaitlist: r.fromWaitlist === true,
           major: r.major === "Other" ? r.otherMajor : r.major,
           year: YEAR_LABELS[r.year] || r.year,
           role: r.positionType,
@@ -734,6 +737,7 @@ const Admin = () => {
             fullName: seatName(student),
             major: seatMajor(student),
             priority: student?.priority === true,
+            fromWaitlist: student?.fromWaitlist === true,
           })),
         }));
       setMatchingResults(seated);
@@ -838,7 +842,7 @@ const Admin = () => {
     setRegistrations((prev) =>
       prev.map((r) =>
         (r.id || r.email) === docId
-          ? { ...r, status: "registered", registrationStatus: "normal registration" }
+          ? { ...r, status: "registered", registrationStatus: "normal registration", fromWaitlist: true }
           : r
       )
     );
@@ -846,6 +850,7 @@ const Admin = () => {
       await updateDoc(doc(db, "Registrations", docId), {
         status: "registered",
         registrationStatus: "normal registration",
+        fromWaitlist: true,
       });
       setError(null);
     } catch (err) {
@@ -867,15 +872,27 @@ const Admin = () => {
     }
 
     const prevRegistrations = registrations;
+    const previousStatus = registration.status && registration.status !== "cancelled" ? registration.status : "registered";
+    const previousRegistrationStatus = registration.registrationStatus && registration.registrationStatus !== "cancelled"
+      ? registration.registrationStatus
+      : "normal registration";
     setRegistrations((prev) =>
       prev.map((r) =>
         (r.id || r.email) === docId
-          ? { ...r, status: "cancelled", registrationStatus: "cancelled" }
+          ? {
+            ...r,
+            statusBeforeCancel: previousStatus,
+            registrationStatusBeforeCancel: previousRegistrationStatus,
+            status: "cancelled",
+            registrationStatus: "cancelled",
+          }
           : r
       )
     );
     try {
       await updateDoc(doc(db, "Registrations", docId), {
+        statusBeforeCancel: previousStatus,
+        registrationStatusBeforeCancel: previousRegistrationStatus,
         status: "cancelled",
         registrationStatus: "cancelled",
       });
@@ -883,6 +900,41 @@ const Admin = () => {
     } catch (err) {
       console.error(err);
       setError("Failed to cancel registration.");
+      setRegistrations(prevRegistrations);
+    }
+  };
+
+  const handleRestoreRegistration = async () => {
+    const registration = confirmRestore;
+    setConfirmRestore(null);
+    if (!registration) return;
+
+    const docId = registration.id || registration.email;
+    if (!docId) {
+      setError("This registration has no email, so it can't be restored.");
+      return;
+    }
+
+    const status = registration.statusBeforeCancel && registration.statusBeforeCancel !== "cancelled"
+      ? registration.statusBeforeCancel
+      : "registered";
+    const registrationStatus = registration.registrationStatusBeforeCancel && registration.registrationStatusBeforeCancel !== "cancelled"
+      ? registration.registrationStatusBeforeCancel
+      : "normal registration";
+    const prevRegistrations = registrations;
+    setRegistrations((prev) =>
+      prev.map((r) =>
+        (r.id || r.email) === docId
+          ? { ...r, status, registrationStatus }
+          : r
+      )
+    );
+    try {
+      await updateDoc(doc(db, "Registrations", docId), { status, registrationStatus });
+      setError(null);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to restore registration.");
       setRegistrations(prevRegistrations);
     }
   };
@@ -1084,7 +1136,7 @@ const Admin = () => {
     .filter((r) => {
       if (participantFilter === "committee" && !isCommitteeMember(r)) return false;
       if (participantFilter === "priority" && r.priorityMatching !== true) return false;
-      if (participantFilter === "waitlisted" && registrationRowStatus(r) !== "waitlisted") return false;
+      if (participantFilter === "waitlisted" && registrationRowStatus(r) !== "waitlisted" && r.fromWaitlist !== true) return false;
       if (participantFilter === "cancelled" && registrationRowStatus(r) !== "cancelled") return false;
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
@@ -1094,6 +1146,11 @@ const Admin = () => {
       );
     })
     .sort((a, b) => {
+      if (participantFilter === "waitlisted") {
+        const stillWaiting = (person) => registrationRowStatus(person) === "waitlisted" ? 0 : 1;
+        const groupDiff = stillWaiting(a) - stillWaiting(b);
+        if (groupDiff !== 0) return groupDiff;
+      }
       if (sortBy === "name") return (a.fullName || "").localeCompare(b.fullName || "");
       if (sortBy === "status") return registrationRowStatus(a).localeCompare(registrationRowStatus(b));
       if (sortBy === "year") return (a.year || "").localeCompare(b.year || "");
@@ -1202,6 +1259,14 @@ const Admin = () => {
     if (student?.priority === false) return false;
     return priorityNames.has(String(seatName(student)).trim());
   };
+  const fromWaitlistNames = new Set(
+    registrations
+      .filter((registration) => registration.fromWaitlist === true)
+      .map((registration) => (registration.fullName || "").trim().toLowerCase())
+  );
+  const movedFromWaitlist = (student) =>
+    student?.fromWaitlist === true
+    || fromWaitlistNames.has(String(seatName(student)).trim().toLowerCase());
 
   if (authLoading) {
     return <div className="admin-shell admin-center"><p className="admin-loading-text">Loading...</p></div>;
@@ -1749,7 +1814,10 @@ const Admin = () => {
                                     key={`${seatName(student)}-${index}`}
                                     className={`match-person${priority ? " is-priority" : ""}`}
                                   >
-                                    <span>{seatName(student)}</span>
+                                    <span>
+                                      {seatName(student)}
+                                      {movedFromWaitlist(student) && <em className="match-waitlist-tag">from waitlist</em>}
+                                    </span>
                                     {abbr && (
                                       <abbr title={seatMajor(student) || abbr} style={{ color: majorColor[abbr] }}>
                                         {abbr}
@@ -1867,6 +1935,9 @@ const Admin = () => {
                               {isCommitteeMember(r) && (
                                 <span className="status-badge committee">committee</span>
                               )}
+                              {r.fromWaitlist === true && (
+                                <span className="status-badge from-waitlist">from waitlist</span>
+                              )}
                             </div>
                           </td>
                           <td>{r.companyPreferences?.[0] || "—"}</td>
@@ -1898,6 +1969,16 @@ const Admin = () => {
                                 onClick={() => setConfirmRegister(r)}
                               >
                                 <FiUserCheck aria-hidden="true" />
+                              </button>
+                            )}
+                            {registrationRowStatus(r) === "cancelled" && (
+                              <button
+                                type="button"
+                                className="admin-restore-btn"
+                                aria-label={`Restore registration for ${r.fullName || r.email}`}
+                                onClick={() => setConfirmRestore(r)}
+                              >
+                                <FiRotateCcw aria-hidden="true" />
                               </button>
                             )}
                             {registrationRowStatus(r) !== "cancelled" && (
@@ -2208,6 +2289,19 @@ const Admin = () => {
             <div className="modal-actions">
               <button className="modal-cancel" onClick={() => setConfirmRegister(null)}>Not yet</button>
               <button className="modal-delete" onClick={handleMoveToRegistered}>Email sent, move to registered</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {confirmRestore && (
+        <div className="modal-overlay" onClick={() => setConfirmRestore(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <p>
+              Are you sure you want to undo the cancellation for <strong>{confirmRestore.fullName || confirmRestore.email}</strong>?
+            </p>
+            <div className="modal-actions">
+              <button className="modal-cancel" onClick={() => setConfirmRestore(null)}>Keep cancelled</button>
+              <button className="modal-delete" onClick={handleRestoreRegistration}>Restore registration</button>
             </div>
           </div>
         </div>
